@@ -1,0 +1,20 @@
+// @import url('./tailwind.css');
+@import url('./reset.scss');
+@import url('./base.scss');
+
+@font-face {
+  font-family: 'sourcehansans';
+  /* 这个名字可以自己定义 */
+  src: url('./HanSans/sourcehansans.eot');
+  /* IE9 Compat Modes */
+  /*这里以及下面的src后面的地址填的都是自己本地的相对地址*/
+  src:
+    url('./HanSans/sourcehansans.eot?#iefix') format('embedded-opentype'),
+    /* IE6-IE8 */ url('./HanSans/sourcehansans.woff') format('woff'),
+    /* Modern Browsers */ url('./HanSans/sourcehansans.ttf') format('truetype'),
+    /* Safari, Android, iOS */ url('./HanSans/sourcehansans.svg#sourcehansans')
+      format('svg');
+  /* Legacy iOS */
+  // font-weight: bold;
+  font-style: normal;
+}
