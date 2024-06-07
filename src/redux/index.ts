@@ -1,9 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
-import corpLoginUserReducer from './modules/corpLoginUser'
 
 const store = configureStore({
   reducer: {
-    corpLoginUser: corpLoginUserReducer
   }
 })
 
