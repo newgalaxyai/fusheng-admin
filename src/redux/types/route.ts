@@ -26,6 +26,7 @@ export interface IRouteState {
   activeKey: string; // 激活标签页key
   routes: IRoute[]; // 路由列表
   collapsed: boolean; // 侧边栏是否折叠
+  isLogin: boolean | null; // 是否登录
 }
 
 export interface IThunkRouteState {

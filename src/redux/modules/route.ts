@@ -66,6 +66,8 @@ const initialState: IRouteState = {
   activeKey: '',
   // 侧边栏是否折叠
   collapsed: false,
+  // 是否登录
+  isLogin: null,
 }
 
 const routeSlice = createSlice({
@@ -107,8 +109,15 @@ const routeSlice = createSlice({
           break
       }
     },
+    isLoginAction: (state, { payload: { type, data } }) => {
+      switch (type) {
+        case 'set':
+          state.isLogin = data
+          break
+      }
+    },
   }
 })
 
-export const { tabsListAction, activeKeyAction, collapsedAction } = routeSlice.actions
+export const { tabsListAction, activeKeyAction, collapsedAction, isLoginAction } = routeSlice.actions
 export default routeSlice.reducer

@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "./useAppStore";
 import type { IRoute } from "@/redux/types/route";
-import { tabsListAction, collapsedAction, activeKeyAction } from "@/redux/modules/route";
+import { tabsListAction, collapsedAction, activeKeyAction, isLoginAction } from "@/redux/modules/route";
 import { useNavigate, type RouteObject } from "react-router-dom";
 import Lazy from "@/router/lazy";
 import originalRoutes from "@/router";
@@ -26,6 +26,11 @@ export const useRoutesHook = () => {
     if (route) {
       navigate(route.routePath);
     }
+  }
+
+  // 设置登录状态
+  const setLoginStatus = (status: boolean) => {
+    dispatch(isLoginAction({ type: 'set', data: status }))
   }
 
   // 添加标签页
@@ -114,5 +119,6 @@ export const useRoutesHook = () => {
     getBreadcrumb,
     navigateTo,
     setCollapsed,
+    setLoginStatus,
   };
 }

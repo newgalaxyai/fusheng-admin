@@ -7,6 +7,11 @@ body,
   background-color: rgba(237, 240, 242, 1);
 }
 
+// 登录页面隐藏左侧广告区域
+.ant-pro-form-login-page-notice {
+  display: none;
+}
+
 // 布局组件
 .layout-component {
   min-height: 100vh;
