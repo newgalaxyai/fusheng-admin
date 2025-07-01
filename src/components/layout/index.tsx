@@ -34,11 +34,19 @@ const LayoutComponent: React.FC = () => {
         <Layout
             hasSider
             className='layout-component'
+            style={{
+                // 首页设置最大高度
+                maxHeight: activeKey !== 'home' ? '' : '100vh',
+            }}
         >
             <Sider
-                trigger={null}
+                // 首页显示侧边栏底部折叠按钮
+                trigger={activeKey !== 'home' && null}
                 collapsible
                 collapsed={collapsed}
+                onCollapse={(value) => {
+                    setCollapsed(value);
+                }}
                 className='layout-sider'
             >
                 <div className="demo-logo-vertical" />
@@ -54,59 +62,72 @@ const LayoutComponent: React.FC = () => {
                 />
             </Sider>
             <Layout>
-                <Header
-                    className='layout-header'
-                    style={{ background: colorBgContainer, padding: 0 }}
-                >
-                    <Button
-                        type="text"
-                        icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-                        onClick={() => setCollapsed(!collapsed)}
-                        style={{
-                            fontSize: '16px',
-                            width: 64,
-                            height: 64,
-                        }}
-                    />
-                </Header>
-                <div
-                    className='layout-tabs'
-                >
-                    {
-                        tabsList.length > 0 && (
-                            <ConfigProvider
-                                theme={{
-                                    components: {
-                                        Tabs: {
-                                            horizontalMargin: '10px 0 0 0',
-                                            cardBg: colorBgContainer,
-                                        },
-                                    },
-                                }}
+                {/* 首页不显示头部 */}
+                {
+                    activeKey !== 'home' && (
+                        <>
+                            <Header
+                                className='layout-header'
+                                style={{ background: colorBgContainer, padding: 0 }}
                             >
-                                <Tabs
-                                    hideAdd
-                                    onChange={(key) => {
-                                        navigateTo(key);
+                                <Button
+                                    type="text"
+                                    icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                                    onClick={() => setCollapsed(!collapsed)}
+                                    style={{
+                                        fontSize: '16px',
+                                        width: 64,
+                                        height: 64,
                                     }}
-                                    activeKey={activeKey}
-                                    type="editable-card"
-                                    onEdit={onEdit}
-                                    items={tabsList as any}
-                                    size='small'
                                 />
-                            </ConfigProvider>
-                        )
-                    }
-                    <Breadcrumb
-                        items={getBreadcrumb(routes, activeKey, [])}
-                        style={{ margin: '16px 0' }}
-                    />
-                </div>
-                <Layout style={{ padding: '0 24px 24px' }}>
+                            </Header>
+                            <div
+                                className='layout-tabs'
+                            >
+                                {
+                                    tabsList.length > 0 && (
+                                        <ConfigProvider
+                                            theme={{
+                                                components: {
+                                                    Tabs: {
+                                                        horizontalMargin: '10px 0 0 0',
+                                                        cardBg: colorBgContainer,
+                                                    },
+                                                },
+                                            }}
+                                        >
+                                            <Tabs
+                                                hideAdd
+                                                onChange={(key) => {
+                                                    navigateTo(key);
+                                                }}
+                                                activeKey={activeKey}
+                                                type="editable-card"
+                                                onEdit={onEdit}
+                                                items={tabsList as any}
+                                                size='small'
+                                            />
+                                        </ConfigProvider>
+                                    )
+                                }
+                                <Breadcrumb
+                                    items={getBreadcrumb(routes, activeKey, [])}
+                                    style={{ margin: '16px 0' }}
+                                />
+                            </div>
+                        </>
+                    )
+                }
+                <Layout
+                    style={{
+                        // 首页四周都显示padding
+                        padding: activeKey !== 'home' ? '0 24px 24px' : '24px'
+                    }}>
                     <Content
                         className='layout-content'
                         style={{
+                            // 首页内容区域添加滚动条
+                            overflow: activeKey !== 'home' ? 'initial' : 'auto',
                             padding: 10,
                             background: colorBgContainer,
                             borderRadius: borderRadiusLG,
