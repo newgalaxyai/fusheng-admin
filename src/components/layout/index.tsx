@@ -39,6 +39,7 @@ const LayoutComponent: React.FC = () => {
                 maxHeight: activeKey !== 'home' ? '' : '100vh',
             }}
         >
+            {/* 侧边栏 */}
             <Sider
                 // 首页显示侧边栏底部折叠按钮
                 trigger={activeKey !== 'home' && null}
@@ -50,6 +51,7 @@ const LayoutComponent: React.FC = () => {
                 className='layout-sider'
             >
                 <div className="demo-logo-vertical" />
+                {/* 菜单 */}
                 <Menu
                     theme='dark'
                     mode="inline"
@@ -66,6 +68,7 @@ const LayoutComponent: React.FC = () => {
                 {
                     activeKey !== 'home' && (
                         <>
+                            {/* 顶部 */}
                             <Header
                                 className='layout-header'
                                 style={{ background: colorBgContainer, padding: 0 }}
@@ -84,6 +87,7 @@ const LayoutComponent: React.FC = () => {
                             <div
                                 className='layout-tabs'
                             >
+                                {/* 卡片标签 */}
                                 {
                                     tabsList.length > 0 && (
                                         <ConfigProvider
@@ -110,6 +114,7 @@ const LayoutComponent: React.FC = () => {
                                         </ConfigProvider>
                                     )
                                 }
+                                {/* 面包屑 */}
                                 <Breadcrumb
                                     items={getBreadcrumb(routes, activeKey, [])}
                                     style={{ margin: '16px 0' }}
@@ -118,6 +123,7 @@ const LayoutComponent: React.FC = () => {
                         </>
                     )
                 }
+                {/* 内容区域 */}
                 <Layout
                     style={{
                         // 首页四周都显示padding

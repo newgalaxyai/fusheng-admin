@@ -7,10 +7,12 @@ body,
   background-color: rgba(237, 240, 242, 1);
 }
 
+// 布局组件
 .layout-component {
   min-height: 100vh;
 }
 
+// 固定在顶部
 .layout-header,
 .layout-tabs {
   position: sticky;
@@ -21,6 +23,7 @@ body,
   align-items: center;
 }
 
+// 卡片标签
 .layout-tabs {
   z-index: 2;
   padding: 0 24px;
@@ -29,6 +32,7 @@ body,
   background-color: #f5f5f5;
 }
 
+// 固定侧边栏
 .layout-sider {
   overflow: auto;
   height: 100vh;
@@ -40,6 +44,7 @@ body,
   scrollbar-gutter: stable;
 }
 
+// 内容区域
 .layout-content {
   height: 100%;
 }
