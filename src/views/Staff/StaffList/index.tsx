@@ -10,7 +10,7 @@ const StaffList: FC<IProps> = (_props) => {
   return (
     <>
       <div>
-        <h1>登录</h1>
+        <h1>员工列表</h1>
       </div>
     </>
   )

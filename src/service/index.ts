@@ -1,6 +1,6 @@
 import { VITE_BASE_URL, TIME_OUT } from './config'
 import ZZRequest from './request'
-import { message } from 'antd'
+import { message,Modal } from 'antd'
 import { IResponseData } from '@/api/type'
 
 const createRequest = (baseURL: string, headers: any) => {
@@ -33,7 +33,9 @@ const createRequest = (baseURL: string, headers: any) => {
             }
           // 登录过期
           case 400:
+            // 跳转登录页面
             message.error(res.msg || '登录过期')
+            window.location.href = '/login'
             return {
               success: false,
               data: res.data,

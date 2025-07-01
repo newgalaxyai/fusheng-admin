@@ -2,7 +2,7 @@ import type { RouteObject } from 'react-router-dom'
 
 export type IRoute = RouteObject & {
   name: string; // 路由名称
-  icon?: React.ReactNode; // 路由图标
+  icon?: React.ComponentType; // 路由图标
   key: string; // 路由key
   parentKey: string; // 父级路由key
   routePath: string; // 路由路径
@@ -25,6 +25,7 @@ export interface IRouteState {
   tabsList: ITabsItem[]; // 标签页列表
   activeKey: string; // 激活标签页key
   routes: IRoute[]; // 路由列表
+  collapsed: boolean; // 侧边栏是否折叠
 }
 
 export interface IThunkRouteState {

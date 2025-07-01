@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo } from 'react';
 import type { MenuProps } from 'antd';
-import { Breadcrumb, ConfigProvider, Layout, Menu, Tabs, theme } from 'antd';
+import { Breadcrumb, ConfigProvider, Layout, Menu, Tabs, theme, Button } from 'antd';
 import { useAppSelector } from '@/hooks/useAppStore';
 import { useRoutesHook } from '@/hooks/useRoutes';
 import { useRoutes } from 'react-router-dom';
+import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 
 // 卡片标签类型
 type TargetKey = React.MouseEvent | React.KeyboardEvent | string;
@@ -11,8 +12,8 @@ type TargetKey = React.MouseEvent | React.KeyboardEvent | string;
 const { Header, Content, Sider } = Layout;
 
 const LayoutComponent: React.FC = () => {
-    const { getMenuItems, getBreadcrumb, removeTab, getRoutes, navigateTo } = useRoutesHook();
-    const { tabsList, activeKey,routes } = useAppSelector(state => state.route);
+    const { getMenuItems, getBreadcrumb, removeTab, getRoutes, navigateTo, setCollapsed } = useRoutesHook();
+    const { tabsList, activeKey, routes, collapsed } = useAppSelector(state => state.route);
     // layout主题token
     const {
         token: { colorBgContainer, borderRadiusLG },
@@ -31,34 +32,46 @@ const LayoutComponent: React.FC = () => {
 
     return (
         <Layout
+            hasSider
             className='layout-component'
         >
-            <Header style={{ display: 'flex', alignItems: 'center' }}>
-                <div className="demo-logo" />
-            </Header>
+            <Sider
+                trigger={null}
+                collapsible
+                collapsed={collapsed}
+                className='layout-sider'
+            >
+                <div className="demo-logo-vertical" />
+                <Menu
+                    theme='dark'
+                    mode="inline"
+                    selectedKeys={[activeKey]}
+                    style={{ height: '100%', borderRight: 0 }}
+                    items={menuItems}
+                    onSelect={(e) => {
+                        navigateTo(e.key);
+                    }}
+                />
+            </Sider>
             <Layout>
-                <Sider
-                    breakpoint="lg"
-                    collapsedWidth="0"
-                    onBreakpoint={(broken) => {
-                        console.log(broken);
-                    }}
-                    onCollapse={(collapsed, type) => {
-                        console.log(collapsed, type);
-                    }}
-                    style={{ background: colorBgContainer }}
+                <Header
+                    className='layout-header'
+                    style={{ background: colorBgContainer, padding: 0 }}
                 >
-                    <Menu
-                        mode="inline"
-                        selectedKeys={[activeKey]}
-                        style={{ height: '100%', borderRight: 0 }}
-                        items={menuItems}
-                        onSelect={(e) => {
-                            navigateTo(e.key);
+                    <Button
+                        type="text"
+                        icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                        onClick={() => setCollapsed(!collapsed)}
+                        style={{
+                            fontSize: '16px',
+                            width: 64,
+                            height: 64,
                         }}
                     />
-                </Sider>
-                <Layout style={{ padding: '0 24px 24px' }}>
+                </Header>
+                <div
+                    className='layout-tabs'
+                >
                     {
                         tabsList.length > 0 && (
                             <ConfigProvider
@@ -89,11 +102,12 @@ const LayoutComponent: React.FC = () => {
                         items={getBreadcrumb(routes, activeKey, [])}
                         style={{ margin: '16px 0' }}
                     />
+                </div>
+                <Layout style={{ padding: '0 24px 24px' }}>
                     <Content
+                        className='layout-content'
                         style={{
-                            padding: 24,
-                            margin: 0,
-                            minHeight: 280,
+                            padding: 10,
                             background: colorBgContainer,
                             borderRadius: borderRadiusLG,
                         }}

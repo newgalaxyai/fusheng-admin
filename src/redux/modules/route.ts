@@ -1,11 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { IRouteState } from '../types/route'
+import { HomeOutlined, UserOutlined, UnorderedListOutlined } from '@ant-design/icons';
 
 const initialState: IRouteState = {
   // 路由列表
   routes: [
     {
       name: '首页',
+      icon: HomeOutlined,
       key: 'home',
       routePath: '/home',
       closable: false,
@@ -18,6 +20,7 @@ const initialState: IRouteState = {
     // 员工管理
     {
       name: '员工管理',
+      icon: UserOutlined,
       key: 'staffManage',
       routePath: '/staffManage',
       closable: true,
@@ -29,6 +32,7 @@ const initialState: IRouteState = {
     },
     {
       name: '员工列表',
+      icon: UnorderedListOutlined,
       key: 'staffList',
       routePath: '/staffManage/staffList',
       closable: true,
@@ -60,6 +64,8 @@ const initialState: IRouteState = {
   ],
   // 激活标签
   activeKey: '',
+  // 侧边栏是否折叠
+  collapsed: false,
 }
 
 const routeSlice = createSlice({
@@ -83,19 +89,6 @@ const routeSlice = createSlice({
           // 设置激活标签
           state.activeKey = data.key
           break
-        case 'remove':
-          // 获取要移除的标签索引
-          const targetIndex = state.tabsList.findIndex(item => item.key === data)
-          // 移除标签
-          const newTabsList = state.tabsList.filter(item => item.key !== data)
-          // 更新标签列表
-          state.tabsList = newTabsList
-          // 如果移除的标签是当前激活的标签，则切换到上一个标签
-          if (newTabsList.length && data === state.activeKey) {
-            const { key } = newTabsList[targetIndex === newTabsList.length ? targetIndex - 1 : targetIndex]
-            state.activeKey = key
-          }
-          break
         default:
           break
       }
@@ -107,8 +100,15 @@ const routeSlice = createSlice({
           break
       }
     },
+    collapsedAction: (state, { payload: { type, data } }) => {
+      switch (type) {
+        case 'set':
+          state.collapsed = data
+          break
+      }
+    },
   }
 })
 
-export const { tabsListAction, activeKeyAction } = routeSlice.actions
+export const { tabsListAction, activeKeyAction, collapsedAction } = routeSlice.actions
 export default routeSlice.reducer
