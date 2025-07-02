@@ -2,7 +2,7 @@ import { VITE_BASE_URL, TIME_OUT } from './config'
 import ZZRequest from './request'
 import { message } from 'antd'
 import { IResponseData } from '@/api/type'
-import { refreshTokenAPI } from '@/utils/auth'
+import { refreshToken } from '@/utils/auth'
 import { getToken, removeToken } from '@/utils/storge'
 
 // 是否正在刷新token
@@ -34,7 +34,7 @@ const handleTokenRefresh = async (originalRequest: any) => {
     // 开始刷新token
     isRefreshToken = true
 
-    refreshTokenAPI()
+    refreshToken()
       .then((newToken) => {
         // 刷新成功，处理等待队列中的所有请求
         console.log('Token刷新成功，重试等待队列中的请求')
