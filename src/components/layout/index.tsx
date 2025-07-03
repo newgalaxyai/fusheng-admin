@@ -34,15 +34,16 @@ const LayoutComponent: React.FC = () => {
         <Layout
             hasSider
             className='layout-component'
-            style={{
-                // 首页设置最大高度
-                maxHeight: activeKey !== 'home' ? '' : '100vh',
-            }}
+        // style={{
+        //     // 首页设置最大高度
+        //     maxHeight: activeKey !== 'home' ? '' : '100vh',
+        // }}
         >
             {/* 侧边栏 */}
             <Sider
                 // 首页显示侧边栏底部折叠按钮
-                trigger={activeKey !== 'home' && null}
+                // trigger={activeKey !== 'home' && null}
+                trigger={null}
                 collapsible
                 collapsed={collapsed}
                 onCollapse={(value) => {
@@ -55,6 +56,7 @@ const LayoutComponent: React.FC = () => {
                 <Menu
                     theme='dark'
                     mode="inline"
+                    defaultSelectedKeys={[activeKey]}
                     selectedKeys={[activeKey]}
                     style={{ height: '100%', borderRight: 0 }}
                     items={menuItems}
@@ -66,7 +68,8 @@ const LayoutComponent: React.FC = () => {
             <Layout>
                 {/* 首页不显示头部 */}
                 {
-                    activeKey !== 'home' && (
+                    // activeKey !== 'home' && (
+                    activeKey !== '' && (
                         <>
                             {/* 顶部 */}
                             <Header
@@ -103,6 +106,7 @@ const LayoutComponent: React.FC = () => {
                                             <Tabs
                                                 hideAdd
                                                 onChange={(key) => {
+                                                    // console.log('key', key);
                                                     navigateTo(key);
                                                 }}
                                                 activeKey={activeKey}
@@ -127,13 +131,16 @@ const LayoutComponent: React.FC = () => {
                 <Layout
                     style={{
                         // 首页四周都显示padding
-                        padding: activeKey !== 'home' ? '0 24px 24px' : '24px'
-                    }}>
+                        // padding: activeKey !== 'home' ? '0 24px 24px' : '24px'
+                        padding: '0 24px 24px'
+                    }}
+                    >
                     <Content
                         className='layout-content'
                         style={{
                             // 首页内容区域添加滚动条
-                            overflow: activeKey !== 'home' ? 'initial' : 'auto',
+                            // overflow: activeKey !== 'home' ? 'initial' : 'auto',
+                            overflow: 'initial',
                             padding: 10,
                             background: colorBgContainer,
                             borderRadius: borderRadiusLG,

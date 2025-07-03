@@ -5,13 +5,13 @@ export type IRoute = RouteObject & {
   icon?: React.ComponentType; // 路由图标
   key: string; // 路由key
   parentKey: string; // 父级路由key
-  routePath: string; // 路由路径
-  elementPath: string; // 路由组件路径
-  hideInMenu: boolean; // 是否在菜单中隐藏
-  closable: boolean; // 标签页是否可关闭
-  redirect?: string; // 重定向路径
-  order?: number; // 路由排序
-  permission?: string; // 权限标识
+  routePath?: string; // 路由路径
+  elementPath?: string; // 路由组件路径
+  hideInMenu?: boolean; // 是否在侧边栏中隐藏
+  order: number; // 路由排序
+  requiredRole: number; // 所需角色标识
+  requiredPermission: string; // 所需权限标识
+  type: number; // 路由类型 1: 目录 2: 菜单 3: 按钮
 };
 
 export type ITabsItem = {
@@ -27,6 +27,7 @@ export interface IRouteState {
   routes: IRoute[]; // 路由列表
   collapsed: boolean; // 侧边栏是否折叠
   isLogin: boolean | null; // 是否登录
+  isNotFound: boolean; // 是否未找到页面
 }
 
 export interface IThunkRouteState {
