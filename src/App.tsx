@@ -6,18 +6,10 @@ import { Route, Routes, Navigate, useRoutes, useLocation } from 'react-router-do
 import { Spin } from 'antd'
 import { LOGIN_TOKEN_NAME } from '@/utils/constants'
 import Login from '@/views/Login'
-import originalRoutes from "@/router";
 import NotFound from '@/views/NotFound';
 import Reset from '@/views/Reset';
 import { useRoutesHook } from './hooks/useRoutes';
-
-const OriginalPages: FC = () => {
-  return (
-    <>
-      {useRoutes(originalRoutes)}
-    </>
-  )
-}
+import publicRoutes from './router'
 
 function App() {
   const { isLogin, isNotFound, routes } = useAppSelector(state => state.route);
@@ -30,6 +22,15 @@ function App() {
   // 获取路由
   const location = useLocation();
   useEffect(() => {
+    // 如果路由地址为公共路由，则不进行路由处理
+    if (publicRoutes.some(item => item.path === location.pathname)) {
+      const route = publicRoutes.find(item => item.path === location.pathname)!;
+      if (route.type > 0) {
+        // 设置当前激活的菜单、标签页和面包屑
+        addTab(route);
+      }
+      return;
+    }
     // 根据路由地址获取路由信息
     const keyList = location.pathname.split('/');
     const route = getCurrentRoute(keyList.slice(1), routes.filter(item => item.parentKey === ''), null);
@@ -51,18 +52,23 @@ function App() {
     }
     if (isLogin) {
       if (isNotFound) {
-        return <OriginalPages />
+        return (
+          <Routes>
+            <Route path="*" element={<Navigate to="/404" />} />
+            <Route path="/" element={<Navigate to="/404" />} />
+            <Route path="/404" element={<NotFound />} />
+          </Routes>
+        )
       } else {
         return <LayoutComponent />
       }
     } else {
       return (
         <Routes>
-          <Route path="*" element={<Navigate to="/404" />} />
-          <Route path="/404" element={<NotFound />} />
+          <Route path="*" element={<Navigate to="/login" />} />
+          <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/login" element={<Login />} />
           <Route path="/resetPassword" element={<Reset />} />
-          <Route path="/" element={<Navigate to="/login" />} />
         </Routes>
       )
     }

@@ -25,6 +25,10 @@ export const useRoutesHook = () => {
 
   // 跳转路由
   const navigateTo = (key: string) => {
+    if (originalRoutes.some(item => item.key === key)) {
+      navigate(originalRoutes.find(item => item.key === key)!.path!);
+      return;
+    }
     const route = routes.find(item => item.key === key);
     if (route) {
       const path = getRoutePath(key, routes.filter(item => item.key === key));
@@ -93,9 +97,6 @@ export const useRoutesHook = () => {
 
   // 设置未找到页面
   const setIsNotFound = (isNotFound: boolean) => {
-    if (isNotFound) {
-      navigate('/404');
-    }
     dispatch(isNotFoundAction({ type: 'set', data: isNotFound }))
   }
 
@@ -105,7 +106,7 @@ export const useRoutesHook = () => {
       if (route.parentKey === parentKey) {
         result.push({
           // id: route.key,
-          path: route.routePath,
+          path: route.path,
           element: route.elementPath ? Lazy(() => {
             const importPath = route.elementPath?.replace('@/', '../') || '';
             return import(/* @vite-ignore */ importPath)
@@ -116,9 +117,17 @@ export const useRoutesHook = () => {
     }
     return result;
   }
-
   // 一维数组转多维菜单
   const getMenuItems = (routes: IRoute[], parentKey: string, result: MenuProps['items'] = []) => {
+    // 暂时只有首页所以简单配置
+    if (parentKey === '' && result.length === 0) {
+      result = originalRoutes.filter(item => item.type > 0).map(item => ({
+        key: item.key,
+        label: item.name,
+        icon: item.icon as React.ReactNode,
+      }));
+    }
+
     for (const route of routes) {
       if (route.parentKey === parentKey) {
         if (!route.hideInMenu) {
@@ -142,7 +151,7 @@ export const useRoutesHook = () => {
     for (const route of routes) {
       if (route.key === currentKey) {
         result.unshift({
-          title: route.name,
+          title: route.name!,
           key: route.key,
         })
         getBreadcrumb(routes, route.parentKey, result)

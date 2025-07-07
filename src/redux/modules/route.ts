@@ -1,23 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { IRouteState } from '../types/route'
-import { HomeOutlined, UserOutlined } from '@ant-design/icons';
+import { UserOutlined } from '@ant-design/icons';
 
 const initialState: IRouteState = {
   // 路由列表
   routes: [
-    {
-      name: '首页',
-      icon: HomeOutlined,
-      key: 'home',
-      parentKey: '',
-      routePath: '/home',
-      elementPath: '@/views/Home',
-      hideInMenu: false,
-      order: 0,
-      requiredRole: 2, // 普通用户
-      requiredPermission: ':home', // 首页
-      type: 2,
-    },
     // 员工管理
     {
       name: '员工管理',
@@ -25,8 +12,8 @@ const initialState: IRouteState = {
       key: 'staffManage',
       parentKey: '',
       hideInMenu: false,
-      routePath: '/staffManage',
-      requiredRole: 1, // 管理员
+      path: '/staffManage',
+      requiredRole: ['super'],
       requiredPermission: ':staff:manage',  // 员工管理
       order: 1,
       type: 1,
@@ -35,10 +22,10 @@ const initialState: IRouteState = {
       name: '员工列表',
       key: 'staffList',
       parentKey: 'staffManage',
-      routePath: 'staffList',
+      path: 'staffList',
       hideInMenu: false,
       elementPath: '@/views/Staff/StaffList',
-      requiredRole: 1, // 管理员
+      requiredRole: ['super'],
       requiredPermission: ':staff:manage:list',  // 员工列表
       order: 1,
       type: 2,
@@ -47,7 +34,7 @@ const initialState: IRouteState = {
       name: '新增员工按钮',
       key: 'addStaffBtn',
       parentKey: 'staffList',
-      requiredRole: 1, // 管理员
+      requiredRole: ['super'],
       requiredPermission: ':staff:manage:list:add',  // 新增员工
       order: 3,
       type: 3,
@@ -55,11 +42,11 @@ const initialState: IRouteState = {
     {
       name: '新增员工',
       key: 'addStaff',
-      routePath: 'addStaff',
+      path: 'addStaff',
       elementPath: '@/views/Staff/AddOrEdit',
       parentKey: 'staffList',
       hideInMenu: true,
-      requiredRole: 1, // 管理员
+      requiredRole: ['super'],
       requiredPermission: ':staff:manage:list:add',  // 新增员工
       order: 1,
       type: 2,
@@ -68,7 +55,7 @@ const initialState: IRouteState = {
       name: '编辑员工按钮',
       key: 'editStaffBtn',
       parentKey: 'staffList',
-      requiredRole: 1, // 管理员
+      requiredRole: ['super'],
       requiredPermission: ':staff:manage:list:edit',  // 编辑员工
       order: 4,
       type: 3,
@@ -76,11 +63,11 @@ const initialState: IRouteState = {
     {
       name: '编辑员工',
       key: 'editStaff',
-      routePath: 'editStaff',
+      path: 'editStaff',
       elementPath: '@/views/Staff/AddOrEdit',
       parentKey: 'staffList',
       hideInMenu: true,
-      requiredRole: 1, // 管理员
+      requiredRole: ['super'],
       requiredPermission: ':staff:manage:list:edit',  // 编辑员工
       order: 2,
       type: 2,

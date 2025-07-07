@@ -1,16 +1,16 @@
 import type { RouteObject } from 'react-router-dom'
 
 export type IRoute = RouteObject & {
-  name: string; // 路由名称
-  icon?: React.ComponentType; // 路由图标
+  name?: string; // 路由名称
+  icon?: React.ComponentType | React.ReactNode; // 路由图标
   key: string; // 路由key
   parentKey: string; // 父级路由key
-  routePath?: string; // 路由路径
+  path?: string; // 路由路径
   elementPath?: string; // 路由组件路径
   hideInMenu?: boolean; // 是否在侧边栏中隐藏
   order: number; // 路由排序
-  requiredRole: number; // 所需角色标识
-  requiredPermission: string; // 所需权限标识
+  requiredRole?: string[]; // 所需角色标识
+  requiredPermission?: string; // 所需权限标识
   type: number; // 路由类型 1: 目录 2: 菜单 3: 按钮
 };
 

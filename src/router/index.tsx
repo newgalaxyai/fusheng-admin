@@ -1,26 +1,38 @@
+import { Navigate } from 'react-router-dom'
 import Lazy from './lazy'
-import { RouteObject, Navigate, Outlet } from 'react-router-dom'
+import { IRoute } from '@/redux/types/route'
+import { HomeOutlined } from '@ant-design/icons'
 
-const routes: RouteObject[] = [
+const routes: IRoute[] = [
   {
+    key: 'notFound',
+    parentKey: '',
+    order: -1,
+    type: -1,
     path: '*',
-    element: <Navigate to="/404" />
+    hideInMenu: true,
+    element: <Navigate to="/" replace />
   },
   {
-    path: '/404',
-    element: Lazy(() => /* @vite-ignore */ import('@/views/NotFound'))
-  },
-  {
-    path: '/login',
-    element: Lazy(() => /* @vite-ignore */ import('@/views/Login'))
-  },
-  {
-    path: '/resetPassword',
-    element: Lazy(() => /* @vite-ignore */ import('@/views/Reset'))
-  },
-  {
+    key: 'notFound',
+    parentKey: '',
+    order: -1,
+    type: -1,
     path: '/',
+    hideInMenu: true,
     element: <Navigate to="/home" replace />
+  },
+  // 首页
+  {
+    name: '首页',
+    key: 'home',
+    icon: <HomeOutlined />,
+    parentKey: '',
+    order: 0,
+    type: 2,
+    hideInMenu: false,
+    path: '/home',
+    element: Lazy(() => import('@/views/Home'))
   },
 ]
 
