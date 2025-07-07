@@ -160,7 +160,7 @@ export const useRoutesHook = () => {
         result = getCurrentRoute(keyList.slice(1), routes.filter(item => item.parentKey === route.key), route);
       }
     }
-    if (!result?.elementPath) {
+    if (result?.type !== 2) {
       return null;
     }
     return result;

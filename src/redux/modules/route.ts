@@ -16,7 +16,7 @@ const initialState: IRouteState = {
       order: 0,
       requiredRole: 2, // 普通用户
       requiredPermission: ':home', // 首页
-      type: 1,
+      type: 2,
     },
     // 员工管理
     {

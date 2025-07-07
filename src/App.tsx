@@ -35,7 +35,6 @@ function App() {
       setIsNotFound(true);
       return;
     }
-    // console.log(location);
     // 根据路由地址获取路由信息
     const keyList = location.pathname.split('/');
     const route = getCurrentRoute(keyList.slice(1), routes.filter(item => item.parentKey === ''), null);
