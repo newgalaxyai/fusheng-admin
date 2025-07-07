@@ -1,30 +1,47 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, FC } from 'react'
 import { Suspense } from 'react'
-import { useRoutesHook } from '@/hooks/useRoutes'
 import LayoutComponent from '@/components/layout'
 import { useAppSelector } from '@/hooks/useAppStore'
-import { Route, Routes, useLocation, Navigate } from 'react-router-dom'
+import { Route, Routes, Navigate, useRoutes, useLocation } from 'react-router-dom'
 import { Spin } from 'antd'
 import { LOGIN_TOKEN_NAME } from '@/utils/constants'
 import Login from '@/views/Login'
+import originalRoutes from "@/router";
+import NotFound from '@/views/NotFound';
+import Reset from '@/views/Reset';
+import { useRoutesHook } from './hooks/useRoutes';
+
+const OriginalPages: FC = () => {
+  return (
+    <>
+      {useRoutes(originalRoutes)}
+    </>
+  )
+}
 
 function App() {
-  const { routes, isLogin } = useAppSelector(state => state.route);
-  const { addTab, setLoginStatus } = useRoutesHook();
+  const { isLogin, isNotFound, routes } = useAppSelector(state => state.route);
+  const { addTab, getCurrentRoute, setIsNotFound } = useRoutesHook();
   // 获取登录状态，初始化设置redux中的登录状态
-  useEffect(() => {
-    const loginStatus = localStorage.getItem(LOGIN_TOKEN_NAME);
-    setLoginStatus(loginStatus == null ? false : true);
-  }, []);
+  // useEffect(() => {
+  //   const loginStatus = localStorage.getItem(LOGIN_TOKEN_NAME);
+  //   setLoginStatus(loginStatus == null ? false : true);
+  // }, []);
   // 获取路由
   const location = useLocation();
   useEffect(() => {
+    if (location.pathname === '/404') {
+      setIsNotFound(true);
+    }
+    // console.log(location);
     // 根据路由地址获取路由信息
-    const route = routes.find(item => item.routePath === location.pathname);
+    const keyList = location.pathname.split('/');
+    const route = getCurrentRoute(keyList.slice(1), routes.filter(item => item.parentKey === ''), null);
+    // console.log('route', route);
     if (route) {
       addTab(route);
     }
-  }, [location.pathname, routes, addTab]);
+  }, [location.pathname, routes, addTab, getCurrentRoute]);
 
   // 获取渲染内容
   // 如果isLogin为null，则显示加载中
@@ -34,11 +51,25 @@ function App() {
     if (isLogin === null) {
       return <div><Spin spinning={true} fullscreen /></div>
     }
-    return isLogin ? <LayoutComponent /> : <Routes>
-      <Route path="*" element={<Navigate to="/login" />} />
-      <Route path="/login" element={<Login />} />
-    </Routes>
-  }, [isLogin]);
+    if (isLogin) {
+      if (isNotFound) {
+        console.log('isNotFound');
+        return <OriginalPages />
+      } else {
+        return <LayoutComponent />
+      }
+    } else {
+      return (
+        <Routes>
+          <Route path="*" element={<Navigate to="/404" />} />
+          <Route path="/404" element={<NotFound />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/resetPassword" element={<Reset />} />
+          <Route path="/" element={<Navigate to="/login" />} />
+        </Routes>
+      )
+    }
+  }, [isLogin, isNotFound]);
 
   return (
     <>

@@ -16,6 +16,7 @@ import {
 import { Button, Divider, Space, Tabs, message, theme } from 'antd';
 import type { CSSProperties } from 'react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 type LoginType = 'phone' | 'account';
 
@@ -29,14 +30,14 @@ const iconStyles: CSSProperties = {
 const Page = () => {
   const [loginType, setLoginType] = useState<LoginType>('phone');
   const { token } = theme.useToken();
+  const navigate = useNavigate();
   return (
-    <div
-      style={{
-        backgroundColor: 'white',
-        height: '100vh',
-      }}
-    >
       <LoginFormPage
+        style={{
+          minHeight: '100%',
+          height: 'max-content',
+          alignItems: 'center',
+        }}
         // 表单提交
         onFinish={async (values) => {
           console.log('onFinish', values);
@@ -57,7 +58,7 @@ const Page = () => {
         //     success: true,
         //   };
         // }}
-        backgroundImageUrl="https://mdn.alipayobjects.com/huamei_gcee1x/afts/img/A*y0ZTS6WLwvgAAAAAAAAAAAAADml6AQ/fmt.webp"
+        // backgroundImageUrl="https://mdn.alipayobjects.com/huamei_gcee1x/afts/img/A*y0ZTS6WLwvgAAAAAAAAAAAAADml6AQ/fmt.webp"
         // logo="https://github.githubassets.com/favicons/favicon.png"
         backgroundVideoUrl="https://gw.alipayobjects.com/v/huamei_gcee1x/afts/video/jXRBRK_VAwoAAAAAAAAAAAAAK4eUAQBr"
         title="Galaxy AI"
@@ -290,16 +291,19 @@ const Page = () => {
           <ProFormCheckbox noStyle name="autoLogin">
             自动登录
           </ProFormCheckbox>
-          <a
+          <Button
+            type="link"
             style={{
               float: 'right',
             }}
+            onClick={() => {
+              navigate('/resetPassword')
+            }}
           >
             忘记密码
-          </a>
+          </Button>
         </div>
       </LoginFormPage>
-    </div>
   );
 };
 

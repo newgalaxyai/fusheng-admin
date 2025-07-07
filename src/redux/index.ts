@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 import routeReducer from './modules/route'
 import exampleReducer from './modules/example'
+import userReducer from './modules/user'
 
 const store = configureStore({
   reducer: {
     route: routeReducer,
-    example: exampleReducer
+    example: exampleReducer,
+    user: userReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

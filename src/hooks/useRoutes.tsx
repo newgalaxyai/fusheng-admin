@@ -1,12 +1,13 @@
 import { useAppDispatch, useAppSelector } from "./useAppStore";
 import type { IRoute } from "@/redux/types/route";
-import { tabsListAction, collapsedAction, activeKeyAction, isLoginAction } from "@/redux/modules/route";
-import { useNavigate, type RouteObject } from "react-router-dom";
+import { tabsListAction, collapsedAction, activeKeyAction, isLoginAction, isNotFoundAction } from "@/redux/modules/route";
+import { useNavigate, type RouteObject, Outlet, useLocation } from "react-router-dom";
 import Lazy from "@/router/lazy";
 import originalRoutes from "@/router";
 import type { MenuProps } from "antd";
 import Icon from "@ant-design/icons";
 import type { GetProps } from "antd";
+import { usePermissionCheck } from "./usePermission";
 
 export type IBreadcrumb = {
   title: string
@@ -17,15 +18,50 @@ type CustomIconComponentProps = GetProps<typeof Icon>;
 
 export const useRoutesHook = () => {
   const { routes, tabsList, activeKey } = useAppSelector(state => state.route);
+  const { hasRole } = usePermissionCheck();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   // 跳转路由
   const navigateTo = (key: string) => {
     const route = routes.find(item => item.key === key);
     if (route) {
-      navigate(route.routePath);
+      const path = getRoutePath(key, routes.filter(item => item.key === key));
+      navigate(path);
     }
+
+    // 如果路由存在
+    // if (route) {
+    //   // 获取当前路径的列表
+    //   const pathList = location.pathname.split('/');
+    //   // 获取当前路径的key索引
+    //   const keyIndex = pathList.findIndex(item => item === key);
+    //   // 获取父级key
+    //   const parentKey = route.parentKey;
+    //   if (parentKey === '') {
+    //     navigate('/' + key);
+    //     return;
+    //   }
+    //   // 获取当前路径的父级key索引
+    //   const parentKeyIndex = pathList.findIndex(item => item === route.parentKey);
+    //   // 如果当前路径的key索引和父级key索引都为-1，则说明当前路径不存在，需要跳转
+    //   if (keyIndex === -1 && parentKeyIndex === -1) {
+    //     // 获取当前key的路径
+    //     const path = getRoutePath(key, routes.filter(item => item.key === key));
+    //     // 跳转
+    //     navigate(path);
+    //     return;
+    //   } else 
+    //   // 如果当前路径的key为-1，父级路径key不为-1，则跳转到当前路径
+    //   if (keyIndex === -1 && parentKeyIndex !== -1) {
+    //     // 直接跳转
+    //     navigate(key);
+    //     return;
+    //   }
+
+    //   // 如果当前路径在末尾，则跳转到父级路径
+    // }
   }
 
   // 设置登录状态
@@ -55,19 +91,24 @@ export const useRoutesHook = () => {
     dispatch(collapsedAction({ type: 'set', data: collapsed }))
   }
 
-  // 一维数组转多维路由
+  // 设置未找到页面
+  const setIsNotFound = (isNotFound: boolean) => {
+    dispatch(isNotFoundAction({ type: 'set', data: isNotFound }))
+  }
+
+  // 数组转路由
   const getRoutes = (routes: IRoute[], parentKey: string, result: RouteObject[]) => {
     for (const route of routes) {
       if (route.parentKey === parentKey) {
         result.push({
-          path: route.parentKey === '' ? '/' + route.key : route.key,
-          element: route.elementPath !== '' ? Lazy(() => {
-            // 将路径别名 @ 转换为相对路径
-            const importPath = route.elementPath.replace('@/', '../');
-            return import(/* @vite-ignore */ importPath);
+          // id: route.key,
+          path: route.routePath,
+          element: route.elementPath ? Lazy(() => {
+            const importPath = route.elementPath?.replace('@/', '../') || '';
+            return import(/* @vite-ignore */ importPath)
           }) : null,
           children: getRoutes(routes, route.key, []),
-        });
+        })
       }
     }
     return result;
@@ -108,17 +149,49 @@ export const useRoutesHook = () => {
     return result;
   }
 
+  // 获取当前地址的路由
+  const getCurrentRoute = (keyList: string[], realRoutes: IRoute[], result: IRoute | null): IRoute | null => {
+    const route = realRoutes.find(item => item.key === keyList[0]);
+    // console.log('route', route);
+    if (route) {
+      if (keyList.length === 1) {
+        result = route;
+      } else {
+        result = getCurrentRoute(keyList.slice(1), routes.filter(item => item.parentKey === route.key), route);
+      }
+    }
+    return result;
+  }
+
+  // 获取制定key的路由地址
+  const getRoutePath = (key: string, realRoutes: IRoute[], result: string = '') => {
+    const route = realRoutes.find(item => item.key === key);
+    if (route) {
+      if (route.parentKey !== '') {
+        result = getRoutePath(route.parentKey, routes.filter(item => item.key === route.parentKey), '/' + route.key + result);
+      } else {
+        result = '/' + route.key + result;
+      }
+    }
+    return result;
+  }
+
+  // console.log('getRoutes', getRoutes(routes.filter(item => item.type !== 3 && hasRole(item.requiredRole)), '', []));
+
   return {
     getRoutes: [
       ...originalRoutes,
-      ...getRoutes(routes, '', [])
+      ...getRoutes(routes.filter(item => item.type !== 3 && hasRole(item.requiredRole)), '', []),
     ],
-    getMenuItems: getMenuItems(routes, '', []),
+    getMenuItems: getMenuItems(routes.filter(item => item.type !== 3 && hasRole(item.requiredRole)), '', []),
     addTab,
     removeTab,
     getBreadcrumb,
     navigateTo,
     setCollapsed,
     setLoginStatus,
+    setIsNotFound,
+    getCurrentRoute,
+    getRoutePath,
   };
 }

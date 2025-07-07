@@ -1,14 +1,14 @@
 import React from 'react'
 import type { FC, ReactNode } from 'react'
 import { Result, Button } from 'antd'
-import { useNavigate } from 'react-router-dom'
+import { useRoutesHook } from '@/hooks/useRoutes'
 
 interface IProps {
   children?: ReactNode
 }
 
 const NotFound: FC<IProps> = (_props) => {
-  const navigate = useNavigate();
+  const { setIsNotFound, navigateTo } = useRoutesHook();
   return (
     <>
       <Result
@@ -18,7 +18,8 @@ const NotFound: FC<IProps> = (_props) => {
         extra={<Button
           type="primary"
           onClick={() => {
-            navigate('/home')
+            setIsNotFound(false);
+            navigateTo('home')
           }}
         >
           返回首页

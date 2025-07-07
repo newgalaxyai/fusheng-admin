@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { IRouteState } from '../types/route'
-import { HomeOutlined, UserOutlined, UnorderedListOutlined } from '@ant-design/icons';
+import { HomeOutlined, UserOutlined } from '@ant-design/icons';
 
 const initialState: IRouteState = {
   // 路由列表
@@ -9,50 +9,82 @@ const initialState: IRouteState = {
       name: '首页',
       icon: HomeOutlined,
       key: 'home',
-      routePath: '/home',
-      closable: false,
-      elementPath: '@/views/Home',
       parentKey: '',
+      routePath: '/home',
+      elementPath: '@/views/Home',
       hideInMenu: false,
-      permission: 'user',
       order: 0,
+      requiredRole: 2, // 普通用户
+      requiredPermission: ':home', // 首页
+      type: 1,
     },
     // 员工管理
     {
       name: '员工管理',
       icon: UserOutlined,
       key: 'staffManage',
-      routePath: '/staffManage',
-      closable: true,
-      elementPath: '',
       parentKey: '',
       hideInMenu: false,
-      permission: 'user',
+      routePath: '/staffManage',
+      requiredRole: 1, // 管理员
+      requiredPermission: ':staff:manage',  // 员工管理
       order: 1,
+      type: 1,
     },
     {
       name: '员工列表',
-      icon: UnorderedListOutlined,
       key: 'staffList',
-      routePath: '/staffManage/staffList',
-      closable: true,
-      elementPath: '@/views/Staff/StaffList',
       parentKey: 'staffManage',
+      routePath: 'staffList',
       hideInMenu: false,
-      permission: 'user',
+      elementPath: '@/views/Staff/StaffList',
+      requiredRole: 1, // 管理员
+      requiredPermission: ':staff:manage:list',  // 员工列表
       order: 1,
+      type: 2,
     },
     {
-      name: '新增/编辑',
-      key: 'addOrEdit',
-      routePath: '/staffManage/addOrEdit/:id?',
-      closable: true,
+      name: '新增员工',
+      key: 'addStaff',
+      routePath: 'addStaff',
       elementPath: '@/views/Staff/AddOrEdit',
-      parentKey: 'staffManage',
+      parentKey: 'staffList',
       hideInMenu: true,
-      permission: 'admin',
+      requiredRole: 1, // 管理员
+      requiredPermission: ':staff:manage:list:add',  // 新增员工
+      order: 1,
+      type: 2,
+    },
+    {
+      name: '编辑员工',
+      key: 'editStaff',
+      routePath: 'editStaff',
+      elementPath: '@/views/Staff/AddOrEdit',
+      parentKey: 'staffList',
+      hideInMenu: true,
+      requiredRole: 1, // 管理员
+      requiredPermission: ':staff:manage:list:edit',  // 编辑员工
       order: 2,
-    }
+      type: 2,
+    },
+    {
+      name: '新增员工按钮',
+      key: 'addStaffBtn',
+      parentKey: 'staffList',
+      requiredRole: 1, // 管理员
+      requiredPermission: ':staff:manage:list:add',  // 新增员工
+      order: 3,
+      type: 3,
+    },
+    {
+      name: '编辑员工按钮',
+      key: 'editStaffBtn',
+      parentKey: 'staffList',
+      requiredRole: 1, // 管理员
+      requiredPermission: ':staff:manage:list:edit',  // 编辑员工
+      order: 4,
+      type: 3,
+    },
   ],
   // 标签列表
   tabsList: [
@@ -63,11 +95,13 @@ const initialState: IRouteState = {
     }
   ],
   // 激活标签
-  activeKey: '',
+  activeKey: 'home',
   // 侧边栏是否折叠
   collapsed: false,
   // 是否登录
-  isLogin: null,
+  isLogin: true,
+  // 是否未找到页面
+  isNotFound: false,
 }
 
 const routeSlice = createSlice({
@@ -85,7 +119,7 @@ const routeSlice = createSlice({
             state.tabsList.push({
               key: data.key,
               label: data.name,
-              closable: data.closable,
+              closable: data.type === 2 ? true : false,
             })
           }
           // 设置激活标签
@@ -116,8 +150,15 @@ const routeSlice = createSlice({
           break
       }
     },
+    isNotFoundAction: (state, { payload: { type, data } }) => {
+      switch (type) {
+        case 'set':
+          state.isNotFound = data
+          break
+      }
+    },
   }
 })
 
-export const { tabsListAction, activeKeyAction, collapsedAction, isLoginAction } = routeSlice.actions
+export const { tabsListAction, activeKeyAction, collapsedAction, isLoginAction, isNotFoundAction } = routeSlice.actions
 export default routeSlice.reducer
