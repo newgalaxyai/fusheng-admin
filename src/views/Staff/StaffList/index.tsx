@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import type { FC, ReactNode } from 'react'
-import { Result, Button } from 'antd'
+import { Button } from 'antd'
 import { Outlet, useLocation } from 'react-router-dom'
 import { usePermissionCheck } from '@/hooks/usePermission'
 import { useAppSelector } from '@/hooks/useAppStore'

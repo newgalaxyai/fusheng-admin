@@ -122,7 +122,7 @@ export const useRoutesHook = () => {
           result.push({
             key: route.key,
             label: route.name,
-            icon: <Icon component={route.icon as CustomIconComponentProps['component']} />,
+            icon: route.icon ? <Icon component={route.icon as CustomIconComponentProps['component']} /> : null,
             children: getMenuItems(routes, route.key, []).length === 0 ? undefined : getMenuItems(routes, route.key, []),
           });
         }
@@ -159,6 +159,9 @@ export const useRoutesHook = () => {
       } else {
         result = getCurrentRoute(keyList.slice(1), routes.filter(item => item.parentKey === route.key), route);
       }
+    }
+    if (!result?.elementPath) {
+      return null;
     }
     return result;
   }

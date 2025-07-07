@@ -44,6 +44,15 @@ const initialState: IRouteState = {
       type: 2,
     },
     {
+      name: '新增员工按钮',
+      key: 'addStaffBtn',
+      parentKey: 'staffList',
+      requiredRole: 1, // 管理员
+      requiredPermission: ':staff:manage:list:add',  // 新增员工
+      order: 3,
+      type: 3,
+    },
+    {
       name: '新增员工',
       key: 'addStaff',
       routePath: 'addStaff',
@@ -56,6 +65,15 @@ const initialState: IRouteState = {
       type: 2,
     },
     {
+      name: '编辑员工按钮',
+      key: 'editStaffBtn',
+      parentKey: 'staffList',
+      requiredRole: 1, // 管理员
+      requiredPermission: ':staff:manage:list:edit',  // 编辑员工
+      order: 4,
+      type: 3,
+    },
+    {
       name: '编辑员工',
       key: 'editStaff',
       routePath: 'editStaff',
@@ -66,24 +84,6 @@ const initialState: IRouteState = {
       requiredPermission: ':staff:manage:list:edit',  // 编辑员工
       order: 2,
       type: 2,
-    },
-    {
-      name: '新增员工按钮',
-      key: 'addStaffBtn',
-      parentKey: 'staffList',
-      requiredRole: 1, // 管理员
-      requiredPermission: ':staff:manage:list:add',  // 新增员工
-      order: 3,
-      type: 3,
-    },
-    {
-      name: '编辑员工按钮',
-      key: 'editStaffBtn',
-      parentKey: 'staffList',
-      requiredRole: 1, // 管理员
-      requiredPermission: ':staff:manage:list:edit',  // 编辑员工
-      order: 4,
-      type: 3,
     },
   ],
   // 标签列表

@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import routeReducer from './modules/route'
 import exampleReducer from './modules/example'
 import userReducer from './modules/user'
+import { IRequest } from '@/api/type'
 
 const store = configureStore({
   reducer: {

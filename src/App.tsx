@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, FC } from 'react'
 import { Suspense } from 'react'
 import LayoutComponent from '@/components/layout'
 import { useAppSelector } from '@/hooks/useAppStore'
-import { Route, Routes, Navigate, useRoutes, useLocation } from 'react-router-dom'
+import { Route, Routes, Navigate, useRoutes, useLocation, useNavigate } from 'react-router-dom'
 import { Spin } from 'antd'
 import { LOGIN_TOKEN_NAME } from '@/utils/constants'
 import Login from '@/views/Login'
@@ -22,6 +22,7 @@ const OriginalPages: FC = () => {
 function App() {
   const { isLogin, isNotFound, routes } = useAppSelector(state => state.route);
   const { addTab, getCurrentRoute, setIsNotFound } = useRoutesHook();
+  const navigate = useNavigate();
   // 获取登录状态，初始化设置redux中的登录状态
   // useEffect(() => {
   //   const loginStatus = localStorage.getItem(LOGIN_TOKEN_NAME);
@@ -32,6 +33,7 @@ function App() {
   useEffect(() => {
     if (location.pathname === '/404') {
       setIsNotFound(true);
+      return;
     }
     // console.log(location);
     // 根据路由地址获取路由信息
@@ -40,8 +42,10 @@ function App() {
     // console.log('route', route);
     if (route) {
       addTab(route);
+    } else {
+      navigate('/404');
     }
-  }, [location.pathname, routes, addTab, getCurrentRoute]);
+  }, [location.pathname]);
 
   // 获取渲染内容
   // 如果isLogin为null，则显示加载中
@@ -53,7 +57,6 @@ function App() {
     }
     if (isLogin) {
       if (isNotFound) {
-        console.log('isNotFound');
         return <OriginalPages />
       } else {
         return <LayoutComponent />
