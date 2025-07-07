@@ -93,6 +93,9 @@ export const useRoutesHook = () => {
 
   // 设置未找到页面
   const setIsNotFound = (isNotFound: boolean) => {
+    if (isNotFound) {
+      navigate('/404');
+    }
     dispatch(isNotFoundAction({ type: 'set', data: isNotFound }))
   }
 

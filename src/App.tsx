@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, FC } from 'react'
 import { Suspense } from 'react'
 import LayoutComponent from '@/components/layout'
 import { useAppSelector } from '@/hooks/useAppStore'
-import { Route, Routes, Navigate, useRoutes, useLocation, useNavigate } from 'react-router-dom'
+import { Route, Routes, Navigate, useRoutes, useLocation } from 'react-router-dom'
 import { Spin } from 'antd'
 import { LOGIN_TOKEN_NAME } from '@/utils/constants'
 import Login from '@/views/Login'
@@ -22,7 +22,6 @@ const OriginalPages: FC = () => {
 function App() {
   const { isLogin, isNotFound, routes } = useAppSelector(state => state.route);
   const { addTab, getCurrentRoute, setIsNotFound } = useRoutesHook();
-  const navigate = useNavigate();
   // 获取登录状态，初始化设置redux中的登录状态
   // useEffect(() => {
   //   const loginStatus = localStorage.getItem(LOGIN_TOKEN_NAME);
@@ -31,10 +30,6 @@ function App() {
   // 获取路由
   const location = useLocation();
   useEffect(() => {
-    if (location.pathname === '/404') {
-      setIsNotFound(true);
-      return;
-    }
     // 根据路由地址获取路由信息
     const keyList = location.pathname.split('/');
     const route = getCurrentRoute(keyList.slice(1), routes.filter(item => item.parentKey === ''), null);
@@ -42,7 +37,7 @@ function App() {
     if (route) {
       addTab(route);
     } else {
-      navigate('/404');
+      setIsNotFound(true);
     }
   }, [location.pathname]);
 
