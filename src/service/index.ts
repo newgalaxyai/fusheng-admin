@@ -64,13 +64,8 @@ const handleTokenRefresh = async (originalRequest: any) => {
         // 清空等待队列
         waitQueue.length = 0
 
-        // 清除token并跳转到登录页
+        // 清除token
         removeToken()
-        
-        message.error('登录已过期，请重新登录')
-        setTimeout(() => {
-          window.location.href = '/'
-        }, 500)
       })
       .finally(() => {
         // 重置刷新状态

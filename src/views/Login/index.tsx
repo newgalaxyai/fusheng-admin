@@ -16,7 +16,8 @@ import {
 import { Button, Divider, Space, Tabs, message, theme } from 'antd';
 import type { CSSProperties } from 'react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { setToken } from '@/utils/storge';
 
 type LoginType = 'phone' | 'account';
 
@@ -31,6 +32,7 @@ const Page = () => {
   const [loginType, setLoginType] = useState<LoginType>('phone');
   const { token } = theme.useToken();
   const navigate = useNavigate();
+  const location = useLocation();
   return (
       <LoginFormPage
         style={{
@@ -40,10 +42,13 @@ const Page = () => {
         }}
         // 表单提交
         onFinish={async (values) => {
-          console.log('onFinish', values);
+          // console.log('onFinish', values);
+          setToken('123456')
           // 调用登录接口
-          // 跳转首页
-          window.location.href = '/'
+          // 跳转重定向页面
+          const redirect = location.state?.redirect || '/';
+          // console.log('登录成功，跳转重定向页面', redirect);
+          navigate(redirect, { replace: true })
         }}
         // 表单请求参数
         params={{

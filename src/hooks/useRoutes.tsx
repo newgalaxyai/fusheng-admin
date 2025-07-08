@@ -1,13 +1,16 @@
 import { useAppDispatch, useAppSelector } from "./useAppStore";
 import type { IRoute } from "@/redux/types/route";
-import { tabsListAction, collapsedAction, activeKeyAction, isLoginAction, isNotFoundAction } from "@/redux/modules/route";
-import { useNavigate, type RouteObject, Outlet, useLocation } from "react-router-dom";
+import { tabsListAction, collapsedAction } from "@/redux/modules/route";
+import { useNavigate, type RouteObject, Navigate } from "react-router-dom";
 import Lazy from "@/router/lazy";
-import originalRoutes from "@/router";
+import publicRoutes from "@/router";
 import type { MenuProps } from "antd";
 import Icon from "@ant-design/icons";
 import type { GetProps } from "antd";
 import { usePermissionCheck } from "./usePermission";
+import LayoutComponent from "@/components/layout";
+import AuthRouteComponent from "@/components/auth";
+import { HomeOutlined } from "@ant-design/icons";
 
 export type IBreadcrumb = {
   title: string
@@ -21,58 +24,30 @@ export const useRoutesHook = () => {
   const { hasRole } = usePermissionCheck();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
+  const authRoutes = [
+    // 首页
+    {
+      name: '首页',
+      key: 'home',
+      icon: HomeOutlined,
+      parentKey: 'auth',
+      order: 0,
+      type: 2,
+      hideInMenu: false,
+      path: '/home',
+      element: Lazy(() => import('@/views/Home'))
+    },
+    ...routes.filter(item => item.type !== 3 && hasRole(item.requiredRole)),
+  ];
 
   // 跳转路由
   const navigateTo = (key: string) => {
-    if (originalRoutes.some(item => item.key === key)) {
-      navigate(originalRoutes.find(item => item.key === key)!.path!);
-      return;
-    }
-    const route = routes.find(item => item.key === key);
+    const route = authRoutes.find(item => item.key === key);
     if (route) {
-      const path = getRoutePath(key, routes.filter(item => item.key === key));
+      const path = getRoutePath(key, authRoutes.filter(item => item.key === key));
       navigate(path);
     }
-
-    // 如果路由存在
-    // if (route) {
-    //   // 获取当前路径的列表
-    //   const pathList = location.pathname.split('/');
-    //   // 获取当前路径的key索引
-    //   const keyIndex = pathList.findIndex(item => item === key);
-    //   // 获取父级key
-    //   const parentKey = route.parentKey;
-    //   if (parentKey === '') {
-    //     navigate('/' + key);
-    //     return;
-    //   }
-    //   // 获取当前路径的父级key索引
-    //   const parentKeyIndex = pathList.findIndex(item => item === route.parentKey);
-    //   // 如果当前路径的key索引和父级key索引都为-1，则说明当前路径不存在，需要跳转
-    //   if (keyIndex === -1 && parentKeyIndex === -1) {
-    //     // 获取当前key的路径
-    //     const path = getRoutePath(key, routes.filter(item => item.key === key));
-    //     // 跳转
-    //     navigate(path);
-    //     return;
-    //   } else 
-    //   // 如果当前路径的key为-1，父级路径key不为-1，则跳转到当前路径
-    //   if (keyIndex === -1 && parentKeyIndex !== -1) {
-    //     // 直接跳转
-    //     navigate(key);
-    //     return;
-    //   }
-
-    //   // 如果当前路径在末尾，则跳转到父级路径
-    // }
   }
-
-  // 设置登录状态
-  const setLoginStatus = (status: boolean) => {
-    dispatch(isLoginAction({ type: 'set', data: status }))
-  }
-
   // 添加标签页
   const addTab = (route: IRoute) => {
     dispatch(tabsListAction({ type: 'add', data: route }))
@@ -95,11 +70,6 @@ export const useRoutesHook = () => {
     dispatch(collapsedAction({ type: 'set', data: collapsed }))
   }
 
-  // 设置未找到页面
-  const setIsNotFound = (isNotFound: boolean) => {
-    dispatch(isNotFoundAction({ type: 'set', data: isNotFound }))
-  }
-
   // 数组转路由
   const getRoutes = (routes: IRoute[], parentKey: string, result: RouteObject[]) => {
     for (const route of routes) {
@@ -110,7 +80,7 @@ export const useRoutesHook = () => {
           element: route.elementPath ? Lazy(() => {
             const importPath = route.elementPath?.replace('@/', '../') || '';
             return import(/* @vite-ignore */ importPath)
-          }) : null,
+          }) : route.redirect ? <Navigate to={route.redirect} /> : null,
           children: getRoutes(routes, route.key, []),
         })
       }
@@ -119,15 +89,6 @@ export const useRoutesHook = () => {
   }
   // 一维数组转多维菜单
   const getMenuItems = (routes: IRoute[], parentKey: string, result: MenuProps['items'] = []) => {
-    // 暂时只有首页所以简单配置
-    if (parentKey === '' && result.length === 0) {
-      result = originalRoutes.filter(item => item.type > 0).map(item => ({
-        key: item.key,
-        label: item.name,
-        icon: item.icon as React.ReactNode,
-      }));
-    }
-
     for (const route of routes) {
       if (route.parentKey === parentKey) {
         if (!route.hideInMenu) {
@@ -195,18 +156,30 @@ export const useRoutesHook = () => {
 
   return {
     getRoutes: [
-      ...originalRoutes,
-      ...getRoutes(routes.filter(item => item.type !== 3 && hasRole(item.requiredRole)), '', []),
+      ...publicRoutes,
+      {
+        key: 'auth',
+        parentKey: '',
+        order: -1,
+        type: -1,
+        path: '',
+        hideInMenu: true,
+        element: <AuthRouteComponent requiresAuth={true}>
+          <LayoutComponent />
+        </AuthRouteComponent>,
+        children: [
+          ...getRoutes(authRoutes, 'auth', []),
+        ]
+      }
     ],
-    getMenuItems: getMenuItems(routes.filter(item => item.type !== 3 && hasRole(item.requiredRole)), '', []),
+    getMenuItems: getMenuItems(authRoutes, 'auth', []),
     addTab,
     removeTab,
     getBreadcrumb,
     navigateTo,
     setCollapsed,
-    setLoginStatus,
-    setIsNotFound,
     getCurrentRoute,
     getRoutePath,
+    authRoutes,
   };
 }

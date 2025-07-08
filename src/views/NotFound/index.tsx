@@ -8,7 +8,7 @@ interface IProps {
 }
 
 const NotFound: FC<IProps> = (_props) => {
-  const { setIsNotFound } = useRoutesHook();
+  const { navigateTo } = useRoutesHook();
 
   return (
     <>
@@ -19,7 +19,7 @@ const NotFound: FC<IProps> = (_props) => {
         extra={<Button
           type="primary"
           onClick={() => {
-            setIsNotFound(false);
+            navigateTo('home');
           }}
         >
           返回首页

@@ -10,9 +10,10 @@ const initialState: IRouteState = {
       name: '员工管理',
       icon: UserOutlined,
       key: 'staffManage',
-      parentKey: '',
+      parentKey: 'auth',
       hideInMenu: false,
       path: '/staffManage',
+      redirect: 'staffList',
       requiredRole: ['super'],
       requiredPermission: ':staff:manage',  // 员工管理
       order: 1,
@@ -85,10 +86,6 @@ const initialState: IRouteState = {
   activeKey: 'home',
   // 侧边栏是否折叠
   collapsed: false,
-  // 是否登录
-  isLogin: true,
-  // 是否未找到页面
-  isNotFound: false,
 }
 
 const routeSlice = createSlice({
@@ -130,22 +127,8 @@ const routeSlice = createSlice({
           break
       }
     },
-    isLoginAction: (state, { payload: { type, data } }) => {
-      switch (type) {
-        case 'set':
-          state.isLogin = data
-          break
-      }
-    },
-    isNotFoundAction: (state, { payload: { type, data } }) => {
-      switch (type) {
-        case 'set':
-          state.isNotFound = data
-          break
-      }
-    },
   }
 })
 
-export const { tabsListAction, activeKeyAction, collapsedAction, isLoginAction, isNotFoundAction } = routeSlice.actions
+export const { tabsListAction, activeKeyAction, collapsedAction } = routeSlice.actions
 export default routeSlice.reducer

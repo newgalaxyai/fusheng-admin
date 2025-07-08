@@ -2,6 +2,7 @@ import { Navigate } from 'react-router-dom'
 import Lazy from './lazy'
 import { IRoute } from '@/redux/types/route'
 import { HomeOutlined } from '@ant-design/icons'
+import LayoutComponent from '@/components/layout'
 
 const routes: IRoute[] = [
   {
@@ -11,28 +12,43 @@ const routes: IRoute[] = [
     type: -1,
     path: '*',
     hideInMenu: true,
-    element: <Navigate to="/" replace />
+    element: <Navigate to="/404" replace />
   },
   {
-    key: 'notFound',
+    key: '404',
+    parentKey: '',
+    order: -1,
+    type: -1,
+    path: '/404',
+    hideInMenu: true,
+    element: Lazy(() => import('@/views/NotFound'))
+  },
+  {
+    key: 'login',
+    parentKey: '',
+    order: -1,
+    type: -1,
+    path: '/login',
+    hideInMenu: true,
+    element: Lazy(() => import('@/views/Login'))
+  },
+  {
+    key: 'reset',
+    parentKey: '',
+    order: -1,
+    type: -1,
+    path: '/reset',
+    hideInMenu: true,
+    element: Lazy(() => import('@/views/Reset'))
+  },
+  {
+    key: 'default',
     parentKey: '',
     order: -1,
     type: -1,
     path: '/',
     hideInMenu: true,
     element: <Navigate to="/home" replace />
-  },
-  // 首页
-  {
-    name: '首页',
-    key: 'home',
-    icon: <HomeOutlined />,
-    parentKey: '',
-    order: 0,
-    type: 2,
-    hideInMenu: false,
-    path: '/home',
-    element: Lazy(() => import('@/views/Home'))
   },
 ]
 

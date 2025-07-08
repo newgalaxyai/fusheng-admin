@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { HashRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
+import AntdProvider from '@/hooks/useAntdApp'
 
 import '@/assets/css/index.scss'
 
@@ -13,7 +14,9 @@ const root = ReactDOM.createRoot(document.getElementById('root')!)
 root.render(
   <Provider store={store}>
     <HashRouter>
-      <App></App>
+      <AntdProvider>
+        <App></App>
+      </AntdProvider>
     </HashRouter>
   </Provider>
 )

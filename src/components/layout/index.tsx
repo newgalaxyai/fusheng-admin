@@ -3,7 +3,7 @@ import type { MenuProps } from 'antd';
 import { Breadcrumb, ConfigProvider, Layout, Menu, Tabs, theme, Button } from 'antd';
 import { useAppSelector } from '@/hooks/useAppStore';
 import { useRoutesHook } from '@/hooks/useRoutes';
-import { useRoutes } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 
 // 卡片标签类型
@@ -12,8 +12,8 @@ type TargetKey = React.MouseEvent | React.KeyboardEvent | string;
 const { Header, Content, Sider } = Layout;
 
 const LayoutComponent: React.FC = () => {
-    const { getMenuItems, getBreadcrumb, removeTab, getRoutes, navigateTo, setCollapsed } = useRoutesHook();
-    const { tabsList, activeKey, routes, collapsed } = useAppSelector(state => state.route);
+    const { getMenuItems, getBreadcrumb, removeTab, navigateTo, setCollapsed, authRoutes } = useRoutesHook();
+    const { tabsList, activeKey, collapsed } = useAppSelector(state => state.route);
     // layout主题token
     const {
         token: { colorBgContainer, borderRadiusLG },
@@ -21,7 +21,9 @@ const LayoutComponent: React.FC = () => {
 
     // 菜单列表
     const menuItems: MenuProps['items'] = useMemo(() => {
-        return getMenuItems;
+        const menuItems = getMenuItems;
+        // console.log('menuItems', menuItems);
+        return menuItems;
     }, []);
     // 编辑卡片标签
     const onEdit = (targetKey: TargetKey, action: 'add' | 'remove') => {
@@ -120,7 +122,7 @@ const LayoutComponent: React.FC = () => {
                                 }
                                 {/* 面包屑 */}
                                 <Breadcrumb
-                                    items={getBreadcrumb(routes, activeKey, [])}
+                                    items={getBreadcrumb(authRoutes, activeKey, [])}
                                     style={{ margin: '16px 0' }}
                                 />
                             </div>
@@ -134,7 +136,7 @@ const LayoutComponent: React.FC = () => {
                         // padding: activeKey !== 'home' ? '0 24px 24px' : '24px'
                         padding: '0 24px 24px'
                     }}
-                    >
+                >
                     <Content
                         className='layout-content'
                         style={{
@@ -146,7 +148,7 @@ const LayoutComponent: React.FC = () => {
                             borderRadius: borderRadiusLG,
                         }}
                     >
-                        {useRoutes(getRoutes)}
+                        <Outlet />
                     </Content>
                 </Layout>
             </Layout>
