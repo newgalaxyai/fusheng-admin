@@ -1,8 +1,8 @@
 import { Navigate } from 'react-router-dom'
 import Lazy from './lazy'
 import { IRoute } from '@/redux/types/route'
-import { HomeOutlined } from '@ant-design/icons'
-import LayoutComponent from '@/components/layout'
+import AuthRouteComponent from '@/components/auth'
+import { HOME_PATH, NOT_FOUND_PATH, LOGIN_PATH, RESET_PATH } from '@/utils/constants'
 
 const routes: IRoute[] = [
   {
@@ -12,14 +12,18 @@ const routes: IRoute[] = [
     type: -1,
     path: '*',
     hideInMenu: true,
-    element: <Navigate to="/404" replace />
+    element: (
+      <AuthRouteComponent requiresAuth={false} redirect={NOT_FOUND_PATH}>
+        <Navigate to={NOT_FOUND_PATH} replace />
+      </AuthRouteComponent>
+    )
   },
   {
     key: '404',
     parentKey: '',
     order: -1,
     type: -1,
-    path: '/404',
+    path: NOT_FOUND_PATH,
     hideInMenu: true,
     element: Lazy(() => import('@/views/NotFound'))
   },
@@ -28,7 +32,7 @@ const routes: IRoute[] = [
     parentKey: '',
     order: -1,
     type: -1,
-    path: '/login',
+    path: LOGIN_PATH,
     hideInMenu: true,
     element: Lazy(() => import('@/views/Login'))
   },
@@ -37,7 +41,7 @@ const routes: IRoute[] = [
     parentKey: '',
     order: -1,
     type: -1,
-    path: '/reset',
+    path: RESET_PATH,
     hideInMenu: true,
     element: Lazy(() => import('@/views/Reset'))
   },
@@ -48,7 +52,11 @@ const routes: IRoute[] = [
     type: -1,
     path: '/',
     hideInMenu: true,
-    element: <Navigate to="/home" replace />
+    element: (
+      <AuthRouteComponent requiresAuth={false}>
+        <Navigate to={HOME_PATH} replace />
+      </AuthRouteComponent>
+    )
   },
 ]
 

@@ -15,9 +15,11 @@ import {
 } from '@ant-design/pro-components';
 import { Button, Divider, Space, Tabs, message, theme } from 'antd';
 import type { CSSProperties } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { setToken } from '@/utils/storge';
+import { getRememberMe, setRememberMe, setToken } from '@/utils/storge';
+import { getLocationParamsByName } from '@/utils/location';
+import { REDIRECT_NAME, RESET_PATH } from '@/utils/constants';
 
 type LoginType = 'phone' | 'account';
 
@@ -33,6 +35,13 @@ const Page = () => {
   const { token } = theme.useToken();
   const navigate = useNavigate();
   const location = useLocation();
+  const [rememberMeChecked, setRememberMeChecked] = useState(false);
+  useEffect(() => {
+    const rememberMe = getRememberMe();
+    if (rememberMe) {
+      setRememberMeChecked(rememberMe === 'true');
+    }
+  }, []);
   return (
       <LoginFormPage
         style={{
@@ -42,11 +51,11 @@ const Page = () => {
         }}
         // 表单提交
         onFinish={async (values) => {
-          // console.log('onFinish', values);
+          console.log('onFinish', values);
           setToken('123456')
           // 调用登录接口
           // 跳转重定向页面
-          const redirect = location.state?.redirect || '/';
+          const redirect = getLocationParamsByName(REDIRECT_NAME) || '/';
           // console.log('登录成功，跳转重定向页面', redirect);
           navigate(redirect, { replace: true })
         }}
@@ -293,8 +302,18 @@ const Page = () => {
             marginBlockEnd: 24,
           }}
         >
-          <ProFormCheckbox noStyle name="autoLogin">
-            自动登录
+          <ProFormCheckbox 
+          noStyle 
+          name="rememberMe"
+          fieldProps={{
+            checked: rememberMeChecked,
+            onChange: (e) => {
+              setRememberMe(e.target.checked)
+              setRememberMeChecked(e.target.checked)
+            }
+          }}
+          >
+            记住我
           </ProFormCheckbox>
           <Button
             type="link"
@@ -302,7 +321,7 @@ const Page = () => {
               float: 'right',
             }}
             onClick={() => {
-              navigate('/resetPassword')
+              navigate(RESET_PATH)
             }}
           >
             忘记密码

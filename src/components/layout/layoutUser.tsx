@@ -1,0 +1,73 @@
+import React from 'react'
+import { Avatar, Dropdown, Space, MenuProps, App } from 'antd'
+import { DownOutlined, UserOutlined } from '@ant-design/icons'
+import './css/index.scss'
+import { removeToken } from '@/utils/storge'
+import { useNavigate } from 'react-router-dom'
+import { LOGIN_PATH } from '@/utils/constants'
+
+const LayoutUser = () => {
+  const navigate = useNavigate()
+  const { modal } = App.useApp()
+  const items: MenuProps['items'] = [
+    // {
+    //   key: 'personal',
+    //   label: '个人中心',
+    //   onClick: () => {
+    //     console.log('个人中心')
+    //   },
+    // },
+    // {
+    //   key: 'setting',
+    //   label: '设置',
+    //   onClick: () => {
+    //     console.log('设置')
+    //   },
+    // },
+    // {
+    //   type: 'divider',
+    // },
+    {
+      key: 'logout',
+      label: '退出登录',
+      onClick: () => {
+        modal.confirm({
+          title: '提示',
+          content: '确定退出登录吗？',
+          okText: '确定',
+          cancelText: '取消',
+          onOk: () => {
+            // 退出登录
+            removeToken()
+            navigate(LOGIN_PATH)
+          },
+        })
+      },
+    },
+  ];
+  return (
+    <div
+      className='layout-user'
+    >
+      <Avatar
+        src=""
+        alt=""
+        icon={<UserOutlined />}
+        style={{
+          cursor: 'pointer',
+          marginRight: 10,
+        }}
+      />
+      <Dropdown menu={{ items }} trigger={['click']}>
+        <a onClick={(e) => e.preventDefault()}>
+          <Space>
+            userName
+            <DownOutlined />
+          </Space>
+        </a>
+      </Dropdown>
+    </div>
+  )
+}
+
+export default LayoutUser

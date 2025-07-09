@@ -1,0 +1,10 @@
+.layout-user {
+    height: 100%;
+    width: max-content;
+    // 在父盒子右边
+    margin-left: auto;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

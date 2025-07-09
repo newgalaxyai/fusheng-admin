@@ -4,8 +4,13 @@ import { App } from 'antd';
 
 export const AntdProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <App>
-        {children}
+    <App
+      style={{
+        height: '100%',
+        width: '100%',
+      }}
+    >
+      {children}
     </App>
   );
 };

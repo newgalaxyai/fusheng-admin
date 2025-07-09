@@ -1,10 +1,12 @@
 import React, { useEffect, useMemo } from 'react';
 import type { MenuProps } from 'antd';
-import { Breadcrumb, ConfigProvider, Layout, Menu, Tabs, theme, Button } from 'antd';
+import { Breadcrumb, ConfigProvider, Layout, Menu, Tabs, theme, Button, Avatar } from 'antd';
 import { useAppSelector } from '@/hooks/useAppStore';
 import { useRoutesHook } from '@/hooks/useRoutes';
 import { Outlet } from 'react-router-dom';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
+// 右上角用户信息
+import LayoutUser from './layoutUser';
 
 // 卡片标签类型
 type TargetKey = React.MouseEvent | React.KeyboardEvent | string;
@@ -76,7 +78,10 @@ const LayoutComponent: React.FC = () => {
                             {/* 顶部 */}
                             <Header
                                 className='layout-header'
-                                style={{ background: colorBgContainer, padding: 0 }}
+                                style={{
+                                    background: colorBgContainer,
+                                    padding: 0,
+                                }}
                             >
                                 <Button
                                     type="text"
@@ -88,6 +93,7 @@ const LayoutComponent: React.FC = () => {
                                         height: 64,
                                     }}
                                 />
+                                <LayoutUser />
                             </Header>
                             <div
                                 className='layout-tabs'
