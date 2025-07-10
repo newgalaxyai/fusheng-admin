@@ -15,9 +15,9 @@ const AddOrEdit: FC<IProps> = (_props) => {
     <>
       <div>
         <Button type="primary" onClick={() => {
-          navigateTo(ROUTE_KEY.STAFF_LIST)
-        }}>返回员工列表</Button>
-        <h1>新增/编辑</h1>
+          navigateTo(ROUTE_KEY.CONSUMER_LIST)
+        }}>返回用户列表</Button>
+        <h1>新增/编辑用户</h1>
       </div>
     </>
   )

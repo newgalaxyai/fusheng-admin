@@ -3,6 +3,7 @@ import Lazy from './lazy'
 import { IRoute } from '@/redux/types/route'
 import AuthRouteComponent from '@/components/auth'
 import { ROUTE_KEY, ROUTE_PATH, ROUTE_ELEMENT_PATH } from '@/utils/constants'
+import LayoutComponent from '@/components/layout'
 
 const routes: IRoute[] = [
   {
@@ -19,7 +20,7 @@ const routes: IRoute[] = [
     )
   },
   {
-    key: ROUTE_KEY.NOT_FOUND,
+    key: ROUTE_KEY.NOT_404,
     parentKey: '',
     order: -1,
     type: -1,
@@ -46,7 +47,7 @@ const routes: IRoute[] = [
     element: Lazy(() => import(ROUTE_ELEMENT_PATH.RESET))
   },
   {
-    key: ROUTE_KEY.HOME,
+    key: ROUTE_KEY.DEFAULT,
     parentKey: '',
     order: -1,
     type: -1,

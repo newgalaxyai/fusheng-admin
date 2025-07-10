@@ -12,11 +12,11 @@ interface IProps {
   children?: ReactNode
 }
 
-const StaffList: FC<IProps> = (_props) => {
+const ConsumerList: FC<IProps> = (_props) => {
   const location = useLocation();
   const { getCurrentRoute, navigateTo, authRoutes } = useRoutesHook();
   const { hasRole, hasPermission } = usePermissionCheck();
-  const [pageType, setPageType] = useState(ROUTE_KEY.STAFF_LIST);
+  const [pageType, setPageType] = useState(ROUTE_KEY.CONSUMER_LIST);
 
   useEffect(() => {
     const route = getCurrentRoute(location.pathname.split('/').slice(1), authRoutes.filter(item => item.parentKey === ROUTE_KEY.AUTH), null);
@@ -30,15 +30,15 @@ const StaffList: FC<IProps> = (_props) => {
     <>
       <div>
         {
-          pageType === ROUTE_KEY.STAFF_LIST ? (
+          pageType === ROUTE_KEY.CONSUMER_LIST ? (
             <>
-              <h1>员工列表</h1>
+              <h1>用户列表</h1>
               <Button type="primary" onClick={() => {
-                navigateTo(ROUTE_KEY.ADD_STAFF)
-              }}>新增员工</Button>
+                navigateTo(ROUTE_KEY.ADD_CONSUMER)
+              }}>新增用户</Button>
               <Button type="primary" onClick={() => {
-                navigateTo(ROUTE_KEY.EDIT_STAFF)
-              }}>编辑员工</Button>
+                navigateTo(ROUTE_KEY.EDIT_CONSUMER)
+              }}>编辑用户</Button>
             </>
           ) : (
             <Outlet />
@@ -49,4 +49,4 @@ const StaffList: FC<IProps> = (_props) => {
   )
 }
 
-export default StaffList
+export default ConsumerList

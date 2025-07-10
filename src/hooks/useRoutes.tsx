@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "./useAppStore";
 import type { IRoute } from "@/redux/types/route";
-import { tabsListAction, collapsedAction } from "@/redux/modules/route";
-import { useNavigate, type RouteObject, Navigate } from "react-router-dom";
+import { tabsListAction, collapsedAction, activeKeyAction } from "@/redux/modules/route";
+import { useNavigate, type RouteObject, Navigate, Outlet } from "react-router-dom";
 import Lazy from "@/router/lazy";
 import publicRoutes from "@/router";
 import type { MenuProps } from "antd";
@@ -11,7 +11,7 @@ import { usePermissionCheck } from "./usePermission";
 import LayoutComponent from "@/components/layout";
 import AuthRouteComponent from "@/components/auth";
 import { HomeOutlined } from "@ant-design/icons";
-import { ROUTE_PATH } from "@/utils/constants";
+import { ROUTE_ELEMENT_PATH, ROUTE_KEY, ROUTE_NAME, ROUTE_PATH } from "@/utils/constants";
 
 export type IBreadcrumb = {
   title: string
@@ -19,6 +19,11 @@ export type IBreadcrumb = {
 }
 
 type CustomIconComponentProps = GetProps<typeof Icon>;
+
+interface LevelKeysProps {
+  key?: string;
+  children?: LevelKeysProps[];
+}
 
 export const useRoutesHook = () => {
   const { routes, tabsList, activeKey } = useAppSelector(state => state.route);
@@ -28,25 +33,34 @@ export const useRoutesHook = () => {
   const authRoutes = [
     // 首页
     {
-      name: '首页',
-      key: 'home',
+      name: ROUTE_NAME.HOME,
+      key: ROUTE_KEY.HOME,
       icon: HomeOutlined,
-      parentKey: 'auth',
+      parentKey: ROUTE_KEY.AUTH,
       order: 0,
       type: 2,
       hideInMenu: false,
       path: ROUTE_PATH.HOME,
-      element: Lazy(() => import('@/views/Home'))
+      elementPath: ROUTE_ELEMENT_PATH.HOME
     },
     ...routes.filter(item => item.type !== 3 && hasRole(item.requiredRole)),
   ];
 
   // 跳转路由
-  const navigateTo = (key: string) => {
+  const navigateTo = (key: string, params?: any, state?: any) => {
     const route = authRoutes.find(item => item.key === key);
     if (route) {
-      const path = getRoutePath(key, authRoutes.filter(item => item.key === key));
-      navigate(path);
+      let path = getRoutePath(key, authRoutes.filter(item => item.key === key));
+      if (params) {
+        path = path + '?' + Object.entries(params).map(([key, value]) => `${key}=${value}`).join('&');
+      }
+      if (state) {
+        navigate(path, {
+          state
+        });
+      } else {
+        navigate(path);
+      }
     }
   }
   // 添加标签页
@@ -66,24 +80,72 @@ export const useRoutesHook = () => {
     dispatch(tabsListAction({ type: 'set', data: newTabsList }))
   }
 
+  // 关闭左侧/右侧标签页
+  const closeLeftOrRightTabs = (key: string, isLeft: boolean) => {
+    const targetIndex = tabsList.findIndex(item => item.key === key);
+    if (targetIndex === -1) {
+      return;
+    }
+    if (!isLeft && targetIndex === tabsList.length - 1) {
+      return;
+    }
+    const newTabsList = tabsList.filter((item, index) => {
+      if (item.key === ROUTE_KEY.HOME) {
+        return true;
+      }
+      if (isLeft) {
+        return index >= targetIndex;
+      } else {
+        return index <= targetIndex;
+      }
+    });
+    if (isLeft) {
+      navigateTo(newTabsList[newTabsList.length - 1].key)
+    } else {
+      navigateTo(key)
+    }
+    dispatch(tabsListAction({ type: 'set', data: newTabsList }))
+  }
+
+  // 关闭其他标签页
+  const closeOtherTabs = (key: string) => {
+    const targetIndex = tabsList.findIndex(item => item.key === key);
+    if (targetIndex === -1) {
+      return;
+    }
+    const newTabsList = tabsList.filter((item, index) => item.key === ROUTE_KEY.HOME || index === targetIndex);
+    if (activeKey !== key) {
+      navigateTo(key)
+    }
+    dispatch(tabsListAction({ type: 'set', data: newTabsList }))
+  }
+
+  // 关闭所有标签页
+  const closeAllTabs = () => {
+    const newTabsList = tabsList.filter(item => item.key === ROUTE_KEY.HOME);
+    dispatch(tabsListAction({ type: 'set', data: newTabsList }))
+    navigateTo(ROUTE_KEY.HOME)
+  }
+
   // 折叠侧边栏
   const setCollapsed = (collapsed: boolean) => {
     dispatch(collapsedAction({ type: 'set', data: collapsed }))
   }
 
   // 数组转路由
-  const getRoutes = (routes: IRoute[], parentKey: string, result: RouteObject[]) => {
+  const getRoutes = (routes: IRoute[], parentKey: string, parentType: number, result: RouteObject[]) => {
     for (const route of routes) {
       if (route.parentKey === parentKey) {
-        result.push({
-          // id: route.key,
-          path: route.path,
-          element: route.elementPath ? Lazy(() => {
-            const importPath = route.elementPath?.replace('@/', '../') || '';
-            return import(/* @vite-ignore */ importPath)
-          }) : route.redirect ? <Navigate to={route.redirect} /> : null,
-          children: getRoutes(routes, route.key, []),
-        })
+        if (route.type === 2) {
+          result.push({
+            // id: route.key,
+            path: parentType === 2 ? route.path : getRoutePath(route.key, authRoutes, ''),
+            element: Lazy(() => import(/* @vite-ignore */ route.elementPath!)),
+            children: getRoutes(routes, route.key, route.type, []),
+          })
+        } else {
+          getRoutes(routes, route.key, route.type, result)
+        }
       }
     }
     return result;
@@ -104,6 +166,23 @@ export const useRoutesHook = () => {
     }
     return result;
   }
+
+  // 获取菜单的层级
+  const getLevelKeys = (items1: LevelKeysProps[]) => {
+    const key: Record<string, number> = {};
+    const func = (items2: LevelKeysProps[], level = 1) => {
+      items2.forEach((item) => {
+        if (item.key) {
+          key[item.key] = level;
+        }
+        if (item.children) {
+          func(item.children, level + 1);
+        }
+      });
+    };
+    func(items1);
+    return key;
+  };
 
   // 获取面包屑数据
   const getBreadcrumb = (routes: IRoute[], currentKey: string, result: IBreadcrumb[]) => {
@@ -126,12 +205,11 @@ export const useRoutesHook = () => {
   // 获取当前地址的路由
   const getCurrentRoute = (keyList: string[], realRoutes: IRoute[], result: IRoute | null): IRoute | null => {
     const route = realRoutes.find(item => item.key === keyList[0]);
-    // console.log('route', route);
     if (route) {
       if (keyList.length === 1) {
         result = route;
       } else {
-        result = getCurrentRoute(keyList.slice(1), routes.filter(item => item.parentKey === route.key), route);
+        result = getCurrentRoute(keyList.slice(1), authRoutes.filter(item => item.parentKey === route.key), route);
       }
     }
     if (result?.type !== 2) {
@@ -140,20 +218,18 @@ export const useRoutesHook = () => {
     return result;
   }
 
-  // 获取制定key的路由地址
+  // 获取指定key的路由地址
   const getRoutePath = (key: string, realRoutes: IRoute[], result: string = '') => {
     const route = realRoutes.find(item => item.key === key);
     if (route) {
       if (route.parentKey !== '') {
-        result = getRoutePath(route.parentKey, routes.filter(item => item.key === route.parentKey), '/' + route.key + result);
+        result = getRoutePath(route.parentKey, authRoutes.filter(item => item.key === route.parentKey), '/' + route.key + result);
       } else {
         result = '/' + route.key + result;
       }
     }
     return result;
   }
-
-  // console.log('getRoutes', getRoutes(routes.filter(item => item.type !== 3 && hasRole(item.requiredRole)), '', []));
 
   return {
     getRoutes: [
@@ -168,12 +244,11 @@ export const useRoutesHook = () => {
         element: <AuthRouteComponent requiresAuth={true}>
           <LayoutComponent />
         </AuthRouteComponent>,
-        children: [
-          ...getRoutes(authRoutes, 'auth', []),
-        ]
+        children: getRoutes(authRoutes, 'auth', -1, [])
       }
     ],
     getMenuItems: getMenuItems(authRoutes, 'auth', []),
+    getLevelKeys,
     addTab,
     removeTab,
     getBreadcrumb,
@@ -182,5 +257,8 @@ export const useRoutesHook = () => {
     getCurrentRoute,
     getRoutePath,
     authRoutes,
+    closeLeftOrRightTabs,
+    closeOtherTabs,
+    closeAllTabs,
   };
 }
