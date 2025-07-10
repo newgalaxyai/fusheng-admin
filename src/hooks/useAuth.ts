@@ -1,13 +1,13 @@
 import { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { getToken } from '@/utils/storge'
+import { getAccessToken } from '@/utils/storge'
 import { App } from 'antd'
 import { getLocationParamsByName } from '@/utils/location'
-import { REDIRECT_NAME, LOGIN_PATH, HOME_PATH } from '@/utils/constants'
+import { ROUTE_PARAM_NAME, ROUTE_PATH } from '@/utils/constants'
 
 // 验证登录 token 是否有效的函数
 const checkAuth = () => {
-    const token = getToken()
+    const token = getAccessToken()
     if (!token) return false
     return true
 }
@@ -29,14 +29,14 @@ export function useAuth(requiresAuth: boolean, redirect?: string) {
                 cancelText: null,
                 okText: '确定',
                 onOk: () => {
-                    navigate(LOGIN_PATH + (location.pathname === '/' ? '' : '?' + REDIRECT_NAME + '=' + location.pathname), { replace: true })
+                    navigate(ROUTE_PATH.LOGIN + (location.pathname === '/' ? '' : '?' + ROUTE_PARAM_NAME.REDIRECT + '=' + location.pathname), { replace: true })
                 }
             })
         }
 
         // 已经登录时访问公共路由
         if (!requiresAuth && isAuthenticated) {
-            const paramsRedirect = getLocationParamsByName(REDIRECT_NAME)
+            const paramsRedirect = getLocationParamsByName(ROUTE_PARAM_NAME.REDIRECT)
             if (paramsRedirect) {
                 // console.log('paramsRedirect', paramsRedirect)
                 // 如果路由参数存在重定向，则跳转到重定向页面
@@ -47,13 +47,13 @@ export function useAuth(requiresAuth: boolean, redirect?: string) {
                 navigate(redirect, { replace: true })
             } else {
                 // 如果不存在重定向，则跳转到首页
-                navigate(HOME_PATH, { replace: true })
+                navigate(ROUTE_PATH.HOME, { replace: true })
             }
         }
 
         // 未登录时访问公共路由
         if (!requiresAuth && !isAuthenticated) {
-            navigate(LOGIN_PATH + (location.pathname === '/' ? '' : '?' + REDIRECT_NAME + '=' + location.pathname), { replace: true })
+            navigate(ROUTE_PATH.LOGIN + (location.pathname === '/' ? '' : '?' + ROUTE_PARAM_NAME.REDIRECT + '=' + location.pathname), { replace: true })
         }
     }, [requiresAuth, navigate, location])
 

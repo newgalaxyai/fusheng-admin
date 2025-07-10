@@ -9,7 +9,7 @@ import { Button, Card, message, Result, theme } from 'antd';
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MobileOutlined, LockOutlined } from '@ant-design/icons';
-import { LOGIN_PATH } from '@/utils/constants';
+import { ROUTE_PATH } from '@/utils/constants';
 
 export default () => {
     const navigate = useNavigate();
@@ -23,7 +23,7 @@ export default () => {
             <Card
                 title="重置密码"
                 extra={<Button type="link" onClick={() => {
-                    navigate(LOGIN_PATH)
+                    navigate(ROUTE_PATH.LOGIN)
                 }}>返回登录</Button>}
                 className='reset-password-card'
             >
@@ -173,7 +173,7 @@ export default () => {
                             <Button
                                 type="primary"
                                 onClick={() => {
-                                    navigate(LOGIN_PATH);
+                                    navigate(ROUTE_PATH.LOGIN);
                                 }}
                                 style={{
                                     width: '100%',

@@ -2,51 +2,51 @@ import { Navigate } from 'react-router-dom'
 import Lazy from './lazy'
 import { IRoute } from '@/redux/types/route'
 import AuthRouteComponent from '@/components/auth'
-import { HOME_PATH, NOT_FOUND_PATH, LOGIN_PATH, RESET_PATH } from '@/utils/constants'
+import { ROUTE_KEY, ROUTE_PATH, ROUTE_ELEMENT_PATH } from '@/utils/constants'
 
 const routes: IRoute[] = [
   {
-    key: 'notFound',
+    key: ROUTE_KEY.NOT_FOUND,
     parentKey: '',
     order: -1,
     type: -1,
     path: '*',
     hideInMenu: true,
     element: (
-      <AuthRouteComponent requiresAuth={false} redirect={NOT_FOUND_PATH}>
-        <Navigate to={NOT_FOUND_PATH} replace />
+      <AuthRouteComponent requiresAuth={false} redirect={ROUTE_PATH.NOT_FOUND}>
+        <Navigate to={ROUTE_PATH.NOT_FOUND} replace />
       </AuthRouteComponent>
     )
   },
   {
-    key: '404',
+    key: ROUTE_KEY.NOT_FOUND,
     parentKey: '',
     order: -1,
     type: -1,
-    path: NOT_FOUND_PATH,
+    path: ROUTE_PATH.NOT_FOUND,
     hideInMenu: true,
-    element: Lazy(() => import('@/views/NotFound'))
+    element: Lazy(() => import(ROUTE_ELEMENT_PATH.NOT_FOUND))
   },
   {
-    key: 'login',
+    key: ROUTE_KEY.LOGIN,
     parentKey: '',
     order: -1,
     type: -1,
-    path: LOGIN_PATH,
+    path: ROUTE_PATH.LOGIN,
     hideInMenu: true,
-    element: Lazy(() => import('@/views/Login'))
+    element: Lazy(() => import(ROUTE_ELEMENT_PATH.LOGIN))
   },
   {
-    key: 'reset',
+    key: ROUTE_KEY.RESET,
     parentKey: '',
     order: -1,
     type: -1,
-    path: RESET_PATH,
+    path: ROUTE_PATH.RESET,
     hideInMenu: true,
-    element: Lazy(() => import('@/views/Reset'))
+    element: Lazy(() => import(ROUTE_ELEMENT_PATH.RESET))
   },
   {
-    key: 'default',
+    key: ROUTE_KEY.HOME,
     parentKey: '',
     order: -1,
     type: -1,
@@ -54,7 +54,7 @@ const routes: IRoute[] = [
     hideInMenu: true,
     element: (
       <AuthRouteComponent requiresAuth={false}>
-        <Navigate to={HOME_PATH} replace />
+        <Navigate to={ROUTE_PATH.HOME} replace />
       </AuthRouteComponent>
     )
   },

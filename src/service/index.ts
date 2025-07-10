@@ -3,7 +3,7 @@ import ZZRequest from './request'
 import { message } from 'antd'
 import { IResponseData } from '@/api/type'
 import { refreshToken } from '@/utils/auth'
-import { getToken, removeToken } from '@/utils/storge'
+import { getAccessToken, removeAccessToken, removeRefreshToken } from '@/utils/storge'
 
 // 是否正在刷新token
 let isRefreshToken = false
@@ -38,12 +38,12 @@ const handleTokenRefresh = async (originalRequest: any) => {
       .then((newToken) => {
         // 刷新成功，处理等待队列中的所有请求
         console.log('Token刷新成功，重试等待队列中的请求')
-        
+
         // 为所有等待的请求更新token并重试
         waitQueue.forEach(({ config, resolve, reject }) => {
           config.headers = config.headers || {}
           config.headers['Authorization'] = `Bearer ${newToken}`
-          
+
           // 重新发起请求
           baseRequest.request(config)
             .then(resolve)
@@ -55,7 +55,7 @@ const handleTokenRefresh = async (originalRequest: any) => {
       })
       .catch((error) => {
         console.error('Token刷新失败:', error)
-        
+
         // 刷新失败，拒绝所有等待的请求
         waitQueue.forEach(({ reject }) => {
           reject(error)
@@ -65,7 +65,8 @@ const handleTokenRefresh = async (originalRequest: any) => {
         waitQueue.length = 0
 
         // 清除token
-        removeToken()
+        removeAccessToken()
+        removeRefreshToken()
       })
       .finally(() => {
         // 重置刷新状态
@@ -81,11 +82,16 @@ const createRequest = (baseURL: string) => {
     interceptors: {
       // 请求拦截器 - 自动携带访问令牌
       requestSuccessFn(config: any) {
-        const token = getToken()
+        // 设置请求头
+        config.headers = config.headers || {}
+        config.headers['tenant-id'] = '1'
+        // 设置token
+        const token = getAccessToken()
         if (token) {
-          config.headers = config.headers || {}
           config.headers['Authorization'] = `Bearer ${token}`
-          config.headers['tenant-id'] = '1'
+        } else {
+          // 设置最高等级token，用于测试
+          config.headers['Authorization'] = `Bearer test1`
         }
         return config
       },
@@ -108,6 +114,7 @@ const createRequest = (baseURL: string) => {
         switch (res.code) {
           // 成功
           case 0:
+            // 统一的前端接口返回格式
             return {
               success: true,
               data: res.data,
@@ -131,20 +138,20 @@ const createRequest = (baseURL: string) => {
       },
       responseFailureFn(error) {
         console.log('响应失败', error);
-        
+
         // 处理401错误 - 可能是网络层面的401
         if (error.response && error.response.status === 401) {
           console.log('网络层401错误，开始token刷新流程')
           return handleTokenRefresh(error.config)
         }
-        
+
         // 处理请求超时
         if (error.code === 'ECONNABORTED' && error.message.includes('timeout')) {
           message.error('请求超时，请检查网络连接后重试');
         } else {
           message.error(error.message || '接口响应失败');
         }
-        
+
         // 将错误继续抛出，以便在业务代码中可以继续捕获
         return Promise.reject({
           success: false,
@@ -157,5 +164,6 @@ const createRequest = (baseURL: string) => {
 }
 
 const baseRequest = createRequest(VITE_BASE_URL + '/app-api')
+const adminRequest = createRequest(VITE_BASE_URL + '/admin-api')
 
-export { baseRequest }
+export { baseRequest, adminRequest }

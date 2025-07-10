@@ -6,7 +6,7 @@ export interface IResponseData<T> {
 
 export interface IResponse<T> {
   success: boolean
-  data: IResponseData<T>
+  data: T
   errMsg?: string
 }
 

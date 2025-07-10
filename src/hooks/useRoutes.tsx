@@ -11,7 +11,7 @@ import { usePermissionCheck } from "./usePermission";
 import LayoutComponent from "@/components/layout";
 import AuthRouteComponent from "@/components/auth";
 import { HomeOutlined } from "@ant-design/icons";
-import { HOME_PATH, LOGIN_PATH, RESET_PATH, NOT_FOUND_PATH } from "@/utils/constants";
+import { ROUTE_PATH } from "@/utils/constants";
 
 export type IBreadcrumb = {
   title: string
@@ -35,7 +35,7 @@ export const useRoutesHook = () => {
       order: 0,
       type: 2,
       hideInMenu: false,
-      path: HOME_PATH,
+      path: ROUTE_PATH.HOME,
       element: Lazy(() => import('@/views/Home'))
     },
     ...routes.filter(item => item.type !== 3 && hasRole(item.requiredRole)),

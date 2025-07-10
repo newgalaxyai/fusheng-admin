@@ -1,75 +1,76 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { IRouteState } from '../types/route'
 import { UserOutlined } from '@ant-design/icons';
+import { ROUTE_KEY, ROUTE_NAME, ROUTE_PATH, ROUTE_PERMISSION, ROUTE_ELEMENT_PATH } from '@/utils/constants';
 
 const initialState: IRouteState = {
   // 路由列表
   routes: [
     // 员工管理
     {
-      name: '员工管理',
+      name: ROUTE_NAME.STAFF_MANAGE,
       icon: UserOutlined,
-      key: 'staffManage',
-      parentKey: 'auth',
+      key: ROUTE_KEY.STAFF_MANAGE,
+      parentKey: ROUTE_KEY.AUTH,
       hideInMenu: false,
-      path: '/staffManage',
-      redirect: 'staffList',
+      path: ROUTE_PATH.STAFF_MANAGE,
+      redirect: ROUTE_PATH.STAFF_LIST,
       requiredRole: ['super'],
-      requiredPermission: ':staff:manage',  // 员工管理
+      requiredPermission: ROUTE_PERMISSION.STAFF_MANAGE,  // 员工管理
       order: 1,
       type: 1,
     },
     {
-      name: '员工列表',
-      key: 'staffList',
-      parentKey: 'staffManage',
-      path: 'staffList',
+      name: ROUTE_NAME.STAFF_LIST,
+      key: ROUTE_KEY.STAFF_LIST,
+      parentKey: ROUTE_KEY.STAFF_MANAGE,
+      path: ROUTE_PATH.STAFF_LIST,
       hideInMenu: false,
-      elementPath: '@/views/Staff/StaffList',
+      elementPath: ROUTE_ELEMENT_PATH.STAFF_LIST,
       requiredRole: ['super'],
-      requiredPermission: ':staff:manage:list',  // 员工列表
+      requiredPermission: ROUTE_PERMISSION.STAFF_LIST,  // 员工列表
       order: 1,
       type: 2,
     },
     {
-      name: '新增员工按钮',
-      key: 'addStaffBtn',
-      parentKey: 'staffList',
+      name: ROUTE_NAME.ADD_STAFF,
+      key: ROUTE_KEY.ADD_STAFF,
+      parentKey: ROUTE_KEY.STAFF_LIST,
       requiredRole: ['super'],
-      requiredPermission: ':staff:manage:list:add',  // 新增员工
+      requiredPermission: ROUTE_PERMISSION.ADD_STAFF,  // 新增员工
       order: 3,
       type: 3,
     },
     {
-      name: '新增员工',
-      key: 'addStaff',
-      path: 'addStaff',
-      elementPath: '@/views/Staff/AddOrEdit',
-      parentKey: 'staffList',
+      name: ROUTE_NAME.ADD_STAFF,
+      key: ROUTE_KEY.ADD_STAFF,
+      path: ROUTE_PATH.ADD_STAFF,
+      elementPath: ROUTE_ELEMENT_PATH.ADD_STAFF,
+      parentKey: ROUTE_KEY.STAFF_LIST,
       hideInMenu: true,
       requiredRole: ['super'],
-      requiredPermission: ':staff:manage:list:add',  // 新增员工
+      requiredPermission: ROUTE_PERMISSION.ADD_STAFF,  // 新增员工
       order: 1,
       type: 2,
     },
     {
-      name: '编辑员工按钮',
-      key: 'editStaffBtn',
-      parentKey: 'staffList',
+      name: ROUTE_NAME.EDIT_STAFF,
+      key: ROUTE_KEY.EDIT_STAFF,
+      parentKey: ROUTE_KEY.STAFF_LIST,
       requiredRole: ['super'],
-      requiredPermission: ':staff:manage:list:edit',  // 编辑员工
+      requiredPermission: ROUTE_PERMISSION.EDIT_STAFF,  // 编辑员工
       order: 4,
       type: 3,
     },
     {
-      name: '编辑员工',
-      key: 'editStaff',
-      path: 'editStaff',
-      elementPath: '@/views/Staff/AddOrEdit',
-      parentKey: 'staffList',
+      name: ROUTE_NAME.EDIT_STAFF,
+      key: ROUTE_KEY.EDIT_STAFF,
+      path: ROUTE_PATH.EDIT_STAFF,
+      elementPath: ROUTE_ELEMENT_PATH.EDIT_STAFF,
+      parentKey: ROUTE_KEY.STAFF_LIST,
       hideInMenu: true,
       requiredRole: ['super'],
-      requiredPermission: ':staff:manage:list:edit',  // 编辑员工
+      requiredPermission: ROUTE_PERMISSION.EDIT_STAFF,  // 编辑员工
       order: 2,
       type: 2,
     },

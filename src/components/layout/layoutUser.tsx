@@ -2,9 +2,9 @@ import React from 'react'
 import { Avatar, Dropdown, Space, MenuProps, App } from 'antd'
 import { DownOutlined, UserOutlined } from '@ant-design/icons'
 import './css/index.scss'
-import { removeToken } from '@/utils/storge'
+import { removeAccessToken, removeRefreshToken } from '@/utils/storge'
 import { useNavigate } from 'react-router-dom'
-import { LOGIN_PATH } from '@/utils/constants'
+import { ROUTE_PATH } from '@/utils/constants'
 
 const LayoutUser = () => {
   const navigate = useNavigate()
@@ -38,8 +38,9 @@ const LayoutUser = () => {
           cancelText: '取消',
           onOk: () => {
             // 退出登录
-            removeToken()
-            navigate(LOGIN_PATH)
+            removeAccessToken()
+            removeRefreshToken()
+            navigate(ROUTE_PATH.LOGIN)
           },
         })
       },

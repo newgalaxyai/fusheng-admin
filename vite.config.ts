@@ -13,6 +13,11 @@ export default defineConfig(({ mode }): UserConfig => {
       port: Number(env.VITE_APP_PORT),
       open: false,
       proxy: {
+        '/fusheng': {
+          target: 'http://192.168.110.20:48080',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/fusheng/, '')
+        }
       }
     },
     resolve: {

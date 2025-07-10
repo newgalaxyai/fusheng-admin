@@ -1,26 +1,42 @@
-import { LOGIN_TOKEN_NAME, REMEMBER_ME_NAME } from "./constants"
+import { LOCAL_STORAGE_NAME } from "./constants"
 
-// 获取token
-export const getToken = () => {
-    return localStorage.getItem(LOGIN_TOKEN_NAME)
+// 获取accessToken
+export const getAccessToken = () => {
+    return localStorage.getItem(LOCAL_STORAGE_NAME.ACCESS_TOKEN)
 }
 
-// 设置token
-export const setToken = (token: string) => {
-    localStorage.setItem(LOGIN_TOKEN_NAME, token)
+// 设置accessToken
+export const setAccessToken = (token: string) => {
+    localStorage.setItem(LOCAL_STORAGE_NAME.ACCESS_TOKEN, token)
 }
 
-// 删除token
-export const removeToken = () => {
-    localStorage.removeItem(LOGIN_TOKEN_NAME)
+// 删除accessToken
+export const removeAccessToken = () => {
+    localStorage.removeItem(LOCAL_STORAGE_NAME.ACCESS_TOKEN)
+}
+
+// 获取refreshToken
+export const getRefreshToken = () => {
+    return localStorage.getItem(LOCAL_STORAGE_NAME.REFRESH_TOKEN)
+}
+
+// 设置refreshToken
+
+export const setRefreshToken = (refreshToken: string) => {
+    localStorage.setItem(LOCAL_STORAGE_NAME.REFRESH_TOKEN, refreshToken)
+}
+
+// 删除refreshToken
+export const removeRefreshToken = () => {
+    localStorage.removeItem(LOCAL_STORAGE_NAME.REFRESH_TOKEN)
 }
 
 // 获取记住我
 export const getRememberMe = () => {
-    return localStorage.getItem(REMEMBER_ME_NAME)
+    return localStorage.getItem(LOCAL_STORAGE_NAME.REMEMBER_ME)
 }
 
 // 设置记住我
 export const setRememberMe = (rememberMe: boolean) => {
-    localStorage.setItem(REMEMBER_ME_NAME, rememberMe.toString())
+    localStorage.setItem(LOCAL_STORAGE_NAME.REMEMBER_ME, rememberMe.toString())
 }

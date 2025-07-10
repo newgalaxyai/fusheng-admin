@@ -5,6 +5,7 @@ import { Outlet, useLocation } from 'react-router-dom'
 import { usePermissionCheck } from '@/hooks/usePermission'
 import { useAppSelector } from '@/hooks/useAppStore'
 import { useRoutesHook } from '@/hooks/useRoutes'
+import { ROUTE_KEY } from '@/utils/constants'
 
 interface IProps {
   children?: ReactNode
@@ -37,11 +38,11 @@ const StaffList: FC<IProps> = (_props) => {
               <h1>员工列表</h1>
               <Button type="primary" onClick={() => {
                 setPageType(2);
-                navigateTo('addStaff')
+                navigateTo(ROUTE_KEY.ADD_STAFF)
               }}>新增员工</Button>
               <Button type="primary" onClick={() => {
                 setPageType(2);
-                navigateTo('editStaff')
+                navigateTo(ROUTE_KEY.EDIT_STAFF)
               }}>编辑员工</Button>
             </>
           )

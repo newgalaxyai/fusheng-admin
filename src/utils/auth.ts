@@ -1,12 +1,9 @@
-import axios from "axios"
-import { VITE_BASE_URL } from "@/service/config"
-import { getToken, setToken } from "./storge"
-import { refreshTokenURL } from "@/api/url/login"
+import { getRefreshToken, setRefreshToken, setAccessToken } from "./storge"
 import { refreshTokenAPI } from "@/api/login"
 
 // 刷新token的API调用
 export const refreshToken = async () => {
-    const refreshToken = getToken()
+    const refreshToken = getRefreshToken()
     if (!refreshToken) {
         throw new Error('没有刷新令牌')
     }
@@ -14,12 +11,13 @@ export const refreshToken = async () => {
     try {
         const result = await refreshTokenAPI(refreshToken)
 
-        if (result.code === 0) {
+        if (result.success) {
             // 保存新的token
-            setToken(result.data.accessToken)
+            setRefreshToken(result.data.refreshToken)
+            setAccessToken(result.data.accessToken)
             return result.data.accessToken
         } else {
-            throw new Error(result.msg || '刷新令牌失败')
+            throw new Error(result.errMsg || '刷新令牌失败')
         }
     } catch (error) {
         console.error('刷新token失败:', error)
