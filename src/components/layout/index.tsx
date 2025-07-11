@@ -90,7 +90,7 @@ const LayoutComponent: React.FC = () => {
                 >
                     {tabItem.label}
                 </Dropdown>
-            )
+            ),
         }
     })
 
@@ -108,13 +108,14 @@ const LayoutComponent: React.FC = () => {
     const levelKeys = getLevelKeys(menuItems as any)
     // 展开当前父级菜单
     const [stateOpenKeys, setStateOpenKeys] = useState<string[]>([]);
+    // 当激活标签和折叠状态变化时，设置展开的菜单
     useEffect(() => {
-        if (activeKey !== ROUTE_KEY.HOME) {
+        if (activeKey !== ROUTE_KEY.HOME && !collapsed) {
             const routePath = getRoutePath(activeKey, authRoutes, '')
             const openKeys = routePath.split('/').slice(1)
             setStateOpenKeys(openKeys)
         }
-    }, [activeKey])
+    }, [activeKey, collapsed])
     const onOpenChange: MenuProps['onOpenChange'] = (openKeys) => {
         // console.log('openKeys', openKeys);
         const currentOpenKey = openKeys.find((key) => stateOpenKeys.indexOf(key) === -1);
