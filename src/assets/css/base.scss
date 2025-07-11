@@ -30,7 +30,7 @@ body,
 
 // 卡片标签
 .layout-tabs {
-  z-index: 2;
+  z-index: 9; //超出protable的zindex
   padding: 0 24px;
   align-items: flex-start;
   flex-direction: column;

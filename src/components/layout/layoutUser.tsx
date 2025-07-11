@@ -68,7 +68,7 @@ const LayoutUser = () => {
             }}
           />
           <Space>
-            管理员
+            超级管理员
           </Space>
         </a>
       </Dropdown>

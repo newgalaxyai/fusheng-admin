@@ -12,6 +12,7 @@ import LayoutComponent from "@/components/layout";
 import AuthRouteComponent from "@/components/auth";
 import { HomeOutlined } from "@ant-design/icons";
 import { ROUTE_ELEMENT_PATH, ROUTE_KEY, ROUTE_NAME, ROUTE_PATH } from "@/utils/constants";
+import { useCallback, useEffect } from "react";
 
 export type IBreadcrumb = {
   title: string
@@ -30,7 +31,7 @@ export const useRoutesHook = () => {
   const { hasRole } = usePermissionCheck();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const authRoutes = [
+  const authRoutes: IRoute[] = [
     // 首页
     {
       name: ROUTE_NAME.HOME,
@@ -74,8 +75,8 @@ export const useRoutesHook = () => {
     const newTabsList = tabsList.filter(item => item.key !== key);
     // 如果移除的标签是当前激活的标签，则切换到上一个标签
     if (newTabsList.length && key === activeKey) {
-      const { key } = newTabsList[targetIndex === newTabsList.length ? targetIndex - 1 : targetIndex]
-      navigateTo(key)
+      const test = newTabsList[targetIndex === newTabsList.length ? targetIndex - 1 : targetIndex]
+      navigateTo(test.key)
     }
     dispatch(tabsListAction({ type: 'set', data: newTabsList }))
   }
@@ -89,6 +90,9 @@ export const useRoutesHook = () => {
     if (!isLeft && targetIndex === tabsList.length - 1) {
       return;
     }
+    if (isLeft && targetIndex === 1) {
+      return;
+    }
     const newTabsList = tabsList.filter((item, index) => {
       if (item.key === ROUTE_KEY.HOME) {
         return true;
@@ -99,10 +103,13 @@ export const useRoutesHook = () => {
         return index <= targetIndex;
       }
     });
-    if (isLeft) {
-      navigateTo(newTabsList[newTabsList.length - 1].key)
-    } else {
-      navigateTo(key)
+    // 如果当前激活的标签不是要关闭的标签，则切换激活标签
+    if (activeKey !== key) {
+      if (isLeft) {
+        navigateTo(newTabsList[newTabsList.length - 1].key)
+      } else {
+        navigateTo(key)
+      }
     }
     dispatch(tabsListAction({ type: 'set', data: newTabsList }))
   }
@@ -110,7 +117,7 @@ export const useRoutesHook = () => {
   // 关闭其他标签页
   const closeOtherTabs = (key: string) => {
     const targetIndex = tabsList.findIndex(item => item.key === key);
-    if (targetIndex === -1) {
+    if (targetIndex === -1 || tabsList.length === 2) {
       return;
     }
     const newTabsList = tabsList.filter((item, index) => item.key === ROUTE_KEY.HOME || index === targetIndex);
@@ -231,6 +238,18 @@ export const useRoutesHook = () => {
     return result;
   }
 
+  // 获取指定的路由角色权限
+  const getRouteRole = (key: string, type: number) => {
+    const role = routes.find(item => item.key === key && item.type === type)?.requiredRole;
+    return role;
+  }
+
+  // 获取指定的路由权限
+  const getRoutePermission = (key: string, type: number) => {
+    const permission = routes.find(item => item.key === key && item.type === type)?.requiredPermission;
+    return permission ? [permission] : undefined;
+  }
+
   return {
     getRoutes: [
       ...publicRoutes,
@@ -260,5 +279,7 @@ export const useRoutesHook = () => {
     closeLeftOrRightTabs,
     closeOtherTabs,
     closeAllTabs,
+    getRouteRole,
+    getRoutePermission,
   };
 }

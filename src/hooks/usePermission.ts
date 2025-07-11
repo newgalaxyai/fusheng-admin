@@ -13,9 +13,7 @@ export const usePermissionCheck = () => {
         }
 
         // 超级管理员或者用户权限大于等于所需角色权限
-        return userRole.some(role =>
-            superAdmin.includes(role) || requiredRole.some(role => userRole.includes(role))
-        );
+        return superAdmin.includes(userRole) || requiredRole.includes(userRole);
     };
 
     const hasPermission = (requiredPermissions: string[] | undefined): boolean => {

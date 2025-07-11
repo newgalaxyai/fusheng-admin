@@ -20,3 +20,5 @@
 
 export const TIME_OUT = 10000
 export const VITE_BASE_URL = import.meta.env.VITE_BASE_URL
+export const SENIOR_TOKEN = import.meta.env.VITE_SENIOR_TOKEN
+export const SENIOR_TENANT_ID = import.meta.env.VITE_SENIOR_TENANT_ID

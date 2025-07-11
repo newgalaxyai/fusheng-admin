@@ -1,9 +1,10 @@
-import { VITE_BASE_URL, TIME_OUT } from './config'
+import { VITE_BASE_URL, TIME_OUT, SENIOR_TOKEN, SENIOR_TENANT_ID } from './config'
 import ZZRequest from './request'
 import { message } from 'antd'
 import { IResponseData } from '@/api/type'
 import { refreshToken } from '@/utils/auth'
 import { getAccessToken, removeAccessToken, removeRefreshToken } from '@/utils/storge'
+import { appURL, adminURL } from '@/api/url'
 
 // 是否正在刷新token
 let isRefreshToken = false
@@ -75,7 +76,7 @@ const handleTokenRefresh = async (originalRequest: any) => {
   })
 }
 
-const createRequest = (baseURL: string) => {
+const createRequest = (baseURL: string, headerAuth?: string) => {
   return new ZZRequest({
     baseURL,
     timeout: TIME_OUT,
@@ -84,14 +85,11 @@ const createRequest = (baseURL: string) => {
       requestSuccessFn(config: any) {
         // 设置请求头
         config.headers = config.headers || {}
-        config.headers['tenant-id'] = '1'
+        config.headers['tenant-id'] = SENIOR_TENANT_ID
         // 设置token
         const token = getAccessToken()
-        if (token) {
-          config.headers['Authorization'] = `Bearer ${token}`
-        } else {
-          // 设置最高等级token，用于测试
-          config.headers['Authorization'] = `Bearer test1`
+        if (token || headerAuth) {
+          config.headers['Authorization'] = `Bearer ${token || headerAuth}`
         }
         return config
       },
@@ -163,7 +161,8 @@ const createRequest = (baseURL: string) => {
   })
 }
 
-const baseRequest = createRequest(VITE_BASE_URL + '/app-api')
-const adminRequest = createRequest(VITE_BASE_URL + '/admin-api')
+const baseRequest = createRequest(VITE_BASE_URL + appURL)
+const adminRequest = createRequest(VITE_BASE_URL + adminURL)
+const seniorRequest = createRequest(VITE_BASE_URL + adminURL, SENIOR_TOKEN)
 
-export { baseRequest, adminRequest }
+export { baseRequest, adminRequest, seniorRequest }

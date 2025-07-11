@@ -2,8 +2,8 @@ import { refreshTokenURL, loginURL } from "@/api/url/login"
 import { VITE_BASE_URL } from "@/service/config"
 import axios, { AxiosResponse } from "axios"
 import { IResponse, IResponseData } from "../type"
-import { IRefreshTokenResponse, ILoginResponse } from "../type/login"
-import { adminRequest } from "@/service"
+import { ILoginResponse, ILoginRequest } from "../type/login"
+import { seniorRequest } from "@/service"
 
 
 /**
@@ -11,11 +11,9 @@ import { adminRequest } from "@/service"
  * @param {string} refreshToken 刷新令牌
  * @returns {Promise<IResponse<IRefreshTokenResponse>>} 刷新令牌
  */
-export const refreshTokenAPI = async (refreshToken: string): Promise<IResponse<IRefreshTokenResponse>> => {
-    const response: AxiosResponse<IResponseData<IRefreshTokenResponse>> = await axios(`${VITE_BASE_URL}${refreshTokenURL}`, {
+export const refreshTokenAPI = async (refreshToken: string): Promise<IResponse<ILoginResponse>> => {
+    const response: AxiosResponse<IResponseData<ILoginResponse>> = await axios(`${VITE_BASE_URL}${refreshTokenURL}`, {
         method: 'POST',
-        headers: {
-        },
         data: { refreshToken }
     })
 
@@ -39,17 +37,13 @@ export const refreshTokenAPI = async (refreshToken: string): Promise<IResponse<I
 
 /**
  * 账号密码登录接口
- * @param {string} username 用户名
- * @param {string} password 密码
+ * @param {ILoginRequest} data 登录请求数据
  * @returns {Promise<IResponse<ILoginResponse>>} 登录
  */
-export const loginAPI = async (username: string, password: string): Promise<IResponse<ILoginResponse>> => {
-    const response = await adminRequest.post<IResponse<ILoginResponse>>({
+export const loginAPI = async (data: ILoginRequest): Promise<IResponse<ILoginResponse>> => {
+    const response = await seniorRequest.post<IResponse<ILoginResponse>>({
         url: loginURL,
-        data: {
-            username,
-            password
-        }
+        data
     })
 
     return response

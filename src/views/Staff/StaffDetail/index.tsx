@@ -10,7 +10,7 @@ interface IProps {
   children?: ReactNode
 }
 
-const AddOrEdit: FC<IProps> = (_props) => {
+const StaffDetail: FC<IProps> = (_props) => {
   const { navigateTo } = useRoutesHook();
   const location = useLocation();
   const staffId = getLocationParamsByName(location, ROUTE_PARAM_NAME.STAFF_ID);
@@ -22,10 +22,10 @@ const AddOrEdit: FC<IProps> = (_props) => {
         <Button type="primary" onClick={() => {
           navigateTo(ROUTE_KEY.STAFF_LIST)
         }}>返回员工列表</Button>
-        <h1>新增/编辑</h1>
+        <h1>员工详情</h1>
       </div>
     </>
   )
 }
 
-export default AddOrEdit
+export default StaffDetail

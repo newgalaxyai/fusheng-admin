@@ -9,7 +9,7 @@ export type IRoute = RouteObject & {
   elementPath?: string; // 路由组件路径
   redirect?: string; // 重定向路径
   hideInMenu?: boolean; // 是否在侧边栏中隐藏
-  order: number; // 路由排序
+  order?: number; // 路由排序
   requiredRole?: string[]; // 所需角色标识
   requiredPermission?: string; // 所需权限标识
   type: number; // 路由类型 1: 目录 2: 菜单 3: 按钮

@@ -5,10 +5,12 @@ import { Spin } from 'antd'
 import { useRoutesHook } from './hooks/useRoutes';
 import routes from './router';
 import { ROUTE_KEY } from './utils/constants';
+import { useAppSelector } from '@/hooks/useAppStore';
 
 function App() {
   const { addTab, getCurrentRoute, getRoutes, authRoutes } = useRoutesHook();
   const allRoutes = getRoutes;
+  const { activeKey } = useAppSelector(state => state.route);
 
   // console.log('所有路由:', allRoutes);
 

@@ -4,7 +4,7 @@ import { IUserState } from '../types/user'
 // 用户状态
 const initialState: IUserState = {
   loading: false,
-  userRole: ['super'],
+  userRole: 'super',
   permissions: ['*:*:*']
 }
 

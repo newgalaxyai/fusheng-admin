@@ -31,7 +31,7 @@ const LayoutComponent: React.FC = () => {
     } = useRoutesHook();
     const { tabsList, activeKey, collapsed } = useAppSelector(state => state.route);
     // 标签页下拉菜单项
-    const tabMenuItems = (tabItem: ITabsItem): MenuProps['items'] => [
+    const tabMenuItems = (tabItem: ITabsItem): MenuProps['items'] => tabItem.key === ROUTE_KEY.HOME ? [] : [
         {
             key: 'closeCurrent',
             label: '关闭当前页面',
@@ -80,21 +80,20 @@ const LayoutComponent: React.FC = () => {
         },
     ]
     // 渲染标签页
-    const renderTabs = useMemo(() => {
-        return tabsList.map((tabItem) => {
-            return {
-                ...tabItem,
-                label: (
-                    <Dropdown
-                        menu={{ items: tabMenuItems(tabItem) }}
-                        trigger={['contextMenu']}
-                    >
-                        {tabItem.label}
-                    </Dropdown>
-                )
-            }
-        })
-    }, [tabsList])
+    const renderTabs = tabsList.map((tabItem) => {
+        return {
+            ...tabItem,
+            label: (
+                <Dropdown
+                    menu={{ items: tabMenuItems(tabItem) }}
+                    trigger={['contextMenu']}
+                >
+                    {tabItem.label}
+                </Dropdown>
+            )
+        }
+    })
+
     // layout主题token
     const {
         token: { colorBgContainer, borderRadiusLG },
