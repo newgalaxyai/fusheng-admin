@@ -9,6 +9,7 @@ export const LOCAL_STORAGE_NAME = {
 export const ROUTE_PARAM_NAME = {
     REDIRECT: 'redirect', // 重定向参数名
     STAFF_ID: 'staffId', // 员工id
+    PAGE_TYPE: 'pageType', // 页面类型 1:新增 2:编辑 3:详情
 }
 
 // 路由路径的常量
@@ -85,12 +86,12 @@ export const ROUTE_ELEMENT_PATH = {
     LOGIN: '../views/Login', // 登录
     RESET: '../views/Reset', // 重置密码
     STAFF_LIST: '../views/Staff/StaffList', // 员工列表
-    ADD_STAFF: '../views/Staff/AddOrEdit', // 新增员工
-    EDIT_STAFF: '../views/Staff/AddOrEdit', // 编辑员工
+    ADD_STAFF: '../views/Staff/StaffDetail', // 新增员工
+    EDIT_STAFF: '../views/Staff/StaffDetail', // 编辑员工
     STAFF_DETAIL: '../views/Staff/StaffDetail', // 员工详情
     CONSUMER_LIST: '../views/Consumer/ConsumerList', // 用户列表
-    ADD_CONSUMER: '../views/Consumer/AddOrEdit', // 新增用户
-    EDIT_CONSUMER: '../views/Consumer/AddOrEdit', // 编辑用户
+    ADD_CONSUMER: '../views/Consumer/ConsumerDetail', // 新增用户
+    EDIT_CONSUMER: '../views/Consumer/ConsumerDetail', // 编辑用户
 }
 
 // name-color类型
@@ -112,4 +113,34 @@ export const STAFF_ROLE: Record<string, INameColor> = {
         name: '员工',
         color: 'default',
     },
+}
+
+export const STAFF_GENDER: Record<number, string> = {
+    1: '男',
+    2: '女',
+}
+
+export const STAFF_EDUCATION: Record<number, string> = {
+    1: '博士',
+    2: '硕士',
+    3: '本科',
+    4: '专科',
+    5: '高中',
+    6: '初中',
+    7: '小学',
+}
+
+export const STAFF_MARRIAGE_STATUS: Record<number, string> = {
+    1: '未婚',
+    2: '已婚',
+}
+
+export const STAFF_CERTIFICATE_TYPE: Record<number, string> = {
+    1: '居民身份证',
+    2: '护照',
+    3: '驾驶证',
+    4: '军官证',
+    5: '港澳居民来往内地通行证',
+    6: '台湾居民来往内地通行证',
+    7: '外国人永久居留身份证',
 }

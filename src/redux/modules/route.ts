@@ -198,6 +198,8 @@ const routeSlice = createSlice({
               key: data.key,
               label: data.name,
               closable: data.type === 2 ? true : false,
+              params: data.params,
+              state: data.state,
             })
           }
           // 设置激活标签

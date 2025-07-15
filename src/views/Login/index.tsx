@@ -57,34 +57,36 @@ const Page = () => {
       }}
       // 表单提交
       onFinish={async (values) => {
-        // console.log('onFinish', values);
-        if (loginType === 'account') {
-          // 调用登录接口
-          const accountRes = await loginAPI(
-            values.username || username,
-            values.password || password
-          )
-          if (accountRes.success) {
-            setAccessToken(accountRes.data.accessToken)
-            setRefreshToken(accountRes.data.refreshToken)
-            // console.log('登录成功', accountRes.data);
-          } else {
-            message.error(accountRes.errMsg);
-          }
-        } else {
-          const phoneRes = await loginAPI(
-            values.mobile,
-            values.captcha
-          )
-          if (phoneRes.success) {
-            console.log('登录成功', phoneRes.data);
-          } else {
-            message.error(phoneRes.errMsg);
-          }
-        }
-        // setAccessToken('123456')
+        // if (loginType === 'account') {
+        //   // 调用登录接口
+        //   const accountRes = await loginAPI(
+        //     {
+        //       username: values.username || username,
+        //       password: values.password || password,
+        //     }
+        //   )
+        //   if (accountRes.success) {
+        //     setAccessToken(accountRes.data.accessToken)
+        //     setRefreshToken(accountRes.data.refreshToken)
+        //   } else {
+        //     message.error(accountRes.errMsg);
+        //   }
+        // } else {
+        //   const phoneRes = await loginAPI(
+        //     {
+        //       username: values.mobile,
+        //       password: values.captcha,
+        //     }
+        //   )
+        //   if (phoneRes.success) {
+        //     console.log('登录成功', phoneRes.data);
+        //   } else {
+        //     message.error(phoneRes.errMsg);
+        //   }
+        // }
+        setAccessToken('123456')
         // 跳转重定向页面
-        const redirect = getLocationParamsByName(ROUTE_PARAM_NAME.REDIRECT) || '/';
+        const redirect = getLocationParamsByName(location, ROUTE_PARAM_NAME.REDIRECT) || '/';
         // console.log('登录成功，跳转重定向页面', redirect);
         navigate(redirect, { replace: true })
       }}
@@ -242,10 +244,12 @@ const Page = () => {
               {
                 validator: (_rule, value) => {
                   if (!value && !username) {
+                    console.log('用户名不能为空!')
                     return Promise.reject('用户名不能为空!')
                   }
                   return Promise.resolve()
-                }
+                },
+                validateTrigger: ['onSubmit', 'onFinish'],
               }
             ]}
           />
@@ -271,7 +275,8 @@ const Page = () => {
                     return Promise.reject('密码不能为空!')
                   }
                   return Promise.resolve()
-                }
+                },
+                validateTrigger: ['onSubmit', 'onFinish'],
               }
             ]}
           />

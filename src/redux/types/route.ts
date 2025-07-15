@@ -21,6 +21,8 @@ export type ITabsItem = {
   label: string; // 标签页名称
   closable: boolean; // 标签页是否可关闭
   children?: ITabsItem[]; // 子标签页
+  params?: any; // 标签页参数
+  state?: any; // 标签页状态
 }
 
 export interface IRouteState {

@@ -126,7 +126,7 @@ const createRequest = (baseURL: string, headerAuth?: string) => {
             throw error
           // 其他失败情况
           default:
-            message.error(res.msg || '接口响应失败')
+            // message.error(res.msg || '接口响应失败')
             return {
               success: false,
               data: res.data,

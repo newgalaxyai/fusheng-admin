@@ -53,7 +53,11 @@ export const useRoutesHook = () => {
     if (route) {
       let path = getRoutePath(key, authRoutes.filter(item => item.key === key));
       if (params) {
-        path = path + '?' + Object.entries(params).map(([key, value]) => `${key}=${value}`).join('&');
+        if (typeof params === 'string') {
+          path = path + params;
+        } else {
+          path = path + '?' + Object.entries(params).map(([key, value]) => `${key}=${value}`).join('&');
+        }
       }
       if (state) {
         navigate(path, {
@@ -65,8 +69,17 @@ export const useRoutesHook = () => {
     }
   }
   // 添加标签页
-  const addTab = (route: IRoute) => {
-    dispatch(tabsListAction({ type: 'add', data: route }))
+  const addTab = (route: IRoute, params?: any, state?: any) => {
+    dispatch(tabsListAction({ type: 'add', data: { ...route, params, state } }))
+  }
+
+  // 切换标签页
+  const switchTab = (key: string) => {
+    const targetTab = tabsList.find(item => item.key === key);
+    // console.log('targetTab: ', targetTab);
+    if (targetTab) {
+      navigateTo(targetTab.key, targetTab.params, targetTab.state)
+    }
   }
 
   // 删除标签页
@@ -78,6 +91,12 @@ export const useRoutesHook = () => {
       const test = newTabsList[targetIndex === newTabsList.length ? targetIndex - 1 : targetIndex]
       navigateTo(test.key)
     }
+    dispatch(tabsListAction({ type: 'set', data: newTabsList }))
+  }
+
+  // 单纯的删除标签页
+  const pureRemoveTab = (key: string) => {
+    const newTabsList = tabsList.filter(item => item.key !== key);
     dispatch(tabsListAction({ type: 'set', data: newTabsList }))
   }
 
@@ -269,7 +288,9 @@ export const useRoutesHook = () => {
     getMenuItems: getMenuItems(authRoutes, 'auth', []),
     getLevelKeys,
     addTab,
+    switchTab,
     removeTab,
+    pureRemoveTab,
     getBreadcrumb,
     navigateTo,
     setCollapsed,

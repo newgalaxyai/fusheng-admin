@@ -19,6 +19,7 @@ const LayoutComponent: React.FC = () => {
     const {
         getMenuItems,
         getBreadcrumb,
+        switchTab,
         removeTab,
         navigateTo,
         setCollapsed,
@@ -201,9 +202,15 @@ const LayoutComponent: React.FC = () => {
                                     onClick={() => setCollapsed(!collapsed)}
                                     style={{
                                         fontSize: '16px',
-                                        width: 64,
-                                        height: 64,
+                                        width: '48px',
+                                        height: '48px',
+                                        marginRight: '16px',
                                     }}
+                                />
+                                {/* 面包屑 */}
+                                <Breadcrumb
+                                    items={getBreadcrumb(authRoutes, activeKey, [])}
+                                    style={{ margin: '16px 0' }}
                                 />
                                 <LayoutUser />
                             </Header>
@@ -226,8 +233,7 @@ const LayoutComponent: React.FC = () => {
                                             <Tabs
                                                 hideAdd
                                                 onChange={(key) => {
-                                                    // console.log('key', key);
-                                                    navigateTo(key);
+                                                    switchTab(key);
                                                 }}
                                                 activeKey={activeKey}
                                                 type="editable-card"
@@ -238,11 +244,6 @@ const LayoutComponent: React.FC = () => {
                                         </ConfigProvider>
                                     )
                                 }
-                                {/* 面包屑 */}
-                                <Breadcrumb
-                                    items={getBreadcrumb(authRoutes, activeKey, [])}
-                                    style={{ margin: '16px 0' }}
-                                />
                             </div>
                         </>
                     )
