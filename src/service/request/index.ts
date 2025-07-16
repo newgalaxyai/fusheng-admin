@@ -21,7 +21,17 @@ class ZZRequest {
   constructor(config: ZZRequestConfig) {
     this.instance = axios.create(config)
 
-    // 每个instance实例都添加拦截器
+    // 先添加自定义拦截器（这样可以访问到完整的AxiosResponse对象）
+    this.instance.interceptors.request.use(
+      config.interceptors?.requestSuccessFn,
+      config.interceptors?.requestFailureFn
+    )
+    this.instance.interceptors.response.use(
+      config.interceptors?.responseSuccessFn,
+      config.interceptors?.responseFailureFn
+    )
+
+    // 然后添加默认的拦截器（用于基础处理）
     this.instance.interceptors.request.use(
       (config) => {
         // loading/token
@@ -33,21 +43,12 @@ class ZZRequest {
     )
     this.instance.interceptors.response.use(
       (res) => {
-        return res.data
+        // console.log('responseSuccessFn', res)
+        return res
       },
       (err) => {
         return err
       }
-    )
-
-    // 针对特定的hyRequest实例添加拦截器
-    this.instance.interceptors.request.use(
-      config.interceptors?.requestSuccessFn,
-      config.interceptors?.requestFailureFn
-    )
-    this.instance.interceptors.response.use(
-      config.interceptors?.responseSuccessFn,
-      config.interceptors?.responseFailureFn
     )
   }
 

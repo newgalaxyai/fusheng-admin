@@ -1,5 +1,6 @@
 import { getRefreshToken, setRefreshToken, setAccessToken } from "./storge"
 import { refreshTokenAPI } from "@/api/login"
+import type { Location } from "react-router-dom"
 
 // 刷新token的API调用
 export const refreshToken = async () => {
@@ -10,7 +11,6 @@ export const refreshToken = async () => {
 
     try {
         const result = await refreshTokenAPI(refreshToken)
-
         if (result.success) {
             // 保存新的token
             setRefreshToken(result.data.refreshToken)
@@ -20,7 +20,16 @@ export const refreshToken = async () => {
             throw new Error(result.errMsg || '刷新令牌失败')
         }
     } catch (error) {
-        console.error('刷新token失败:', error)
+        console.log('刷新token失败:', error)
         throw error
     }
+}
+
+// 设置重定向信息
+export const encodeRedirectInfo = (location: Location) => {
+    return encodeURIComponent(JSON.stringify(location as Location))
+}
+// 获取重定向信息
+export const decodeRedirectInfo = (encodedRedirectInfo: string) => {
+    return JSON.parse(decodeURIComponent(encodedRedirectInfo)) as Location
 }

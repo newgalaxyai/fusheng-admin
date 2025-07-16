@@ -4,6 +4,7 @@ import axios, { AxiosResponse } from "axios"
 import { IResponse, IResponseData } from "../type"
 import { ILoginResponse, ILoginRequest } from "../type/login"
 import { seniorRequest } from "@/service"
+import { SENIOR_TOKEN, SENIOR_TENANT_ID } from "@/service/config"
 
 
 /**
@@ -14,7 +15,12 @@ import { seniorRequest } from "@/service"
 export const refreshTokenAPI = async (refreshToken: string): Promise<IResponse<ILoginResponse>> => {
     const response: AxiosResponse<IResponseData<ILoginResponse>> = await axios(`${VITE_BASE_URL}${refreshTokenURL}`, {
         method: 'POST',
-        data: { refreshToken }
+        data: { refreshToken },
+        headers: {
+            'Authorization': `Bearer ${SENIOR_TOKEN}`,
+            'tenant-id': SENIOR_TENANT_ID,
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
     })
 
     if (response.status !== 200) {

@@ -20,7 +20,7 @@ import { Row, Col, Space, message, DescriptionsProps } from 'antd'
 import { STAFF_ROLE, STAFF_CERTIFICATE_TYPE, STAFF_GENDER, STAFF_EDUCATION, STAFF_MARRIAGE_STATUS } from '@/utils/constants'
 import { MobileOutlined } from '@ant-design/icons'
 import { theme } from 'antd'
-import { IStaffListResponse } from '@/api/type/staff'
+import { IStaffList, IStaffListResponse } from '@/api/type/staff'
 import PermissionWrapper from '@/components/permission/PermissionWrapper'
 import { ROUTE_KEY, ROUTE_PERMISSION } from '@/utils/constants'
 import { useRoutesHook } from '@/hooks/useRoutes'
@@ -38,64 +38,44 @@ const StaffDetail: FC<IProps> = (_props) => {
   const staffId = getLocationParamsByName(location, ROUTE_PARAM_NAME.STAFF_ID);
   const redirect = getLocationParamsByName(location, ROUTE_PARAM_NAME.REDIRECT);
   const formRef = useRef<ProFormInstance<any>>(null);
-  const [staffInfo, setStaffInfo] = useState<IStaffListResponse>({} as IStaffListResponse);
+  const [staffInfo, setStaffInfo] = useState<IStaffList>({} as IStaffList);
   useEffect(() => {
     if (staffId && pageType === '2') {
-      setStaffInfo({
-        id: Number(staffId),
-        staffNumber: '1234567890',
-        staffName: '张三',
-        staffStatus: true,
-        staffMobile: '1234567890',
-        staffDepartmentName: '技术部',
-        staffPositionName: '技术员',
-        staffRole: 'super',
-        staffCreateTime: 1715404800,
-        staffUpdateTime: 1715404800,
-        staffDeleteTime: 1715404800,
-        certificateType: 1,
-        certificateNumber: '1234567890',
-        staffGender: 1,
-        education: 3,
-        marriageStatus: 1,
-        email: '1234567890@qq.com',
-        remark: '备注',
-      })
+      setStaffInfo({} as IStaffList)
     }
   }, [])
   const staffInfoItems: DescriptionsProps['items'] = (staffId && pageType === '2') ? [
     {
-      key: 'staffNumber',
+      key: 'username',
       label: '员工编号',
-      children: staffInfo.staffNumber,
+      children: staffInfo.username,
     },
     {
-      key: 'staffName',
+      key: 'nickname',
       label: '员工姓名',
-      children: staffInfo.staffName,
+      children: staffInfo.nickname,
     },
     {
-      key: 'staffDepartmentName',
+      key: 'deptName',
       label: '员工部门',
-      children: staffInfo.staffDepartmentName,
+      children: staffInfo.deptName,
     },
     {
       key: 'staffPositionName',
       label: '员工职位',
       children: staffInfo.staffPositionName,
     },
-
     {
       key: 'staffRole',
       label: '员工角色',
-      children: STAFF_ROLE[staffInfo.staffRole]?.name || '未知',
+      children: STAFF_ROLE[staffInfo.staffRole]?.name || '未设置',
     },
     {
-      key: 'staffMobile',
+      key: 'mobile',
       label: '手机号',
       children: (
         <>
-          {staffInfo.staffMobile}
+          {staffInfo.mobile}
         </>
       ),
     },
@@ -110,14 +90,14 @@ const StaffDetail: FC<IProps> = (_props) => {
       children: staffInfo.certificateNumber,
     },
     {
-      key: 'staffCreateTime',
+      key: 'inTime',
       label: '入职日期',
-      children: staffInfo.staffCreateTime,
+      children: staffInfo.inTime,
     },
     {
-      key: 'staffGender',
+      key: 'sex',
       label: '性别',
-      children: STAFF_GENDER[staffInfo.staffGender || 0] || '未知',
+      children: STAFF_GENDER[staffInfo.sex || 0] || '未知',
     },
     {
       key: 'education',
@@ -154,7 +134,7 @@ const StaffDetail: FC<IProps> = (_props) => {
               overflow: 'hidden',
             }}
           >
-            <ProForm<IStaffListResponse>
+            <ProForm<IStaffList>
               autoFocusFirstInput={false}
               formRef={formRef}
               layout="vertical"
@@ -175,37 +155,22 @@ const StaffDetail: FC<IProps> = (_props) => {
               }}
               onFinish={async (values) => {
                 console.log(values);
-                message.success('提交成功');
-                if (redirect) {
-                  pureRemoveTab(ROUTE_KEY.EDIT_STAFF);
-                  switchTab(ROUTE_KEY.STAFF_DETAIL);
-                }
+                // message.success('提交成功');
+                // if (redirect) {
+                //   if (redirect === ROUTE_KEY.STAFF_LIST) {
+                //     pureRemoveTab(ROUTE_KEY.ADD_STAFF);
+                //   } else if (redirect === ROUTE_KEY.STAFF_DETAIL) {
+                //     pureRemoveTab(ROUTE_KEY.EDIT_STAFF);
+                //   }
+                //   switchTab(redirect);
+                // }
               }}
               params={{}}
               request={async () => {
                 if (staffId) {
-                  return {
-                    id: Number(staffId),
-                    staffNumber: '1234567890',
-                    staffName: '张三',
-                    staffStatus: true,
-                    staffMobile: '1234567890',
-                    staffDepartmentName: '技术部',
-                    staffPositionName: '技术员',
-                    staffRole: 'super',
-                    staffCreateTime: 1715404800,
-                    staffUpdateTime: 1715404800,
-                    staffDeleteTime: 1715404800,
-                    certificateType: 1,
-                    certificateNumber: '1234567890',
-                    // staffGender: 1,
-                    // education: 3,
-                    // marriageStatus: 1,
-                    // email: '1234567890@qq.com',
-                    // remark: '备注',
-                  }
+
                 }
-                return {} as IStaffListResponse;
+                return {} as IStaffList;
               }}
             >
               <ProFormText
@@ -214,9 +179,19 @@ const StaffDetail: FC<IProps> = (_props) => {
                 tooltip="最长为 24 位"
                 placeholder="请输入"
                 colProps={{ md: 12, xl: 8 }}
+                validateTrigger={['onSubmit', 'onFinish', 'onBlur']}
                 rules={[
                   {
                     required: true,
+                    validator: (_rule, value) => {
+                      if (value && value === '1') {
+                        return Promise.reject('该员工编号已存在！')
+                      }
+                      return Promise.resolve()
+                    },
+                    validateTrigger: ['onSubmit', 'onFinish', 'onBlur'],
+                  },
+                  {
                     validator: (_rule, value) => {
                       if (!value) {
                         return Promise.reject('员工编号不能为空！')
@@ -228,10 +203,11 @@ const StaffDetail: FC<IProps> = (_props) => {
                 ]}
               />
               <ProFormText
-                name="staffName"
+                name="username"
                 label="员工姓名"
                 placeholder="请输入"
                 colProps={{ md: 12, xl: 8 }}
+                validateTrigger={['onSubmit', 'onFinish', 'onBlur']}
                 rules={[
                   {
                     required: true,
@@ -250,36 +226,36 @@ const StaffDetail: FC<IProps> = (_props) => {
                 label="员工部门"
                 placeholder="请输入"
                 colProps={{ md: 12, xl: 8 }}
-                rules={[
-                  {
-                    required: true,
-                    validator: (_rule, value) => {
-                      if (!value) {
-                        return Promise.reject('员工部门不能为空！')
-                      }
-                      return Promise.resolve()
-                    },
-                    validateTrigger: ['onSubmit', 'onFinish'],
-                  }
-                ]}
+              // rules={[
+              //   {
+              //     required: true,
+              //     validator: (_rule, value) => {
+              //       if (!value) {
+              //         return Promise.reject('员工部门不能为空！')
+              //       }
+              //       return Promise.resolve()
+              //     },
+              //     validateTrigger: ['onSubmit', 'onFinish'],
+              //   }
+              // ]}
               />
               <ProFormText
                 name="staffPositionName"
                 label="员工职位"
                 placeholder="请输入"
                 colProps={{ md: 12, xl: 8 }}
-                rules={[
-                  {
-                    required: true,
-                    validator: (_rule, value) => {
-                      if (!value) {
-                        return Promise.reject('员工职位不能为空！')
-                      }
-                      return Promise.resolve()
-                    },
-                    validateTrigger: ['onSubmit', 'onFinish'],
-                  }
-                ]}
+              // rules={[
+              //   {
+              //     required: true,
+              //     validator: (_rule, value) => {
+              //       if (!value) {
+              //         return Promise.reject('员工职位不能为空！')
+              //       }
+              //       return Promise.resolve()
+              //     },
+              //     validateTrigger: ['onSubmit', 'onFinish'],
+              //   }
+              // ]}
               />
               <ProFormSelect
                 name="staffRole"
@@ -315,9 +291,10 @@ const StaffDetail: FC<IProps> = (_props) => {
                   ),
                 }}
                 label="手机号"
-                name="staffMobile"
+                name="mobile"
                 placeholder="请输入"
                 colProps={{ xl: 8, md: 12 }}
+                validateTrigger={['onSubmit', 'onFinish', 'onBlur']}
                 rules={[
                   {
                     required: true,
@@ -325,12 +302,18 @@ const StaffDetail: FC<IProps> = (_props) => {
                       if (!value) {
                         return Promise.reject('手机号不能为空！')
                       }
+                      return Promise.resolve()
+                    },
+                    validateTrigger: ['onSubmit', 'onFinish'],
+                  },
+                  {
+                    validator: (_rule, value) => {
                       if (value && value.length === 15020202020) {
                         return Promise.reject('该手机号已存在！')
                       }
                       return Promise.resolve()
                     },
-                    validateTrigger: ['onSubmit', 'onFinish'],
+                    validateTrigger: ['onSubmit', 'onFinish', 'onBlur'],
                   }
                 ]}
               />
@@ -342,6 +325,7 @@ const StaffDetail: FC<IProps> = (_props) => {
                   label: STAFF_CERTIFICATE_TYPE[Number(key)],
                   value: key,
                 }))}
+                validateTrigger={['onSubmit', 'onFinish', 'onBlur']}
                 rules={[
                   {
                     required: true,
@@ -359,6 +343,7 @@ const StaffDetail: FC<IProps> = (_props) => {
                 label="证件号码"
                 name="certificateNumber"
                 colProps={{ xl: 8, md: 12 }}
+                validateTrigger={['onSubmit', 'onFinish', 'onBlur']}
                 rules={[
                   {
                     required: true,
@@ -397,7 +382,7 @@ const StaffDetail: FC<IProps> = (_props) => {
               />
               <ProFormSelect
                 label="性别"
-                name="staffGender"
+                name="sex"
                 colProps={{ xl: 8, md: 12 }}
                 options={Object.keys(STAFF_GENDER).map((key) => ({
                   label: STAFF_GENDER[Number(key)],
@@ -409,6 +394,7 @@ const StaffDetail: FC<IProps> = (_props) => {
                 name="staffCreateTime"
                 className="staff-form-date-picker"
                 colProps={{ xl: 8, md: 12 }}
+                validateTrigger={['onSubmit', 'onFinish', 'onBlur']}
                 rules={[
                   {
                     required: true,
@@ -452,7 +438,7 @@ const StaffDetail: FC<IProps> = (_props) => {
                       {
                         [ROUTE_PARAM_NAME.STAFF_ID]: staffId,
                         [ROUTE_PARAM_NAME.PAGE_TYPE]: '1',
-                        [ROUTE_PARAM_NAME.REDIRECT]: '1',
+                        [ROUTE_PARAM_NAME.REDIRECT]: ROUTE_KEY.STAFF_DETAIL,
                       });
                   }}
                 >

@@ -1,10 +1,12 @@
 import { VITE_BASE_URL, TIME_OUT, SENIOR_TOKEN, SENIOR_TENANT_ID } from './config'
 import ZZRequest from './request'
-import { message } from 'antd'
+import { message, Modal } from 'antd'
 import { IResponseData } from '@/api/type'
-import { refreshToken } from '@/utils/auth'
+import { encodeRedirectInfo, refreshToken } from '@/utils/auth'
 import { getAccessToken, removeAccessToken, removeRefreshToken } from '@/utils/storge'
 import { appURL, adminURL } from '@/api/url'
+import { ROUTE_PATH, ROUTE_PARAM_NAME } from '@/utils/constants'
+import axios from 'axios'
 
 // 是否正在刷新token
 let isRefreshToken = false
@@ -14,17 +16,19 @@ interface PendingRequest {
   config: any;
   resolve: (value: any) => void;
   reject: (reason?: any) => void;
+  requestInstance: ZZRequest; // 保存请求实例以便重试时使用相同的拦截器
 }
 const waitQueue: PendingRequest[] = []
 
 // 处理token刷新逻辑
-const handleTokenRefresh = async (originalRequest: any) => {
+const handleTokenRefresh = async (originalRequest: any, requestInstance: ZZRequest) => {
   return new Promise((resolve, reject) => {
     // 将请求加入等待队列
     waitQueue.push({
       config: originalRequest,
       resolve,
-      reject
+      reject,
+      requestInstance
     })
 
     // 如果已经在刷新token，直接返回
@@ -38,24 +42,22 @@ const handleTokenRefresh = async (originalRequest: any) => {
     refreshToken()
       .then((newToken) => {
         // 刷新成功，处理等待队列中的所有请求
-        console.log('Token刷新成功，重试等待队列中的请求')
+        // console.log('Token刷新成功，重试等待队列中的请求')
 
         // 为所有等待的请求更新token并重试
-        waitQueue.forEach(({ config, resolve, reject }) => {
+        waitQueue.forEach(({ config, resolve, reject, requestInstance }) => {
           config.headers = config.headers || {}
           config.headers['Authorization'] = `Bearer ${newToken}`
 
-          // 重新发起请求
-          baseRequest.request(config)
-            .then(resolve)
-            .catch(reject)
+          // 使用原始的请求实例重新发起请求，确保经过相同的拦截器处理
+          requestInstance.instance.request(config).then(resolve).catch(reject)
         })
 
         // 清空等待队列
         waitQueue.length = 0
       })
       .catch((error) => {
-        console.error('Token刷新失败:', error)
+        console.log('Token刷新失败:', error)
 
         // 刷新失败，拒绝所有等待的请求
         waitQueue.forEach(({ reject }) => {
@@ -68,6 +70,27 @@ const handleTokenRefresh = async (originalRequest: any) => {
         // 清除token
         removeAccessToken()
         removeRefreshToken()
+        // 使用Modal静态方法显示提示框
+        Modal.info({
+          title: '登录已过期',
+          content: '登录已过期，请重新登录',
+          okText: '确定',
+          onOk: () => {
+            // 获取当前位置信息并编码
+            const currentLocation = {
+              pathname: window.location.pathname,
+              search: window.location.search,
+              hash: window.location.hash,
+              state: null,
+              key: 'default'
+            }
+            const encodedRedirectInfo = encodeRedirectInfo(currentLocation)
+
+            // 跳转到登录页面
+            const loginUrl = `#${ROUTE_PATH.LOGIN}?${ROUTE_PARAM_NAME.REDIRECT_INFO}=${encodedRedirectInfo}`
+            window.location.href = loginUrl
+          }
+        })
       })
       .finally(() => {
         // 重置刷新状态
@@ -77,7 +100,7 @@ const handleTokenRefresh = async (originalRequest: any) => {
 }
 
 const createRequest = (baseURL: string, headerAuth?: string) => {
-  return new ZZRequest({
+  const requestInstance = new ZZRequest({
     baseURL,
     timeout: TIME_OUT,
     interceptors: {
@@ -108,22 +131,20 @@ const createRequest = (baseURL: string, headerAuth?: string) => {
           errMsg: error.message || '接口请求失败'
         })
       },
-      responseSuccessFn(res: IResponseData<any>) {
+      responseSuccessFn(response: any) {
+        const res: IResponseData<any> = response.data
         switch (res.code) {
           // 成功
           case 0:
+            // console.log('响应成功', res)
             // 统一的前端接口返回格式
             return {
               success: true,
               data: res.data,
             }
-          // 登录过期/权限不足 - 抛出401错误，让responseFailureFn处理
+          // 登录过期/权限不足 - 使用原始请求配置进行token刷新
           case 401:
-            console.log('检测到业务401错误，转换为网络401错误')
-            const error = new Error('Unauthorized') as any
-            error.response = { status: 401, data: res }
-            error.config = (res as any).config
-            throw error
+            return handleTokenRefresh(response.config, requestInstance)
           // 其他失败情况
           default:
             // message.error(res.msg || '接口响应失败')
@@ -136,12 +157,6 @@ const createRequest = (baseURL: string, headerAuth?: string) => {
       },
       responseFailureFn(error) {
         console.log('响应失败', error);
-
-        // 处理401错误 - 可能是网络层面的401
-        if (error.response && error.response.status === 401) {
-          console.log('网络层401错误，开始token刷新流程')
-          return handleTokenRefresh(error.config)
-        }
 
         // 处理请求超时
         if (error.code === 'ECONNABORTED' && error.message.includes('timeout')) {
@@ -159,6 +174,8 @@ const createRequest = (baseURL: string, headerAuth?: string) => {
       }
     },
   })
+  
+  return requestInstance
 }
 
 const baseRequest = createRequest(VITE_BASE_URL + appURL)

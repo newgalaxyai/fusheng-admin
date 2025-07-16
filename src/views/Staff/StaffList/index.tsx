@@ -1,15 +1,16 @@
 import React, { useRef, useEffect, memo, useState } from 'react'
 import type { FC, ReactNode } from 'react'
-import { Button, Space, App, Tag, Spin } from 'antd'
+import { Button, Space, App, Tag, Spin, DatePicker } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { ProTable, ProColumns, TableDropdown } from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
 import { useRoutesHook } from '@/hooks/useRoutes'
 import { ROUTE_KEY, ROUTE_PARAM_NAME, ROUTE_PERMISSION, STAFF_ROLE } from '@/utils/constants'
-import { IStaffListResponse } from '@/api/type/staff'
+import { IStaffList, IStaffListRequest, IStaffListResponse } from '@/api/type/staff'
 import { useAppSelector } from '@/hooks/useAppStore'
 import PermissionWrapper from '@/components/permission/PermissionWrapper'
 import dayjs from 'dayjs'
+import { getStaffListAPI } from '@/api/staff'
 
 interface IProps {
   children?: ReactNode
@@ -53,7 +54,7 @@ const StaffList: FC<IProps> = (_props) => {
   // }, [])
 
   // 员工列表列数据
-  const columns: ProColumns<IStaffListResponse>[] = [
+  const columns: ProColumns<IStaffList>[] = [
     {
       dataIndex: 'index',
       valueType: 'index',
@@ -63,7 +64,7 @@ const StaffList: FC<IProps> = (_props) => {
       align: 'center',
     },
     {
-      dataIndex: 'staffNumber',
+      dataIndex: 'username',
       title: '员工编号',
       fixed: 'left',
       width: 120,
@@ -82,18 +83,18 @@ const StaffList: FC<IProps> = (_props) => {
               });
           }}
         >
-          {record.staffNumber}
+          {record.username}
         </Button>
       ),
     },
     {
-      dataIndex: 'staffName',
+      dataIndex: 'nickname',
       title: '员工姓名',
       width: 100,
       align: 'center',
     },
     {
-      dataIndex: 'staffMobile',
+      dataIndex: 'mobile',
       title: '员工手机号',
       width: 150,
       copyable: true,
@@ -117,7 +118,7 @@ const StaffList: FC<IProps> = (_props) => {
       align: 'center',
     },
     {
-      dataIndex: 'staffDepartmentName',
+      dataIndex: 'deptName',
       title: '员工部门',
       width: 100,
       align: 'center',
@@ -135,18 +136,27 @@ const StaffList: FC<IProps> = (_props) => {
       title: '员工角色',
       width: 100,
       render: (_, record) => (
-        <Tag color={STAFF_ROLE[record.staffRole].color} key={record.id}>
-          {STAFF_ROLE[record.staffRole].name}
+        <Tag color={STAFF_ROLE[record.staffRole]?.color || 'default'} key={record.id}>
+          {STAFF_ROLE[record.staffRole]?.name || '未设置'}
         </Tag>
       ),
       align: 'center',
     },
     {
-      dataIndex: 'staffCreateTime',
+      dataIndex: 'createTime',
       title: '创建时间',
       valueType: 'date',
       width: 200,
       align: 'center',
+      renderFormItem: (_, { onChange }) => {
+        return (
+          <DatePicker.RangePicker
+            onChange={(value) => {
+              onChange?.(value);
+            }}
+          />
+        )
+      },
     },
     {
       title: '操作',
@@ -268,7 +278,7 @@ const StaffList: FC<IProps> = (_props) => {
         tip="加载中..."
         style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
       /> */}
-      <ProTable<IStaffListResponse>
+      <ProTable<IStaffList>
         scroll={{ x: true, y: 'calc(100vh - 300px)' }}
         bordered
         columns={columns}
@@ -328,13 +338,21 @@ const StaffList: FC<IProps> = (_props) => {
           // console.log('params: ', params);
           // console.log('sort: ', sort);
           // console.log('filter: ', filter);
-          // const res = await getStaffListAPI(params)
+          let queryParams: IStaffListRequest = {
+            pageNo: params.current!,
+            pageSize: params.pageSize!,
+            staffNumber: params.staffNumber,
+            mobile: params.mobile,
+            staffStatus: params.staffStatus,
+            username: params.username,
+            staffRole: params.staffRole,
+            staffCreateTime: params.staffCreateTime,
+          }
+          const res = await getStaffListAPI(queryParams)
           return {
-            data: Array.from({ length: 100 }, (_, index) => ({
-              ...staffList[0],
-              id: index + 1,
-            })),
-            success: true,
+            data: res.data.list,
+            total: res.data.total,
+            success: res.success,
           }
         }}
         editable={{
@@ -394,7 +412,8 @@ const StaffList: FC<IProps> = (_props) => {
                 navigateTo(
                   ROUTE_KEY.ADD_STAFF,
                   {
-                    [ROUTE_PARAM_NAME.PAGE_TYPE]: '1'
+                    [ROUTE_PARAM_NAME.PAGE_TYPE]: '1',
+                    [ROUTE_PARAM_NAME.REDIRECT]: ROUTE_KEY.STAFF_LIST,
                   });
               }}
               type="primary"

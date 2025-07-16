@@ -21,6 +21,7 @@ import { getRememberMe, setRememberMe, setAccessToken, setRefreshToken } from '@
 import { getLocationParamsByName } from '@/utils/location';
 import { ROUTE_PARAM_NAME, ROUTE_PATH } from '@/utils/constants';
 import { loginAPI } from '@/api/login';
+import { decodeRedirectInfo } from '@/utils/auth';
 
 type LoginType = 'phone' | 'account';
 
@@ -57,38 +58,41 @@ const Page = () => {
       }}
       // 表单提交
       onFinish={async (values) => {
-        // if (loginType === 'account') {
-        //   // 调用登录接口
-        //   const accountRes = await loginAPI(
-        //     {
-        //       username: values.username || username,
-        //       password: values.password || password,
-        //     }
-        //   )
-        //   if (accountRes.success) {
-        //     setAccessToken(accountRes.data.accessToken)
-        //     setRefreshToken(accountRes.data.refreshToken)
-        //   } else {
-        //     message.error(accountRes.errMsg);
-        //   }
-        // } else {
-        //   const phoneRes = await loginAPI(
-        //     {
-        //       username: values.mobile,
-        //       password: values.captcha,
-        //     }
-        //   )
-        //   if (phoneRes.success) {
-        //     console.log('登录成功', phoneRes.data);
-        //   } else {
-        //     message.error(phoneRes.errMsg);
-        //   }
-        // }
-        setAccessToken('123456')
-        // 跳转重定向页面
-        const redirect = getLocationParamsByName(location, ROUTE_PARAM_NAME.REDIRECT) || '/';
-        // console.log('登录成功，跳转重定向页面', redirect);
-        navigate(redirect, { replace: true })
+        if (loginType === 'account') {
+          // 调用登录接口
+          const accountRes = await loginAPI(
+            {
+              username: values.username || username,
+              password: values.password || password,
+            }
+          )
+          // console.log('accountRes', accountRes);
+          if (accountRes.success) {
+            setAccessToken(accountRes.data.accessToken)
+            setRefreshToken(accountRes.data.refreshToken)
+          } else {
+            message.error(accountRes.errMsg);
+          }
+        } else {
+          const phoneRes = await loginAPI(
+            {
+              username: values.mobile,
+              password: values.captcha,
+            }
+          )
+          if (phoneRes.success) {
+            console.log('登录成功', phoneRes.data);
+          } else {
+            message.error(phoneRes.errMsg);
+          }
+        }
+        const encodedRedirectInfo = getLocationParamsByName(location, ROUTE_PARAM_NAME.REDIRECT_INFO)
+        if (encodedRedirectInfo) {
+          const paramsRedirect = decodeRedirectInfo(encodedRedirectInfo)
+          navigate(paramsRedirect.pathname + (paramsRedirect.search || '') + (paramsRedirect.hash || ''), { replace: true, state: paramsRedirect.state })
+        } else {
+          navigate(ROUTE_PATH.HOME, { replace: true })
+        }
       }}
       // 表单请求入参
       // params={{

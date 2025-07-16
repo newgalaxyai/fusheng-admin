@@ -8,8 +8,11 @@ export const LOCAL_STORAGE_NAME = {
 // 路由拼接参数名的常量
 export const ROUTE_PARAM_NAME = {
     REDIRECT: 'redirect', // 重定向参数名
+    SEARCH_PARAMS: 'searchParams', // 搜索参数
+    STATE_PARAMS: 'stateParams', // 状态参数
     STAFF_ID: 'staffId', // 员工id
     PAGE_TYPE: 'pageType', // 页面类型 1:新增 2:编辑 3:详情
+    REDIRECT_INFO: 'redirectInfo', // 完整重定向信息
 }
 
 // 路由路径的常量
