@@ -9,8 +9,8 @@ import { ROUTE_KEY, ROUTE_PARAM_NAME, ROUTE_PERMISSION, STAFF_ROLE } from '@/uti
 import { IStaffList, IStaffListRequest, IStaffListResponse } from '@/api/type/staff'
 import { useAppSelector } from '@/hooks/useAppStore'
 import PermissionWrapper from '@/components/permission/PermissionWrapper'
-import dayjs from 'dayjs'
-import { getStaffListAPI } from '@/api/staff'
+import { getStaffListAPI, deleteStaffAPI } from '@/api/staff'
+import { encodeRedirectInfo } from '@/utils/auth'
 
 interface IProps {
   children?: ReactNode
@@ -75,7 +75,7 @@ const StaffList: FC<IProps> = (_props) => {
           variant="link"
           color="primary"
           onClick={() => {
-            console.log('record: ', record);
+            // console.log('record: ', record);
             navigateTo(ROUTE_KEY.STAFF_DETAIL,
               {
                 [ROUTE_PARAM_NAME.STAFF_ID]: record.id,
@@ -192,10 +192,18 @@ const StaffList: FC<IProps> = (_props) => {
             color="primary" variant="text"
             onClick={() => {
               console.log('record: ', record);
+              const encodedRedirectInfo = encodeRedirectInfo({
+                pathname: ROUTE_KEY.STAFF_LIST,
+                search: '',
+                hash: '',
+                state: null,
+                key: ''
+              })
               navigateTo(ROUTE_KEY.EDIT_STAFF,
                 {
                   [ROUTE_PARAM_NAME.STAFF_ID]: record.id,
-                  [ROUTE_PARAM_NAME.PAGE_TYPE]: '1'
+                  [ROUTE_PARAM_NAME.PAGE_TYPE]: '1',
+                  [ROUTE_PARAM_NAME.REDIRECT_INFO]: encodedRedirectInfo,
                 });
             }}
           >
@@ -251,8 +259,15 @@ const StaffList: FC<IProps> = (_props) => {
                         content: '确定删除该员工吗？',
                         okText: '确定',
                         cancelText: '取消',
-                        onOk: () => {
-                          message.success('删除成功');
+                        onOk: async () => {
+                          const res = await deleteStaffAPI({
+                            id: record.id,
+                          })
+                          if (res.success) {
+                            message.success('删除成功');
+                          } else {
+                            message.error(res.errMsg);
+                          }
                           // 删除后刷新列表
                           action?.reload();
                         },
@@ -409,11 +424,18 @@ const StaffList: FC<IProps> = (_props) => {
               icon={<PlusOutlined />}
               onClick={() => {
                 // actionRef.current?.reload();
+                const encodedRedirectInfo = encodeRedirectInfo({
+                  pathname: ROUTE_KEY.STAFF_LIST,
+                  search: '',
+                  hash: '',
+                  state: null,
+                  key: ''
+                })
                 navigateTo(
                   ROUTE_KEY.ADD_STAFF,
                   {
                     [ROUTE_PARAM_NAME.PAGE_TYPE]: '1',
-                    [ROUTE_PARAM_NAME.REDIRECT]: ROUTE_KEY.STAFF_LIST,
+                    [ROUTE_PARAM_NAME.REDIRECT_INFO]: encodedRedirectInfo,
                   });
               }}
               type="primary"

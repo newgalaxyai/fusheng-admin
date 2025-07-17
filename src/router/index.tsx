@@ -3,7 +3,6 @@ import Lazy from './lazy'
 import { IRoute } from '@/redux/types/route'
 import AuthRouteComponent from '@/components/auth'
 import { ROUTE_KEY, ROUTE_PATH, ROUTE_ELEMENT_PATH } from '@/utils/constants'
-import LayoutComponent from '@/components/layout'
 
 const routes: IRoute[] = [
   {

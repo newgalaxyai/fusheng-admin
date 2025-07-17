@@ -83,6 +83,9 @@ class ZZRequest {
   post<T = any>(config: ZZRequestConfig<T>) {
     return this.request({ ...config, method: 'POST' })
   }
+  put<T = any>(config: ZZRequestConfig<T>) {
+    return this.request({ ...config, method: 'PUT' })
+  }
   delete<T = any>(config: ZZRequestConfig<T>) {
     return this.request({ ...config, method: 'DELETE' })
   }

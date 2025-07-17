@@ -1,7 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { IRouteState } from '../types/route'
-import { SolutionOutlined, UserOutlined } from '@ant-design/icons';
-import { ROUTE_KEY, ROUTE_NAME, ROUTE_PATH, ROUTE_PERMISSION, ROUTE_ELEMENT_PATH } from '@/utils/constants';
+import {
+  ROUTE_KEY,
+  ROUTE_NAME,
+  ROUTE_PATH,
+  ROUTE_PERMISSION,
+  ROUTE_ELEMENT_PATH,
+} from '@/utils/constants';
 
 const initialState: IRouteState = {
   // 路由列表
@@ -9,7 +14,6 @@ const initialState: IRouteState = {
     // 员工管理
     {
       name: ROUTE_NAME.STAFF_MANAGE,
-      icon: UserOutlined,
       key: ROUTE_KEY.STAFF_MANAGE,
       parentKey: ROUTE_KEY.AUTH,
       hideInMenu: false,
@@ -101,7 +105,6 @@ const initialState: IRouteState = {
     // 用户管理
     {
       name: ROUTE_NAME.CONSUMER_MANAGE,
-      icon: SolutionOutlined,
       key: ROUTE_KEY.CONSUMER_MANAGE,
       parentKey: ROUTE_KEY.AUTH,
       hideInMenu: false,

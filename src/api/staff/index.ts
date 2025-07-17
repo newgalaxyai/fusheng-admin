@@ -1,8 +1,23 @@
 import { baseRequest, adminRequest } from '@/service'
-import type { IStaffListRequest, IStaffListResponse } from '@/api/type/staff'
+import type { 
+  IStaffListRequest, 
+  IStaffListResponse, 
+  IStaffList, 
+  IStaffDetailRequest,
+} from '@/api/type/staff'
 import { IRequest, IResponse } from '../type'
-import { staffListURL } from '../url/staff'
+import { 
+  staffListURL, 
+  staffDetailURL, 
+  staffEditURL, 
+  staffAddURL, 
+  staffDeleteURL } from '../url/staff'
 
+/**
+ * 获取员工列表
+ * @param params 员工列表请求参数
+ * @returns 员工列表响应
+ */
 export const getStaffListAPI = async (params: IRequest<IStaffListRequest>): Promise<IResponse<IStaffListResponse>> => {
   const response = await adminRequest.get<IResponse<IStaffListResponse>>({
     url: staffListURL,
@@ -12,4 +27,58 @@ export const getStaffListAPI = async (params: IRequest<IStaffListRequest>): Prom
   return response
 }
 
+/**
+ * 获取员工详情
+ * @param params 员工ID
+ * @returns 员工详情
+ */
+export const getStaffDetailAPI = async (params: IRequest<IStaffDetailRequest>): Promise<IResponse<IStaffList>> => {
+  const response = await adminRequest.get<IResponse<IStaffList>>({
+    url: staffDetailURL,
+    params
+  })
 
+  return response
+}
+
+/**
+ * 新增员工
+ * @param params 员工信息
+ * @returns 结果
+ */
+export const addStaffAPI = async (params: IRequest<IStaffList>): Promise<IResponse<IStaffList>> => {
+  const response = await adminRequest.post<IResponse<any>>({
+    url: staffAddURL,
+    data: params
+  })
+
+  return response
+}
+
+/**
+ * 编辑员工
+ * @param params 员工信息
+ * @returns 结果
+ */
+export const editStaffAPI = async (params: IRequest<IStaffList>): Promise<IResponse<IStaffList>> => {
+  const response = await adminRequest.put<IResponse<any>>({
+    url: staffEditURL,
+    data: params
+  })
+
+  return response
+}
+
+/**
+ * 删除员工
+ * @param params 员工ID
+ * @returns 结果
+ */
+export const deleteStaffAPI = async (params: IRequest<IStaffDetailRequest>): Promise<IResponse<IStaffList>> => {
+  const response = await adminRequest.delete<IResponse<any>>({
+    url: staffDeleteURL,
+    params
+  })
+
+  return response
+}

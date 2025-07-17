@@ -17,7 +17,7 @@ export default defineConfig(({ mode }): UserConfig => {
           target: 'http://192.168.110.10:48080',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/fusheng/, '')
-        }
+        },
       }
     },
     resolve: {

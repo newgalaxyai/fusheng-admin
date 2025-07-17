@@ -1,4 +1,4 @@
-import { refreshTokenURL, loginURL } from "@/api/url/login"
+import { refreshTokenURL, loginURL, loginInfoURL } from "@/api/url/login"
 import { VITE_BASE_URL } from "@/service/config"
 import axios, { AxiosResponse } from "axios"
 import { IResponse, IResponseData } from "../type"
@@ -50,6 +50,14 @@ export const loginAPI = async (data: ILoginRequest): Promise<IResponse<ILoginRes
     const response = await seniorRequest.post<IResponse<ILoginResponse>>({
         url: loginURL,
         data
+    })
+
+    return response
+}
+
+export const getLoginInfoAPI = async (): Promise<IResponse<ILoginResponse>> => {
+    const response = await seniorRequest.get<IResponse<ILoginResponse>>({
+        url: loginInfoURL,
     })
 
     return response

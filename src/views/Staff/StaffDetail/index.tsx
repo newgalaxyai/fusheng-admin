@@ -1,29 +1,35 @@
 import React, { useEffect, useRef, useState } from 'react'
 import type { FC, ReactNode } from 'react'
-import { Result, Button, Descriptions } from 'antd'
+import { Button, Descriptions, Spin } from 'antd'
 import { ROUTE_PARAM_NAME } from '@/utils/constants'
 import { getLocationParamsByName } from '@/utils/location'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
   ProForm,
-  ProFormRadio,
-  ProFormSwitch,
   ProFormText,
   ProFormTextArea,
   ProFormDatePicker,
-  ProFormDateRangePicker,
   ProFormSelect,
-  ProFormDigit,
   ProFormInstance,
 } from '@ant-design/pro-components'
 import { Row, Col, Space, message, DescriptionsProps } from 'antd'
-import { STAFF_ROLE, STAFF_CERTIFICATE_TYPE, STAFF_GENDER, STAFF_EDUCATION, STAFF_MARRIAGE_STATUS } from '@/utils/constants'
+import {
+  STAFF_ROLE,
+  STAFF_CERTIFICATE_TYPE,
+  STAFF_GENDER,
+  STAFF_EDUCATION,
+  STAFF_MARRIAGE_STATUS,
+} from '@/utils/constants'
 import { MobileOutlined } from '@ant-design/icons'
 import { theme } from 'antd'
-import { IStaffList, IStaffListResponse } from '@/api/type/staff'
+import {
+  IStaffList,
+} from '@/api/type/staff'
 import PermissionWrapper from '@/components/permission/PermissionWrapper'
 import { ROUTE_KEY, ROUTE_PERMISSION } from '@/utils/constants'
 import { useRoutesHook } from '@/hooks/useRoutes'
+import { getStaffDetailAPI, editStaffAPI, addStaffAPI } from '@/api/staff'
+import { decodeRedirectInfo, encodeRedirectInfo } from '@/utils/auth'
 
 interface IProps {
   children?: ReactNode
@@ -36,12 +42,26 @@ const StaffDetail: FC<IProps> = (_props) => {
   const { navigateTo, getRouteRole, switchTab, pureRemoveTab } = useRoutesHook();
   const pageType = getLocationParamsByName(location, ROUTE_PARAM_NAME.PAGE_TYPE);
   const staffId = getLocationParamsByName(location, ROUTE_PARAM_NAME.STAFF_ID);
-  const redirect = getLocationParamsByName(location, ROUTE_PARAM_NAME.REDIRECT);
+  const redirectInfo = getLocationParamsByName(location, ROUTE_PARAM_NAME.REDIRECT_INFO);
   const formRef = useRef<ProFormInstance<any>>(null);
   const [staffInfo, setStaffInfo] = useState<IStaffList>({} as IStaffList);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (staffId && pageType === '2') {
-      setStaffInfo({} as IStaffList)
+      setLoading(true);
+      getStaffDetailAPI({
+        id: Number(staffId)
+      }).then((res) => {
+        if (res.success) {
+          setStaffInfo(res.data)
+        } else {
+          message.error(res.errMsg)
+        }
+      }).finally(() => {
+        setLoading(false);
+      })
+    } else {
+      setLoading(false);
     }
   }, [])
   const staffInfoItems: DescriptionsProps['items'] = (staffId && pageType === '2') ? [
@@ -124,7 +144,19 @@ const StaffDetail: FC<IProps> = (_props) => {
   return (
     <>
       {
-        pageType === '1' ? (
+        loading ? (
+          <div
+            style={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Spin spinning={true} tip="加载中..." />
+          </div>
+        ) : pageType === '1' ? (
           <div
             className="staff-form-container"
             style={{
@@ -154,27 +186,55 @@ const StaffDetail: FC<IProps> = (_props) => {
                 },
               }}
               onFinish={async (values) => {
-                console.log(values);
+                let res = null;
+                if (staffId) {
+                  res = await editStaffAPI({
+                    ...values,
+                    id: Number(staffId),
+                  })
+                } else {
+                  res = await addStaffAPI({
+                    ...values,
+                    password: 'fusheng@' + values.username, // 初始密码
+                  })
+                }
+                if (res.success) {
+                  message.success('提交成功');
+                  if (redirectInfo) {
+                    const redirect = decodeRedirectInfo(redirectInfo);
+                    if (redirect.pathname === ROUTE_KEY.STAFF_LIST) {
+                      if (staffId) {
+                        pureRemoveTab(ROUTE_KEY.EDIT_STAFF);
+                      } else {
+                        pureRemoveTab(ROUTE_KEY.ADD_STAFF);
+                      }
+                    } else if (redirect.pathname === ROUTE_KEY.STAFF_DETAIL) {
+                      pureRemoveTab(ROUTE_KEY.EDIT_STAFF);
+                    }
+                    navigateTo(redirect.pathname, redirect.search, redirect.state);
+                  }
+                } else {
+                  message.error(res.errMsg);
+                }
                 // message.success('提交成功');
-                // if (redirect) {
-                //   if (redirect === ROUTE_KEY.STAFF_LIST) {
-                //     pureRemoveTab(ROUTE_KEY.ADD_STAFF);
-                //   } else if (redirect === ROUTE_KEY.STAFF_DETAIL) {
-                //     pureRemoveTab(ROUTE_KEY.EDIT_STAFF);
-                //   }
-                //   switchTab(redirect);
-                // }
               }}
               params={{}}
               request={async () => {
                 if (staffId) {
-
+                  const res = await getStaffDetailAPI({
+                    id: Number(staffId)
+                  })
+                  if (res.success) {
+                    return res.data
+                  } else {
+                    return {} as IStaffList
+                  }
                 }
                 return {} as IStaffList;
               }}
             >
               <ProFormText
-                name="staffNumber"
+                name="username"
                 label="员工编号"
                 tooltip="最长为 24 位"
                 placeholder="请输入"
@@ -203,7 +263,7 @@ const StaffDetail: FC<IProps> = (_props) => {
                 ]}
               />
               <ProFormText
-                name="username"
+                name="nickname"
                 label="员工姓名"
                 placeholder="请输入"
                 colProps={{ md: 12, xl: 8 }}
@@ -222,7 +282,7 @@ const StaffDetail: FC<IProps> = (_props) => {
                 ]}
               />
               <ProFormText
-                name="staffDepartmentName"
+                name="deptName"
                 label="员工部门"
                 placeholder="请输入"
                 colProps={{ md: 12, xl: 8 }}
@@ -386,12 +446,12 @@ const StaffDetail: FC<IProps> = (_props) => {
                 colProps={{ xl: 8, md: 12 }}
                 options={Object.keys(STAFF_GENDER).map((key) => ({
                   label: STAFF_GENDER[Number(key)],
-                  value: key,
+                  value: Number(key),
                 }))}
               />
               <ProFormDatePicker
                 label="入职日期"
-                name="staffCreateTime"
+                name="inTime"
                 className="staff-form-date-picker"
                 colProps={{ xl: 8, md: 12 }}
                 validateTrigger={['onSubmit', 'onFinish', 'onBlur']}
@@ -434,11 +494,18 @@ const StaffDetail: FC<IProps> = (_props) => {
                   key="edit"
                   color="primary" variant="text"
                   onClick={() => {
+                    const encodedRedirectInfo = encodeRedirectInfo({
+                      pathname: ROUTE_KEY.STAFF_DETAIL,
+                      search: `?${ROUTE_PARAM_NAME.STAFF_ID}=${staffId}&${ROUTE_PARAM_NAME.PAGE_TYPE}=2`,
+                      hash: '',
+                      state: null,
+                      key: ''
+                    })
                     navigateTo(ROUTE_KEY.EDIT_STAFF,
                       {
                         [ROUTE_PARAM_NAME.STAFF_ID]: staffId,
                         [ROUTE_PARAM_NAME.PAGE_TYPE]: '1',
-                        [ROUTE_PARAM_NAME.REDIRECT]: ROUTE_KEY.STAFF_DETAIL,
+                        [ROUTE_PARAM_NAME.REDIRECT_INFO]: encodedRedirectInfo,
                       });
                   }}
                 >

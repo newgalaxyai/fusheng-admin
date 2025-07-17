@@ -10,8 +10,7 @@ import type { GetProps } from "antd";
 import { usePermissionCheck } from "./usePermission";
 import LayoutComponent from "@/components/layout";
 import AuthRouteComponent from "@/components/auth";
-import { HomeOutlined } from "@ant-design/icons";
-import { ROUTE_ELEMENT_PATH, ROUTE_KEY, ROUTE_NAME, ROUTE_PATH } from "@/utils/constants";
+import { ROUTE_ELEMENT_PATH, ROUTE_ICON, ROUTE_KEY, ROUTE_NAME, ROUTE_PATH } from "@/utils/constants";
 import { useCallback, useEffect } from "react";
 
 export type IBreadcrumb = {
@@ -36,7 +35,6 @@ export const useRoutesHook = () => {
     {
       name: ROUTE_NAME.HOME,
       key: ROUTE_KEY.HOME,
-      icon: HomeOutlined,
       parentKey: ROUTE_KEY.AUTH,
       order: 0,
       type: 2,
@@ -76,9 +74,10 @@ export const useRoutesHook = () => {
   // 切换标签页
   const switchTab = (key: string) => {
     const targetTab = tabsList.find(item => item.key === key);
-    // console.log('targetTab: ', targetTab);
     if (targetTab) {
       navigateTo(targetTab.key, targetTab.params, targetTab.state)
+    } else {
+      navigateTo(key)
     }
   }
 
@@ -184,7 +183,7 @@ export const useRoutesHook = () => {
           result.push({
             key: route.key,
             label: route.name,
-            icon: route.icon ? <Icon component={route.icon as CustomIconComponentProps['component']} /> : null,
+            icon: ROUTE_ICON[route.key as keyof typeof ROUTE_ICON] ? <Icon component={ROUTE_ICON[route.key as keyof typeof ROUTE_ICON] as CustomIconComponentProps['component']} /> : null,
             children: getMenuItems(routes, route.key, []).length === 0 ? undefined : getMenuItems(routes, route.key, []),
           });
         }

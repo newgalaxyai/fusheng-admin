@@ -2,7 +2,7 @@ import type { RouteObject } from 'react-router-dom'
 
 export type IRoute = RouteObject & {
   name?: string; // 路由名称
-  icon?: React.ComponentType | React.ReactNode; // 路由图标
+  icon?: string; // 路由图标
   key: string; // 路由key
   parentKey: string; // 父级路由key
   path?: string; // 路由路径

@@ -29,9 +29,14 @@ export type IStaffList = {
     marriageStatus?: number // 婚姻状态 0:未知 1:未婚 2:已婚
     email?: string // 邮箱
     remark?: string // 备注
+    password?: string // 密码
 }
 
 export type IStaffListResponse = {
     list: IStaffList[],
     total: number
+}
+
+export type IStaffDetailRequest = {
+    id: number // 员工ID
 }

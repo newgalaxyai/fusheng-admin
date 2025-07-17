@@ -1,6 +1,5 @@
 import React from 'react'
 import type { FC, ReactNode } from 'react'
-import { Result, Button } from 'antd'
 
 interface IProps {
   children?: ReactNode

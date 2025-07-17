@@ -1,3 +1,5 @@
+import { HomeOutlined, UserOutlined, SolutionOutlined } from "@ant-design/icons";
+
 // 本地存储的常量
 export const LOCAL_STORAGE_NAME = {
     ACCESS_TOKEN: 'access_token', // 登录 token
@@ -97,6 +99,13 @@ export const ROUTE_ELEMENT_PATH = {
     EDIT_CONSUMER: '../views/Consumer/ConsumerDetail', // 编辑用户
 }
 
+// 路由图标的常量
+export const ROUTE_ICON: Record<string, React.ComponentType | React.ReactNode> = {
+    [ROUTE_KEY.HOME]: HomeOutlined, // 首页
+    [ROUTE_KEY.STAFF_MANAGE]: SolutionOutlined, // 员工管理
+    [ROUTE_KEY.CONSUMER_MANAGE]: UserOutlined, // 用户管理
+}
+
 // name-color类型
 export type INameColor = {
     name: string;
@@ -119,6 +128,7 @@ export const STAFF_ROLE: Record<string, INameColor> = {
 }
 
 export const STAFF_GENDER: Record<number, string> = {
+    0: '保密',
     1: '男',
     2: '女',
 }
