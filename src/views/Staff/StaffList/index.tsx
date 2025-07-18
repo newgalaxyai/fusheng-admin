@@ -361,7 +361,13 @@ const StaffList: FC<IProps> = (_props) => {
             staffStatus: params.staffStatus,
             username: params.username,
             staffRole: params.staffRole,
-            staffCreateTime: params.staffCreateTime,
+          }
+          if (params.staffCreateTime) {
+            queryParams = {
+              ...queryParams,
+              staffCreateStartTime: params.staffCreateTime[0], // 注册开始时间
+              staffCreateEndTime: params.staffCreateTime[1], // 注册结束时间
+            }
           }
           const res = await getStaffListAPI(queryParams)
           return {

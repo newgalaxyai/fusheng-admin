@@ -13,6 +13,7 @@ export const ROUTE_PARAM_NAME = {
     SEARCH_PARAMS: 'searchParams', // 搜索参数
     STATE_PARAMS: 'stateParams', // 状态参数
     STAFF_ID: 'staffId', // 员工id
+    CONSUMER_ID: 'consumerId',
     PAGE_TYPE: 'pageType', // 页面类型 1:新增 2:编辑 3:详情
     REDIRECT_INFO: 'redirectInfo', // 完整重定向信息
 }
@@ -32,6 +33,7 @@ export const ROUTE_PATH = {
     CONSUMER_LIST: 'consumerList', // 消费者列表
     ADD_CONSUMER: 'addConsumer', // 新增消费者
     EDIT_CONSUMER: 'editConsumer', // 编辑消费者
+    CONSUMER_DETAIL: 'consumerDetail', // 消费者详情
 }
 
 // 路由key的常量
@@ -53,6 +55,8 @@ export const ROUTE_KEY = {
     CONSUMER_LIST: 'consumerList', // 消费者列表
     ADD_CONSUMER: 'addConsumer', // 新增消费者
     EDIT_CONSUMER: 'editConsumer', // 编辑消费者
+    CONSUMER_DETAIL: 'consumerDetail', // 消费者详情
+    DELETE_CONSUMER: 'deleteConsumer', // 删除消费者
 }
 
 // 路由name的常量
@@ -68,6 +72,8 @@ export const ROUTE_NAME = {
     CONSUMER_LIST: '用户列表',
     ADD_CONSUMER: '新增用户',
     EDIT_CONSUMER: '编辑用户',
+    CONSUMER_DETAIL: '用户详情',
+    DELETE_CONSUMER: '删除用户',
 }
 
 // 路由权限的常量
@@ -82,6 +88,8 @@ export const ROUTE_PERMISSION = {
     CONSUMER_LIST: ':consumer:manage:list', // 消费者列表
     ADD_CONSUMER: ':consumer:manage:list:add', // 新增消费者
     EDIT_CONSUMER: ':consumer:manage:list:edit', // 编辑消费者
+    CONSUMER_DETAIL: ':consumer:manage:list:detail', // 消费者详情
+    DELETE_CONSUMER: ':consumer:manage:list:delete',
 }
 
 // 路由组件地址的常量
@@ -97,6 +105,7 @@ export const ROUTE_ELEMENT_PATH = {
     CONSUMER_LIST: '../views/Consumer/ConsumerList', // 用户列表
     ADD_CONSUMER: '../views/Consumer/ConsumerDetail', // 新增用户
     EDIT_CONSUMER: '../views/Consumer/ConsumerDetail', // 编辑用户
+    CONSUMER_DETAIL: '../views/Consumer/ConsumerDetail', // 用户详情
 }
 
 // 路由图标的常量

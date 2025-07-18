@@ -130,18 +130,44 @@ const initialState: IRouteState = {
     {
       name: ROUTE_NAME.ADD_CONSUMER,
       key: ROUTE_KEY.ADD_CONSUMER,
-      parentKey: ROUTE_KEY.CONSUMER_LIST,
+      parentKey: ROUTE_KEY.CONSUMER_MANAGE,
       requiredRole: ['super', 'admin', 'staff'],
       requiredPermission: ROUTE_PERMISSION.ADD_CONSUMER,  // 新增用户
       order: 3,
       type: 3,
     },
     {
+      name: ROUTE_NAME.EDIT_CONSUMER,
+      key: ROUTE_KEY.EDIT_CONSUMER,
+      parentKey: ROUTE_KEY.CONSUMER_MANAGE,
+      requiredRole: ['super', 'admin', 'staff'],
+      requiredPermission: ROUTE_PERMISSION.EDIT_CONSUMER,  // 编辑用户
+      order: 4,
+      type: 3,
+    },
+    {
+      name: ROUTE_NAME.CONSUMER_DETAIL,
+      key: ROUTE_KEY.CONSUMER_DETAIL,
+      parentKey: ROUTE_KEY.STAFF_LIST,
+      requiredRole: ['super', 'admin', 'staff'],
+      requiredPermission: ROUTE_PERMISSION.CONSUMER_DETAIL,  // 用户详情
+      type: 3, // 按钮
+    },
+    {
+      name: ROUTE_NAME.DELETE_CONSUMER,
+      key: ROUTE_KEY.DELETE_CONSUMER,
+      parentKey: ROUTE_KEY.STAFF_LIST,
+      hideInMenu: true,
+      requiredRole: ['super', 'admin'],
+      requiredPermission: ROUTE_PERMISSION.DELETE_CONSUMER,  // 删除用户
+      type: 3, // 按钮
+    },
+    {
       name: ROUTE_NAME.ADD_CONSUMER,
       key: ROUTE_KEY.ADD_CONSUMER,
       path: ROUTE_PATH.ADD_CONSUMER,
       elementPath: ROUTE_ELEMENT_PATH.ADD_CONSUMER,
-      parentKey: ROUTE_KEY.CONSUMER_LIST,
+      parentKey: ROUTE_KEY.CONSUMER_MANAGE,
       hideInMenu: true,
       requiredRole: ['super', 'admin', 'staff'],
       requiredPermission: ROUTE_PERMISSION.ADD_CONSUMER,  // 新增用户
@@ -151,22 +177,25 @@ const initialState: IRouteState = {
     {
       name: ROUTE_NAME.EDIT_CONSUMER,
       key: ROUTE_KEY.EDIT_CONSUMER,
-      parentKey: ROUTE_KEY.CONSUMER_LIST,
-      requiredRole: ['super', 'admin', 'staff'],
-      requiredPermission: ROUTE_PERMISSION.EDIT_CONSUMER,  // 编辑用户
-      order: 4,
-      type: 3,
-    },
-    {
-      name: ROUTE_NAME.EDIT_CONSUMER,
-      key: ROUTE_KEY.EDIT_CONSUMER,
       path: ROUTE_PATH.EDIT_CONSUMER,
       elementPath: ROUTE_ELEMENT_PATH.EDIT_CONSUMER,
-      parentKey: ROUTE_KEY.CONSUMER_LIST,
+      parentKey: ROUTE_KEY.CONSUMER_MANAGE,
       hideInMenu: true,
       requiredRole: ['super', 'admin', 'staff'],
       requiredPermission: ROUTE_PERMISSION.EDIT_CONSUMER,  // 编辑用户
       order: 2,
+      type: 2,
+    },
+    {
+      name: ROUTE_NAME.CONSUMER_DETAIL,
+      key: ROUTE_KEY.CONSUMER_DETAIL,
+      path: ROUTE_PATH.CONSUMER_DETAIL,
+      elementPath: ROUTE_ELEMENT_PATH.CONSUMER_DETAIL,
+      parentKey: ROUTE_KEY.CONSUMER_MANAGE,
+      hideInMenu: true,
+      requiredRole: ['super', 'admin', 'staff'],
+      requiredPermission: ROUTE_PERMISSION.CONSUMER_DETAIL,  // 用户详情
+      order: 1,
       type: 2,
     },
   ],

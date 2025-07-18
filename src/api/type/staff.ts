@@ -6,7 +6,8 @@ export type IStaffListRequest = {
     staffStatus?: boolean // 员工状态 true:启用 false:禁用
     username?: string // 员工姓名
     staffRole?: string // 员工角色
-    staffCreateTime?: number // 员工创建时间戳
+    staffCreateStartTime?: number // 员工创建开始时间
+    staffCreateEndTime?: number // 员工创建结束时间
 }
 
 export type IStaffList = {
