@@ -6,12 +6,13 @@ import { useRoutesHook } from './hooks/useRoutes';
 import routes from './router';
 import { ROUTE_KEY } from './utils/constants';
 import { useAppSelector } from '@/hooks/useAppStore';
-import { getLocationParams } from '@/utils/location';
 
 function App() {
   const { addTab, getCurrentRoute, getRoutes, authRoutes } = useRoutesHook();
   const allRoutes = getRoutes;
   const { activeKey } = useAppSelector(state => state.route);
+
+  // 获取登录用户信息
 
   // console.log('所有路由:', allRoutes);
 

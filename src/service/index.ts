@@ -6,7 +6,6 @@ import { encodeRedirectInfo, refreshToken } from '@/utils/auth'
 import { getAccessToken, removeAccessToken, removeRefreshToken } from '@/utils/storge'
 import { appURL, adminURL } from '@/api/url'
 import { ROUTE_PATH, ROUTE_PARAM_NAME } from '@/utils/constants'
-import axios from 'axios'
 
 // 是否正在刷新token
 let isRefreshToken = false
@@ -174,7 +173,7 @@ const createRequest = (baseURL: string, headerAuth?: string) => {
       }
     },
   })
-  
+
   return requestInstance
 }
 

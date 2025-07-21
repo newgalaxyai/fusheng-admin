@@ -19,7 +19,7 @@ const initialState: IRouteState = {
       hideInMenu: false,
       path: ROUTE_PATH.STAFF_MANAGE,
       redirect: ROUTE_PATH.STAFF_LIST,
-      requiredRole: ['super', 'admin', 'staff'],
+      requiredRole: ['super_admin', 'admin', 'staff'],
       requiredPermission: ROUTE_PERMISSION.STAFF_MANAGE,  // 员工管理
       order: 1,
       type: 1, // 目录
@@ -31,7 +31,7 @@ const initialState: IRouteState = {
       path: ROUTE_PATH.STAFF_LIST,
       hideInMenu: false,
       elementPath: ROUTE_ELEMENT_PATH.STAFF_LIST,
-      requiredRole: ['super', 'admin', 'staff'],
+      requiredRole: ['super_admin', 'admin', 'staff'],
       requiredPermission: ROUTE_PERMISSION.STAFF_LIST,  // 员工列表
       order: 1,
       type: 2, // 菜单
@@ -40,7 +40,7 @@ const initialState: IRouteState = {
       name: ROUTE_NAME.ADD_STAFF,
       key: ROUTE_KEY.ADD_STAFF,
       parentKey: ROUTE_KEY.STAFF_LIST,
-      requiredRole: ['super', 'admin'],
+      requiredRole: ['super_admin', 'admin'],
       requiredPermission: ROUTE_PERMISSION.ADD_STAFF,  // 新增员工
       type: 3, // 按钮
     },
@@ -48,7 +48,7 @@ const initialState: IRouteState = {
       name: ROUTE_NAME.EDIT_STAFF,
       key: ROUTE_KEY.EDIT_STAFF,
       parentKey: ROUTE_KEY.STAFF_LIST,
-      requiredRole: ['super', 'admin'],
+      requiredRole: ['super_admin', 'admin'],
       requiredPermission: ROUTE_PERMISSION.EDIT_STAFF,  // 编辑员工
       type: 3, // 按钮
     },
@@ -56,7 +56,7 @@ const initialState: IRouteState = {
       name: ROUTE_NAME.STAFF_DETAIL,
       key: ROUTE_KEY.STAFF_DETAIL,
       parentKey: ROUTE_KEY.STAFF_LIST,
-      requiredRole: ['super', 'admin', 'staff'],
+      requiredRole: ['super_admin', 'admin', 'staff'],
       requiredPermission: ROUTE_PERMISSION.STAFF_DETAIL,  // 员工详情
       type: 3, // 按钮
     },
@@ -65,7 +65,7 @@ const initialState: IRouteState = {
       key: ROUTE_KEY.DELETE_STAFF,
       parentKey: ROUTE_KEY.STAFF_LIST,
       hideInMenu: true,
-      requiredRole: ['super', 'admin'],
+      requiredRole: ['super_admin', 'admin'],
       requiredPermission: ROUTE_PERMISSION.DELETE_STAFF,  // 删除员工
       type: 3, // 按钮
     },
@@ -76,7 +76,7 @@ const initialState: IRouteState = {
       elementPath: ROUTE_ELEMENT_PATH.ADD_STAFF,
       parentKey: ROUTE_KEY.STAFF_MANAGE,
       hideInMenu: true,
-      requiredRole: ['super', 'admin'],
+      requiredRole: ['super_admin', 'admin'],
       requiredPermission: ROUTE_PERMISSION.ADD_STAFF,  // 新增员工
       type: 2, // 菜单
     },
@@ -87,7 +87,7 @@ const initialState: IRouteState = {
       elementPath: ROUTE_ELEMENT_PATH.EDIT_STAFF,
       parentKey: ROUTE_KEY.STAFF_MANAGE,
       hideInMenu: true,
-      requiredRole: ['super', 'admin'],
+      requiredRole: ['super_admin', 'admin'],
       requiredPermission: ROUTE_PERMISSION.EDIT_STAFF,  // 编辑员工
       type: 2, // 菜单
     },
@@ -98,7 +98,7 @@ const initialState: IRouteState = {
       elementPath: ROUTE_ELEMENT_PATH.STAFF_DETAIL,
       parentKey: ROUTE_KEY.STAFF_MANAGE,
       hideInMenu: true,
-      requiredRole: ['super', 'admin', 'staff'],
+      requiredRole: ['super_admin', 'admin', 'staff'],
       requiredPermission: ROUTE_PERMISSION.STAFF_DETAIL,  // 员工详情
       type: 2, // 菜单
     },
@@ -110,7 +110,7 @@ const initialState: IRouteState = {
       hideInMenu: false,
       path: ROUTE_PATH.CONSUMER_MANAGE,
       redirect: ROUTE_PATH.CONSUMER_LIST,
-      requiredRole: ['super', 'admin', 'staff'],
+      requiredRole: ['super_admin', 'admin', 'staff'],
       requiredPermission: ROUTE_PERMISSION.CONSUMER_MANAGE,  // 用户管理
       order: 1,
       type: 1,
@@ -122,7 +122,7 @@ const initialState: IRouteState = {
       path: ROUTE_PATH.CONSUMER_LIST,
       hideInMenu: false,
       elementPath: ROUTE_ELEMENT_PATH.CONSUMER_LIST,
-      requiredRole: ['super', 'admin', 'staff'],
+      requiredRole: ['super_admin', 'admin', 'staff'],
       requiredPermission: ROUTE_PERMISSION.CONSUMER_LIST,  // 用户列表
       order: 1,
       type: 2,
@@ -131,7 +131,7 @@ const initialState: IRouteState = {
       name: ROUTE_NAME.ADD_CONSUMER,
       key: ROUTE_KEY.ADD_CONSUMER,
       parentKey: ROUTE_KEY.CONSUMER_MANAGE,
-      requiredRole: ['super', 'admin', 'staff'],
+      requiredRole: ['super_admin', 'admin', 'staff'],
       requiredPermission: ROUTE_PERMISSION.ADD_CONSUMER,  // 新增用户
       order: 3,
       type: 3,
@@ -140,7 +140,7 @@ const initialState: IRouteState = {
       name: ROUTE_NAME.EDIT_CONSUMER,
       key: ROUTE_KEY.EDIT_CONSUMER,
       parentKey: ROUTE_KEY.CONSUMER_MANAGE,
-      requiredRole: ['super', 'admin', 'staff'],
+      requiredRole: ['super_admin', 'admin', 'staff'],
       requiredPermission: ROUTE_PERMISSION.EDIT_CONSUMER,  // 编辑用户
       order: 4,
       type: 3,
@@ -149,7 +149,7 @@ const initialState: IRouteState = {
       name: ROUTE_NAME.CONSUMER_DETAIL,
       key: ROUTE_KEY.CONSUMER_DETAIL,
       parentKey: ROUTE_KEY.STAFF_LIST,
-      requiredRole: ['super', 'admin', 'staff'],
+      requiredRole: ['super_admin', 'admin', 'staff'],
       requiredPermission: ROUTE_PERMISSION.CONSUMER_DETAIL,  // 用户详情
       type: 3, // 按钮
     },
@@ -158,7 +158,7 @@ const initialState: IRouteState = {
       key: ROUTE_KEY.DELETE_CONSUMER,
       parentKey: ROUTE_KEY.STAFF_LIST,
       hideInMenu: true,
-      requiredRole: ['super', 'admin'],
+      requiredRole: ['super_admin', 'admin'],
       requiredPermission: ROUTE_PERMISSION.DELETE_CONSUMER,  // 删除用户
       type: 3, // 按钮
     },
@@ -169,7 +169,7 @@ const initialState: IRouteState = {
       elementPath: ROUTE_ELEMENT_PATH.ADD_CONSUMER,
       parentKey: ROUTE_KEY.CONSUMER_MANAGE,
       hideInMenu: true,
-      requiredRole: ['super', 'admin', 'staff'],
+      requiredRole: ['super_admin', 'admin', 'staff'],
       requiredPermission: ROUTE_PERMISSION.ADD_CONSUMER,  // 新增用户
       order: 1,
       type: 2,
@@ -181,7 +181,7 @@ const initialState: IRouteState = {
       elementPath: ROUTE_ELEMENT_PATH.EDIT_CONSUMER,
       parentKey: ROUTE_KEY.CONSUMER_MANAGE,
       hideInMenu: true,
-      requiredRole: ['super', 'admin', 'staff'],
+      requiredRole: ['super_admin', 'admin', 'staff'],
       requiredPermission: ROUTE_PERMISSION.EDIT_CONSUMER,  // 编辑用户
       order: 2,
       type: 2,
@@ -193,8 +193,20 @@ const initialState: IRouteState = {
       elementPath: ROUTE_ELEMENT_PATH.CONSUMER_DETAIL,
       parentKey: ROUTE_KEY.CONSUMER_MANAGE,
       hideInMenu: true,
-      requiredRole: ['super', 'admin', 'staff'],
+      requiredRole: ['super_admin', 'admin', 'staff'],
       requiredPermission: ROUTE_PERMISSION.CONSUMER_DETAIL,  // 用户详情
+      order: 1,
+      type: 2,
+    },
+    {
+      name: ROUTE_NAME.FAVOR_LIST,
+      key: ROUTE_KEY.FAVOR_LIST,
+      parentKey: ROUTE_KEY.CONSUMER_MANAGE,
+      path: ROUTE_PATH.FAVOR_LIST,
+      hideInMenu: false,
+      elementPath: ROUTE_ELEMENT_PATH.FAVOR_LIST,
+      requiredRole: ['super_admin', 'admin', 'staff'],
+      requiredPermission: ROUTE_PERMISSION.FAVOR_LIST,  // 用户收藏列表
       order: 1,
       type: 2,
     },
@@ -255,8 +267,25 @@ const routeSlice = createSlice({
           break
       }
     },
+    resetRouteAction: (state) => {
+      state.tabsList = [
+        {
+          key: 'home',
+          label: '首页',
+          closable: false,
+
+        }
+      ]
+      state.activeKey = 'home'
+      state.collapsed = false
+    },
   }
 })
 
-export const { tabsListAction, activeKeyAction, collapsedAction } = routeSlice.actions
+export const {
+  tabsListAction,
+  activeKeyAction,
+  collapsedAction,
+  resetRouteAction
+} = routeSlice.actions
 export default routeSlice.reducer

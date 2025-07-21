@@ -12,7 +12,13 @@ import {
   ProFormSelect,
   ProFormInstance,
 } from '@ant-design/pro-components'
-import { Row, Col, Space, message, DescriptionsProps } from 'antd'
+import {
+  Row,
+  Col,
+  Space,
+  App,
+  DescriptionsProps
+} from 'antd'
 import {
   STAFF_ROLE,
   STAFF_CERTIFICATE_TYPE,
@@ -20,7 +26,9 @@ import {
   STAFF_EDUCATION,
   STAFF_MARRIAGE_STATUS,
 } from '@/utils/constants'
-import { MobileOutlined } from '@ant-design/icons'
+import {
+  MobileOutlined,
+} from '@ant-design/icons'
 import { theme } from 'antd'
 import {
   IStaffList,
@@ -30,6 +38,7 @@ import { ROUTE_KEY, ROUTE_PERMISSION } from '@/utils/constants'
 import { useRoutesHook } from '@/hooks/useRoutes'
 import { getStaffDetailAPI, editStaffAPI, addStaffAPI } from '@/api/staff'
 import { decodeRedirectInfo, encodeRedirectInfo } from '@/utils/auth'
+import CopyComponent from '@/components/copy'
 
 interface IProps {
   children?: ReactNode
@@ -37,6 +46,7 @@ interface IProps {
 
 const StaffDetail: FC<IProps> = (_props) => {
   const { token } = theme.useToken();
+  const { message } = App.useApp();
   const navigate = useNavigate();
   const location = useLocation();
   const { navigateTo, getRouteRole, switchTab, pureRemoveTab } = useRoutesHook();
@@ -94,9 +104,7 @@ const StaffDetail: FC<IProps> = (_props) => {
       key: 'mobile',
       label: '手机号',
       children: (
-        <>
-          {staffInfo.mobile}
-        </>
+        <CopyComponent copyText={staffInfo.mobile} />
       ),
     },
     {
@@ -141,6 +149,17 @@ const StaffDetail: FC<IProps> = (_props) => {
     },
   ] : []
 
+  const formItemLayout = {
+    labelCol: {
+      xs: { span: 24 },
+      sm: { span: 6 },
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 14 },
+    },
+  }
+
   return (
     <>
       {
@@ -167,13 +186,19 @@ const StaffDetail: FC<IProps> = (_props) => {
             }}
           >
             <ProForm<IStaffList>
+              {...formItemLayout}
               autoFocusFirstInput={false}
               formRef={formRef}
-              layout="vertical"
-              grid={true}
-              rowProps={{
-                gutter: [16, 0],
+              layout="horizontal"
+              style={{
+                margin: '0 auto',
+                marginTop: 20,
+                maxWidth: 800,
               }}
+              // grid={true}
+              // rowProps={{
+              //   gutter: [16, 0],
+              // }}
               submitter={{
                 render: (props, doms) => {
                   return (
@@ -236,11 +261,21 @@ const StaffDetail: FC<IProps> = (_props) => {
               <ProFormText
                 name="username"
                 label="员工编号"
-                tooltip="最长为 24 位"
+                tooltip="最长为 10 位"
                 placeholder="请输入"
-                colProps={{ md: 12, xl: 8 }}
-                validateTrigger={['onSubmit', 'onFinish', 'onBlur']}
+                // colProps={{ md: 12, xl: 8 }}
+                validateTrigger={['onSubmit', 'onFinish', 'onBlur', 'onChange']}
                 rules={[
+                  {
+                    required: true,
+                    validator: (_rule, value) => {
+                      if (value && value.length && value.length > 10) {
+                        return Promise.reject('员工编号最长10位！')
+                      }
+                      return Promise.resolve()
+                    },
+                    validateTrigger: ['onSubmit', 'onFinish', 'onChange'],
+                  },
                   {
                     required: true,
                     validator: (_rule, value) => {
@@ -266,7 +301,7 @@ const StaffDetail: FC<IProps> = (_props) => {
                 name="nickname"
                 label="员工姓名"
                 placeholder="请输入"
-                colProps={{ md: 12, xl: 8 }}
+                // colProps={{ md: 12, xl: 8 }}
                 validateTrigger={['onSubmit', 'onFinish', 'onBlur']}
                 rules={[
                   {
@@ -285,7 +320,7 @@ const StaffDetail: FC<IProps> = (_props) => {
                 name="deptName"
                 label="员工部门"
                 placeholder="请输入"
-                colProps={{ md: 12, xl: 8 }}
+              // colProps={{ md: 12, xl: 8 }}
               // rules={[
               //   {
               //     required: true,
@@ -303,7 +338,7 @@ const StaffDetail: FC<IProps> = (_props) => {
                 name="staffPositionName"
                 label="员工职位"
                 placeholder="请输入"
-                colProps={{ md: 12, xl: 8 }}
+              // colProps={{ md: 12, xl: 8 }}
               // rules={[
               //   {
               //     required: true,
@@ -320,7 +355,7 @@ const StaffDetail: FC<IProps> = (_props) => {
               <ProFormSelect
                 name="staffRole"
                 label="员工角色"
-                colProps={{ md: 12, xl: 8 }}
+                // colProps={{ md: 12, xl: 8 }}
                 options={Object.keys(STAFF_ROLE).map((key) => ({
                   label: STAFF_ROLE[key].name,
                   value: key,
@@ -353,7 +388,7 @@ const StaffDetail: FC<IProps> = (_props) => {
                 label="手机号"
                 name="mobile"
                 placeholder="请输入"
-                colProps={{ xl: 8, md: 12 }}
+                // colProps={{ xl: 8, md: 12 }}
                 validateTrigger={['onSubmit', 'onFinish', 'onBlur']}
                 rules={[
                   {
@@ -380,7 +415,7 @@ const StaffDetail: FC<IProps> = (_props) => {
               <ProFormSelect
                 label="证件类型"
                 name="certificateType"
-                colProps={{ xl: 8, md: 12 }}
+                // colProps={{ xl: 8, md: 12 }}
                 options={Object.keys(STAFF_CERTIFICATE_TYPE).map((key) => ({
                   label: STAFF_CERTIFICATE_TYPE[Number(key)],
                   value: key,
@@ -402,7 +437,7 @@ const StaffDetail: FC<IProps> = (_props) => {
               <ProFormText
                 label="证件号码"
                 name="certificateNumber"
-                colProps={{ xl: 8, md: 12 }}
+                // colProps={{ xl: 8, md: 12 }}
                 validateTrigger={['onSubmit', 'onFinish', 'onBlur']}
                 rules={[
                   {
@@ -420,7 +455,7 @@ const StaffDetail: FC<IProps> = (_props) => {
               <ProFormSelect
                 label="学历"
                 name="education"
-                colProps={{ xl: 8, md: 12 }}
+                // colProps={{ xl: 8, md: 12 }}
                 options={Object.keys(STAFF_EDUCATION).map((key) => ({
                   label: STAFF_EDUCATION[Number(key)],
                   value: key,
@@ -429,7 +464,7 @@ const StaffDetail: FC<IProps> = (_props) => {
               <ProFormSelect
                 label="婚姻状态"
                 name="marriageStatus"
-                colProps={{ xl: 8, md: 12 }}
+                // colProps={{ xl: 8, md: 12 }}
                 options={Object.keys(STAFF_MARRIAGE_STATUS).map((key) => ({
                   label: STAFF_MARRIAGE_STATUS[Number(key)],
                   value: key,
@@ -438,12 +473,12 @@ const StaffDetail: FC<IProps> = (_props) => {
               <ProFormText
                 label="邮箱"
                 name="email"
-                colProps={{ xl: 8, md: 12 }}
+              // colProps={{ xl: 8, md: 12 }}
               />
               <ProFormSelect
                 label="性别"
                 name="sex"
-                colProps={{ xl: 8, md: 12 }}
+                // colProps={{ xl: 8, md: 12 }}
                 options={Object.keys(STAFF_GENDER).map((key) => ({
                   label: STAFF_GENDER[Number(key)],
                   value: Number(key),
@@ -453,7 +488,7 @@ const StaffDetail: FC<IProps> = (_props) => {
                 label="入职日期"
                 name="inTime"
                 className="staff-form-date-picker"
-                colProps={{ xl: 8, md: 12 }}
+                // colProps={{ xl: 8, md: 12 }}
                 validateTrigger={['onSubmit', 'onFinish', 'onBlur']}
                 rules={[
                   {
@@ -482,7 +517,7 @@ const StaffDetail: FC<IProps> = (_props) => {
         ) : (
           <Descriptions
             title="员工信息"
-            layout="vertical"
+            // layout="vertical"
             bordered
             column={{ xs: 1, sm: 2, md: 3, lg: 3, xl: 4, xxl: 4 }}
             extra={

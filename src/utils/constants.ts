@@ -34,6 +34,7 @@ export const ROUTE_PATH = {
     ADD_CONSUMER: 'addConsumer', // 新增消费者
     EDIT_CONSUMER: 'editConsumer', // 编辑消费者
     CONSUMER_DETAIL: 'consumerDetail', // 消费者详情
+    FAVOR_LIST: 'favorList', // 收藏列表
 }
 
 // 路由key的常量
@@ -57,6 +58,7 @@ export const ROUTE_KEY = {
     EDIT_CONSUMER: 'editConsumer', // 编辑消费者
     CONSUMER_DETAIL: 'consumerDetail', // 消费者详情
     DELETE_CONSUMER: 'deleteConsumer', // 删除消费者
+    FAVOR_LIST: 'favorList', // 收藏列表
 }
 
 // 路由name的常量
@@ -74,6 +76,7 @@ export const ROUTE_NAME = {
     EDIT_CONSUMER: '编辑用户',
     CONSUMER_DETAIL: '用户详情',
     DELETE_CONSUMER: '删除用户',
+    FAVOR_LIST: '收藏列表',
 }
 
 // 路由权限的常量
@@ -89,7 +92,8 @@ export const ROUTE_PERMISSION = {
     ADD_CONSUMER: ':consumer:manage:list:add', // 新增消费者
     EDIT_CONSUMER: ':consumer:manage:list:edit', // 编辑消费者
     CONSUMER_DETAIL: ':consumer:manage:list:detail', // 消费者详情
-    DELETE_CONSUMER: ':consumer:manage:list:delete',
+    DELETE_CONSUMER: ':consumer:manage:list:delete', // 删除消费者
+    FAVOR_LIST: ':consumer:manage:favor', // 收藏列表
 }
 
 // 路由组件地址的常量
@@ -106,6 +110,7 @@ export const ROUTE_ELEMENT_PATH = {
     ADD_CONSUMER: '../views/Consumer/ConsumerDetail', // 新增用户
     EDIT_CONSUMER: '../views/Consumer/ConsumerDetail', // 编辑用户
     CONSUMER_DETAIL: '../views/Consumer/ConsumerDetail', // 用户详情
+    FAVOR_LIST: '../views/Consumer/FavorList', // 收藏列表
 }
 
 // 路由图标的常量
@@ -122,7 +127,7 @@ export type INameColor = {
 }
 
 export const STAFF_ROLE: Record<string, INameColor> = {
-    'super': {
+    'super_admin': {
         name: '超级管理员',
         color: 'success',
     },
@@ -165,4 +170,15 @@ export const STAFF_CERTIFICATE_TYPE: Record<number, string> = {
     5: '港澳居民来往内地通行证',
     6: '台湾居民来往内地通行证',
     7: '外国人永久居留身份证',
+}
+
+export const CONSUMER_SOURCE: Record<number, string> = {
+    0: '未知来源',
+    1: '小程序',
+}
+
+export const CONSUMER_OFFOPT: Record<number, string> = {
+    1: '注册',
+    2: '注销',
+    3: '修改',
 }

@@ -11,7 +11,7 @@ const initialState: IStaffState = {
       staffMobile: '1234567890',
       staffDepartmentName: '技术部',
       staffPositionName: '技术员',
-      staffRole: 'super',
+      staffRole: 'super_admin',
       staffCreateTime: 1715404800,
       staffUpdateTime: 1715404800,
       staffDeleteTime: 1715404800,

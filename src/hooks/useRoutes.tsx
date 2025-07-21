@@ -87,8 +87,8 @@ export const useRoutesHook = () => {
     const newTabsList = tabsList.filter(item => item.key !== key);
     // 如果移除的标签是当前激活的标签，则切换到上一个标签
     if (newTabsList.length && key === activeKey) {
-      const test = newTabsList[targetIndex === newTabsList.length ? targetIndex - 1 : targetIndex]
-      navigateTo(test.key)
+      const lastTab = newTabsList[targetIndex === newTabsList.length ? targetIndex - 1 : targetIndex]
+      navigateTo(lastTab.key, lastTab.params, lastTab.state)
     }
     dispatch(tabsListAction({ type: 'set', data: newTabsList }))
   }

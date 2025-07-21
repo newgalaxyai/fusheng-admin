@@ -13,7 +13,7 @@ import {
   ProFormCheckbox,
   ProFormText,
 } from '@ant-design/pro-components';
-import { Button, Divider, Space, Tabs, message, theme } from 'antd';
+import { Button, Divider, Space, Tabs, theme, App } from 'antd';
 import type { CSSProperties } from 'react';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -22,6 +22,8 @@ import { getLocationParamsByName } from '@/utils/location';
 import { ROUTE_PARAM_NAME, ROUTE_PATH } from '@/utils/constants';
 import { loginAPI } from '@/api/login';
 import { decodeRedirectInfo } from '@/utils/auth';
+import { useAppDispatch, useAppSelector } from '@/hooks/useAppStore';
+import { getLoginInfoAsync, getLoginPermissionInfoAsync } from '@/redux/asyncs/login';
 
 type LoginType = 'phone' | 'account';
 
@@ -33,6 +35,14 @@ const iconStyles: CSSProperties = {
 };
 
 const Page = () => {
+  const { message } = App.useApp();
+  const dispatch = useAppDispatch();
+  const {
+    user: {
+      userInfo,
+      userRole
+    }
+  } = useAppSelector(state => state);
   // 登录类型
   const [loginType, setLoginType] = useState<LoginType>('account');
   const { token } = theme.useToken();
@@ -49,6 +59,23 @@ const Page = () => {
       setRememberMeChecked(rememberMe === 'true');
     }
   }, []);
+
+  useEffect(() => {
+    // console.log('userInfo: ', userInfo);
+    // console.log('userRole: ', userRole);
+
+    if (userInfo) {
+      message.success('登录成功');
+      const encodedRedirectInfo = getLocationParamsByName(location, ROUTE_PARAM_NAME.REDIRECT_INFO)
+      if (encodedRedirectInfo) {
+        const paramsRedirect = decodeRedirectInfo(encodedRedirectInfo)
+        navigate(paramsRedirect.pathname + (paramsRedirect.search || '') + (paramsRedirect.hash || ''), { replace: true, state: paramsRedirect.state })
+      } else {
+        navigate(ROUTE_PATH.HOME, { replace: true })
+      }
+    }
+  }, [userInfo]);
+
   return (
     <LoginFormPage
       style={{
@@ -70,6 +97,8 @@ const Page = () => {
           if (accountRes.success) {
             setAccessToken(accountRes.data.accessToken)
             setRefreshToken(accountRes.data.refreshToken)
+            dispatch(getLoginInfoAsync())
+            // dispatch(getLoginPermissionInfoAsync())
           } else {
             message.error(accountRes.errMsg);
           }
@@ -85,13 +114,6 @@ const Page = () => {
           } else {
             message.error(phoneRes.errMsg);
           }
-        }
-        const encodedRedirectInfo = getLocationParamsByName(location, ROUTE_PARAM_NAME.REDIRECT_INFO)
-        if (encodedRedirectInfo) {
-          const paramsRedirect = decodeRedirectInfo(encodedRedirectInfo)
-          navigate(paramsRedirect.pathname + (paramsRedirect.search || '') + (paramsRedirect.hash || ''), { replace: true, state: paramsRedirect.state })
-        } else {
-          navigate(ROUTE_PATH.HOME, { replace: true })
         }
       }}
       // 表单请求入参

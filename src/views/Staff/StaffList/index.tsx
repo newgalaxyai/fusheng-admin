@@ -66,8 +66,8 @@ const StaffList: FC<IProps> = (_props) => {
     {
       dataIndex: 'username',
       title: '员工编号',
-      fixed: 'left',
-      width: 120,
+      // fixed: 'left',
+      width: 100,
       align: 'center',
       render: (_, record) => (
         <Button
@@ -96,14 +96,14 @@ const StaffList: FC<IProps> = (_props) => {
     {
       dataIndex: 'mobile',
       title: '员工手机号',
-      width: 150,
+      width: 100,
       copyable: true,
       align: 'center',
     },
     {
       dataIndex: 'staffStatus',
       title: '员工状态',
-      width: 100,
+      width: 80,
       valueType: 'select',
       valueEnum: {
         true: {
@@ -120,7 +120,7 @@ const StaffList: FC<IProps> = (_props) => {
     {
       dataIndex: 'deptName',
       title: '员工部门',
-      width: 100,
+      width: 120,
       align: 'center',
       search: false,
     },
@@ -134,7 +134,7 @@ const StaffList: FC<IProps> = (_props) => {
     {
       dataIndex: 'staffRole',
       title: '员工角色',
-      width: 100,
+      width: 80,
       render: (_, record) => (
         <Tag color={STAFF_ROLE[record.staffRole]?.color || 'default'} key={record.id}>
           {STAFF_ROLE[record.staffRole]?.name || '未设置'}
@@ -146,7 +146,7 @@ const StaffList: FC<IProps> = (_props) => {
       dataIndex: 'createTime',
       title: '创建时间',
       valueType: 'date',
-      width: 200,
+      width: 100,
       align: 'center',
       renderFormItem: (_, { onChange }) => {
         return (
@@ -160,9 +160,11 @@ const StaffList: FC<IProps> = (_props) => {
     },
     {
       title: '操作',
+      align: 'center',
       valueType: 'option',
       key: 'option',
       fixed: 'right',
+      width: 120,
       render: (text, record, _, action) => [
         <PermissionWrapper
           requiredRole={getRouteRole(ROUTE_KEY.STAFF_DETAIL, 3)}
@@ -294,7 +296,7 @@ const StaffList: FC<IProps> = (_props) => {
         style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
       /> */}
       <ProTable<IStaffList>
-        scroll={{ x: true, y: 'calc(100vh - 300px)' }}
+        scroll={{ x: 1500, y: 'calc(100vh - 300px)' }}
         bordered
         columns={columns}
         rowSelection={{
@@ -370,6 +372,9 @@ const StaffList: FC<IProps> = (_props) => {
             }
           }
           const res = await getStaffListAPI(queryParams)
+          if (res.errMsg) {
+            message.error(res.errMsg)
+          }
           return {
             data: res.data.list,
             total: res.data.total,
@@ -455,4 +460,4 @@ const StaffList: FC<IProps> = (_props) => {
   )
 }
 
-export default memo(StaffList)
+export default StaffList

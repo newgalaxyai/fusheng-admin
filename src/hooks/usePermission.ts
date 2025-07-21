@@ -6,14 +6,16 @@ export const usePermissionCheck = () => {
 
     // 检查角色权限
     const hasRole = (requiredRole: string[] | undefined): boolean => {
-        const superAdmin = ['super']; // 超级管理员
+        const superAdmin = 'super_admin'; // 超级管理员
 
         if (!requiredRole) {
             throw new Error('请设置角色权限标签值');
         }
 
         // 超级管理员或者用户权限大于等于所需角色权限
-        return superAdmin.includes(userRole) || requiredRole.includes(userRole);
+        return userRole.some(role =>
+            superAdmin === role || requiredRole.includes(role)
+        );
     };
 
     const hasPermission = (requiredPermissions: string[] | undefined): boolean => {

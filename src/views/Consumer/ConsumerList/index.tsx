@@ -10,12 +10,14 @@ import { useAppSelector } from '@/hooks/useAppStore'
 import PermissionWrapper from '@/components/permission/PermissionWrapper'
 import { encodeRedirectInfo } from '@/utils/auth'
 import { IConsumerList, IConsumerListRequest } from '@/api/type/consumer'
+import { getConsumerListAPI } from '@/api/consumer'
+import dayjs from 'dayjs'
 
 interface IProps {
   children?: ReactNode
 }
 
-const StaffList: FC<IProps> = (_props) => {
+const ConsumerList: FC<IProps> = (_props) => {
   const {
     staff: {
       staffList
@@ -45,16 +47,16 @@ const StaffList: FC<IProps> = (_props) => {
       align: 'center',
     },
     {
-      dataIndex: 'username',
+      dataIndex: 'openid',
       title: '用户编号',
-      fixed: 'left',
-      width: 120,
+      width: 180,
+      // fixed: 'left',
       align: 'center',
       render: (_, record) => (
         <PermissionWrapper
           requiredRole={getRouteRole(ROUTE_KEY.CONSUMER_DETAIL, 3)}
           requiredPermissions={[ROUTE_PERMISSION.CONSUMER_DETAIL]}
-          fallback={record.username}
+          fallback={record.openid}
         >
           <Button
             type="link"
@@ -69,7 +71,7 @@ const StaffList: FC<IProps> = (_props) => {
                 });
             }}
           >
-            {record.username}
+            {record.openid}
           </Button>
         </PermissionWrapper>
       ),
@@ -77,8 +79,8 @@ const StaffList: FC<IProps> = (_props) => {
     {
       dataIndex: 'id',
       title: '用户ID',
-      width: 100,
       align: 'center',
+      width: 80,
     },
     {
       dataIndex: 'nickname',
@@ -89,14 +91,14 @@ const StaffList: FC<IProps> = (_props) => {
     {
       dataIndex: 'mobile',
       title: '手机号',
-      width: 150,
+      width: 120,
       copyable: true,
       align: 'center',
     },
     {
-      dataIndex: 'staffStatus',
+      dataIndex: 'consumerStatus',
       title: '状态',
-      width: 100,
+      width: 80,
       align: 'center',
       valueType: 'select',
       valueEnum: {
@@ -113,7 +115,7 @@ const StaffList: FC<IProps> = (_props) => {
     {
       dataIndex: 'sex',
       title: '性别',
-      width: 100,
+      width: 80,
       valueType: 'select',
       valueEnum: {
         0: {
@@ -130,16 +132,9 @@ const StaffList: FC<IProps> = (_props) => {
       search: false
     },
     {
-      dataIndex: 'remark',
-      title: '备注',
-      width: 100,
-      align: 'center',
-      search: false
-    },
-    {
       dataIndex: 'compareCompany',
       title: '关联企业',
-      width: 200,
+      width: 180,
       align: 'center',
       search: false,
     },
@@ -153,7 +148,7 @@ const StaffList: FC<IProps> = (_props) => {
     {
       dataIndex: 'registerSource',
       title: '注册来源',
-      width: 100,
+      width: 120,
       align: 'center',
       valueType: 'select',
       valueEnum: {
@@ -164,11 +159,12 @@ const StaffList: FC<IProps> = (_props) => {
       search: false,
     },
     {
-      dataIndex: 'registerTime',
+      dataIndex: 'createTime',
       title: '注册时间',
       valueType: 'date',
-      width: 200,
+      width: 120,
       align: 'center',
+      render: (_, record) => dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss'),
       renderFormItem: (_, { onChange }) => {
         return (
           <DatePicker.RangePicker
@@ -182,14 +178,23 @@ const StaffList: FC<IProps> = (_props) => {
     {
       dataIndex: 'waterMark',
       title: '水印编号',
-      width: 100,
+      width: 180,
       align: 'center',
     },
     {
+      dataIndex: 'remark',
+      title: '备注',
+      width: 180,
+      align: 'center',
+      search: false
+    },
+    {
       title: '操作',
+      align: 'center',
       valueType: 'option',
       key: 'option',
       fixed: 'right',
+      width: 120,
       render: (text, record, _, action) => [
         <PermissionWrapper
           requiredRole={getRouteRole(ROUTE_KEY.CONSUMER_DETAIL, 3)}
@@ -321,7 +326,7 @@ const StaffList: FC<IProps> = (_props) => {
         style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
       /> */}
       <ProTable<IConsumerList>
-        scroll={{ x: true, y: 'calc(100vh - 300px)' }}
+        scroll={{ x: 2500, y: 'calc(100vh - 300px)' }}
         bordered
         columns={columns}
         rowSelection={{
@@ -377,48 +382,57 @@ const StaffList: FC<IProps> = (_props) => {
         actionRef={actionRef}
         cardBordered
         request={async (params, sort, filter) => {
-          console.log('params: ', params);
+          // return {
+          //   data: [
+          //     {
+          //       id: 1,
+          //       openid: 'USER00000001',
+          //       nickname: '测试用户',
+          //       consumerStatus: true,
+          //       mobile: '12345678901',
+          //       compareCompany: '上海测试公司',
+          //       consumerPositionName: '董事长',
+          //       registerSource: 1,
+          //       waterMark: 1,
+          //       loginIp: '192.168.1.1',
+          //       loginCity: '上海',
+          //       createTime: 1672531200000,
+          //       updateTime: 1672531200000,
+          //       sex: 1,
+          //       remark: '备注',
+          //     }
+          //   ],
+          //   success: true,
+          //   total: 1
+          // }
+          // console.log('params: ', params);
           // console.log('sort: ', sort);
           // console.log('filter: ', filter);
           let queryParams: IConsumerListRequest = {
             pageNo: params.current!,
             pageSize: params.pageSize!,
             id: params.id, // 用户ID
-            username: params.username, // 用户编号
+            openid: params.openid, // 用户编号
             nickname: params.nickname, // 用户昵称
             consumerStatus: params.consumerStatus, // 用户状态 true:启用 false:禁用
             mobile: params.mobile, // 用户手机号
             waterMark: params.waterMark, // 水印编号
           }
-          if (params.registerTime) {
+          if (params.createTime) {
             queryParams = {
               ...queryParams,
-              registerStartTime: params.registerTime[0], // 注册开始时间
-              registerEndTime: params.registerTime[1], // 注册结束时间
+              createStartTime: params.createTime[0], // 注册开始时间
+              createEndTime: params.createTime[1], // 注册结束时间
             }
           }
-          // const res = await getStaffListAPI(queryParams)
+          const res = await getConsumerListAPI(queryParams)
+          if (res.errMsg) {
+            message.error(res.errMsg)
+          }
           return {
-            data: [
-              {
-                id: 1,
-                username: 'USER00000001',
-                nickname: '测试用户',
-                consumerStatus: true,
-                mobile: '12345678901',
-                compareCompany: '上海测试公司',
-                consumerPositionName: '董事长',
-                registerSource: 1,
-                registerTime: 1672531200000,
-                waterMark: 1,
-                createTime: 1672531200000,
-                updateTime: 1672531200000,
-                sex: 1,
-                remark: '备注',
-              }
-            ],
-            total: 5,
-            success: true,
+            data: res.data.list,
+            total: res.data.total,
+            success: res.success,
           }
         }
         }
@@ -466,39 +480,39 @@ const StaffList: FC<IProps> = (_props) => {
         }}
         dateFormatter="string"
         headerTitle="用户列表"
-        toolBarRender={() => [
-          <PermissionWrapper
-            requiredRole={getRouteRole(ROUTE_KEY.ADD_CONSUMER, 3)}
-            requiredPermissions={[ROUTE_PERMISSION.ADD_CONSUMER]}
-          >
-            <Button
-              key="add-staff"
-              icon={<PlusOutlined />}
-              onClick={() => {
-                // actionRef.current?.reload();
-                const encodedRedirectInfo = encodeRedirectInfo({
-                  pathname: ROUTE_KEY.CONSUMER_LIST,
-                  search: '',
-                  hash: '',
-                  state: null,
-                  key: ''
-                })
-                navigateTo(
-                  ROUTE_KEY.ADD_CONSUMER,
-                  {
-                    [ROUTE_PARAM_NAME.PAGE_TYPE]: '1',
-                    [ROUTE_PARAM_NAME.REDIRECT_INFO]: encodedRedirectInfo,
-                  });
-              }}
-              type="primary"
-            >
-              新建用户
-            </Button>
-          </PermissionWrapper>
-        ]}
+      // toolBarRender={() => [
+      //   <PermissionWrapper
+      //     requiredRole={getRouteRole(ROUTE_KEY.ADD_CONSUMER, 3)}
+      //     requiredPermissions={[ROUTE_PERMISSION.ADD_CONSUMER]}
+      //   >
+      //     <Button
+      //       key="add-staff"
+      //       icon={<PlusOutlined />}
+      //       onClick={() => {
+      //         // actionRef.current?.reload();
+      //         const encodedRedirectInfo = encodeRedirectInfo({
+      //           pathname: ROUTE_KEY.CONSUMER_LIST,
+      //           search: '',
+      //           hash: '',
+      //           state: null,
+      //           key: ''
+      //         })
+      //         navigateTo(
+      //           ROUTE_KEY.ADD_CONSUMER,
+      //           {
+      //             [ROUTE_PARAM_NAME.PAGE_TYPE]: '1',
+      //             [ROUTE_PARAM_NAME.REDIRECT_INFO]: encodedRedirectInfo,
+      //           });
+      //       }}
+      //       type="primary"
+      //     >
+      //       新建用户
+      //     </Button>
+      //   </PermissionWrapper>
+      // ]}
       />
     </>
   )
 }
 
-export default memo(StaffList)
+export default ConsumerList

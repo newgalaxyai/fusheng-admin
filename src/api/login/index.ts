@@ -1,9 +1,9 @@
-import { refreshTokenURL, loginURL, loginInfoURL } from "@/api/url/login"
+import { refreshTokenURL, loginURL, loginInfoURL, loginPermissionInfoURL } from "@/api/url/login"
 import { VITE_BASE_URL } from "@/service/config"
 import axios, { AxiosResponse } from "axios"
 import { IResponse, IResponseData } from "../type"
-import { ILoginResponse, ILoginRequest } from "../type/login"
-import { seniorRequest } from "@/service"
+import { ILoginResponse, ILoginRequest, ILoginInfo, ILoginPermissionInfo } from "../type/login"
+import { seniorRequest, adminRequest } from "@/service"
 import { SENIOR_TOKEN, SENIOR_TENANT_ID } from "@/service/config"
 
 
@@ -55,9 +55,25 @@ export const loginAPI = async (data: ILoginRequest): Promise<IResponse<ILoginRes
     return response
 }
 
-export const getLoginInfoAPI = async (): Promise<IResponse<ILoginResponse>> => {
-    const response = await seniorRequest.get<IResponse<ILoginResponse>>({
+/**
+ * 
+ * @returns 用户信息
+ */
+export const getLoginInfoAPI = async (): Promise<IResponse<ILoginInfo>> => {
+    const response = await adminRequest.get<IResponse<ILoginInfo>>({
         url: loginInfoURL,
+    })
+
+    return response
+}
+
+/**
+ * 
+ * @returns 用户权限信息
+ */
+export const getLoginPermissionInfoAPI = async (): Promise<IResponse<ILoginPermissionInfo>> => {
+    const response = await adminRequest.get<IResponse<ILoginPermissionInfo>>({
+        url: loginPermissionInfoURL,
     })
 
     return response
