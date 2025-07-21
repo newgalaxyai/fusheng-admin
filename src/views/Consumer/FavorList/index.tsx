@@ -10,6 +10,7 @@ import { useAppSelector } from '@/hooks/useAppStore'
 import { IFavorList, IFavorListRequest } from '@/api/type/consumer'
 import { getConsumerListAPI } from '@/api/consumer'
 import dayjs from 'dayjs'
+import { useFieldProps } from '@/hooks/useFieldProps'
 
 interface IProps {
     children?: ReactNode
@@ -27,6 +28,9 @@ const FavorList: FC<IProps> = (_props) => {
     } = useAppSelector((state) => state)
     const { message, modal } = App.useApp();
     const { navigateTo, getRouteRole } = useRoutesHook();
+    const {
+        dateRangePlaceholder,
+    } = useFieldProps()
 
     // 是否正在加载
     // const [isLoading, setIsLoading] = useState(true);
@@ -93,18 +97,12 @@ const FavorList: FC<IProps> = (_props) => {
         {
             dataIndex: 'createTime',
             title: '收藏时间',
-            valueType: 'date',
+            valueType: 'dateRange',
             width: 150,
             align: 'center',
             render: (_, record) => dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss'),
-            renderFormItem: (_, { onChange }) => {
-                return (
-                    <DatePicker.RangePicker
-                        onChange={(value) => {
-                            onChange?.(value);
-                        }}
-                    />
-                )
+            fieldProps: {
+                placeholder: dateRangePlaceholder,
             },
         },
         {
@@ -117,7 +115,7 @@ const FavorList: FC<IProps> = (_props) => {
             render: (text, record, _, action) => (
                 <Button
                     key="view"
-                    color="primary" 
+                    color="primary"
                     variant="text"
                     size='small'
                     onClick={() => {
@@ -184,7 +182,7 @@ const FavorList: FC<IProps> = (_props) => {
                                 id: 1,
                                 openid: 'oB7RFvsZjYXi1IsY_VjPTXZwCrX4',
                                 nickname: '测试用户',
-                                avatar:'https://i-avatar.csdnimg.cn/587736a80af847d2a1275bc78bac6118_m0_58988036.jpg!1',
+                                avatar: 'https://i-avatar.csdnimg.cn/587736a80af847d2a1275bc78bac6118_m0_58988036.jpg!1',
                                 mobile: '15898989898',
                                 compareCompany: '上海测试公司',
                                 question: '问题1',

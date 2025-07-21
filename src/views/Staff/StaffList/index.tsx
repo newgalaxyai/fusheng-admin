@@ -11,6 +11,7 @@ import { useAppSelector } from '@/hooks/useAppStore'
 import PermissionWrapper from '@/components/permission/PermissionWrapper'
 import { getStaffListAPI, deleteStaffAPI, editStaffAPI } from '@/api/staff'
 import { encodeRedirectInfo } from '@/utils/auth'
+import { useFieldProps } from '@/hooks/useFieldProps'
 
 interface IProps {
   children?: ReactNode
@@ -28,6 +29,9 @@ const StaffList: FC<IProps> = (_props) => {
   } = useAppSelector((state) => state)
   const { message, modal } = App.useApp();
   const { navigateTo, getRouteRole } = useRoutesHook();
+  const {
+    dateRangePlaceholder,
+  } = useFieldProps()
 
   // 是否正在加载
   // const [isLoading, setIsLoading] = useState(true);
@@ -150,17 +154,11 @@ const StaffList: FC<IProps> = (_props) => {
     {
       dataIndex: 'createTime',
       title: '创建时间',
-      valueType: 'date',
+      valueType: 'dateRange',
       width: 100,
       align: 'center',
-      renderFormItem: (_, { onChange }) => {
-        return (
-          <DatePicker.RangePicker
-            onChange={(value) => {
-              onChange?.(value);
-            }}
-          />
-        )
+      fieldProps: {
+        placeholder: dateRangePlaceholder,
       },
     },
     {

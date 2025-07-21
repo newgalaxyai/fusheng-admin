@@ -12,6 +12,7 @@ import { encodeRedirectInfo } from '@/utils/auth'
 import { IConsumerList, IConsumerListRequest } from '@/api/type/consumer'
 import { getConsumerListAPI } from '@/api/consumer'
 import dayjs from 'dayjs'
+import { useFieldProps } from '@/hooks/useFieldProps'
 
 interface IProps {
   children?: ReactNode
@@ -29,6 +30,9 @@ const ConsumerList: FC<IProps> = (_props) => {
   } = useAppSelector((state) => state)
   const { message, modal } = App.useApp();
   const { navigateTo, getRouteRole } = useRoutesHook();
+  const {
+    dateRangePlaceholder
+  } = useFieldProps()
 
   // 是否正在加载
   // const [isLoading, setIsLoading] = useState(true);
@@ -162,19 +166,13 @@ const ConsumerList: FC<IProps> = (_props) => {
     {
       dataIndex: 'createTime',
       title: '注册时间',
-      valueType: 'date',
+      valueType: 'dateRange',
       width: 120,
       align: 'center',
-      render: (_, record) => dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss'),
-      renderFormItem: (_, { onChange }) => {
-        return (
-          <DatePicker.RangePicker
-            onChange={(value) => {
-              onChange?.(value);
-            }}
-          />
-        )
+      fieldProps: {
+        placeholder: dateRangePlaceholder,
       },
+      render: (_, record) => dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
       dataIndex: 'waterMark',

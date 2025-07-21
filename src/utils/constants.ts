@@ -40,7 +40,8 @@ export const ROUTE_PATH = {
     EDIT_CONSUMER: 'editConsumer', // 编辑消费者
     CONSUMER_DETAIL: 'consumerDetail', // 消费者详情
     FAVOR_LIST: 'favorList', // 收藏列表
-    FAVOR_DETAIL: 'favorDetail', // 收藏列表
+    FAVOR_DETAIL: 'favorDetail', // 收藏详情
+    LOGIN_LIST: 'loginList', // 用户登录日志
 }
 
 // 路由key的常量
@@ -66,6 +67,7 @@ export const ROUTE_KEY = {
     DELETE_CONSUMER: 'deleteConsumer', // 删除消费者
     FAVOR_LIST: 'favorList', // 收藏列表
     FAVOR_DETAIL: 'favorDetail', // 收藏列表
+    LOGIN_LIST: 'loginList', // 用户登录日志
 }
 
 // 路由name的常量
@@ -85,6 +87,7 @@ export const ROUTE_NAME = {
     DELETE_CONSUMER: '删除用户',
     FAVOR_LIST: '收藏列表',
     FAVOR_DETAIL: '收藏详情',
+    LOGIN_LIST: '登录日志', // 用户登录日志
 }
 
 // 路由权限的常量
@@ -103,6 +106,7 @@ export const ROUTE_PERMISSION = {
     DELETE_CONSUMER: ':consumer:manage:list:delete', // 删除消费者
     FAVOR_LIST: ':consumer:manage:favor', // 收藏列表
     FAVOR_DETAIL: ':consumer:manage:favor:detail', //收藏详情
+    LOGIN_LIST: ':consumer:manage:login', // 用户登录日志
 }
 
 // 路由组件地址的常量
@@ -121,6 +125,7 @@ export const ROUTE_ELEMENT_PATH = {
     CONSUMER_DETAIL: '../views/Consumer/ConsumerDetail', // 用户详情
     FAVOR_LIST: '../views/Consumer/FavorList', // 收藏列表
     FAVOR_DETAIL: '../views/Consumer/FavorDetail', //收藏详情
+    LOGIN_LIST: '../views/Consumer/LoginList', // 用户登录日志
 }
 
 // 路由图标的常量
@@ -134,7 +139,11 @@ export const ROUTE_ICON: Record<string, React.ComponentType | React.ReactNode> =
 export type INameColor = {
     name: string;
     color: string;
-    id: number
+    id: number;
+}
+
+export type IValueEnum = {
+    text: string;
 }
 
 export const STAFF_ROLE_NAME = {
@@ -199,4 +208,10 @@ export const CONSUMER_OFFOPT: Record<number, string> = {
     1: '注册',
     2: '注销',
     3: '修改',
+}
+
+export const LOGIN_TYPE: Record<number, IValueEnum> = {
+    1: {
+        text: '小程序登录'
+    },
 }

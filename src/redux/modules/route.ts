@@ -222,6 +222,18 @@ const initialState: IRouteState = {
       requiredPermission: ROUTE_PERMISSION.FAVOR_DETAIL,  // 收藏详情
       type: 2, // 菜单
     },
+    {
+      name: ROUTE_NAME.LOGIN_LIST,
+      key: ROUTE_KEY.LOGIN_LIST,
+      parentKey: ROUTE_KEY.CONSUMER_MANAGE,
+      path: ROUTE_PATH.LOGIN_LIST,
+      hideInMenu: false,
+      elementPath: ROUTE_ELEMENT_PATH.LOGIN_LIST,
+      requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN, STAFF_ROLE_NAME.STAFF],
+      requiredPermission: ROUTE_PERMISSION.LOGIN_LIST,  // 用户登录日志
+      order: 1,
+      type: 2,
+    },
   ],
   // 标签列表
   tabsList: [
