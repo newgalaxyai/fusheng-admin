@@ -11,7 +11,7 @@ import { usePermissionCheck } from "./usePermission";
 import LayoutComponent from "@/components/layout";
 import AuthRouteComponent from "@/components/auth";
 import { ROUTE_ELEMENT_PATH, ROUTE_ICON, ROUTE_KEY, ROUTE_NAME, ROUTE_PATH } from "@/utils/constants";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 
 export type IBreadcrumb = {
   title: string
@@ -26,7 +26,14 @@ interface LevelKeysProps {
 }
 
 export const useRoutesHook = () => {
-  const { routes, tabsList, activeKey } = useAppSelector(state => state.route);
+  const {
+    route: {
+      routes, tabsList, activeKey
+    },
+    user: {
+      userRole
+    }
+  } = useAppSelector(state => state);
   const { hasRole } = usePermissionCheck();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -43,7 +50,7 @@ export const useRoutesHook = () => {
       elementPath: ROUTE_ELEMENT_PATH.HOME
     },
     ...routes.filter(item => item.type !== 3 && hasRole(item.requiredRole)),
-  ];
+  ]
 
   // 跳转路由
   const navigateTo = (key: string, params?: any, state?: any) => {

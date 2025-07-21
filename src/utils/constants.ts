@@ -5,6 +5,7 @@ export const LOCAL_STORAGE_NAME = {
     ACCESS_TOKEN: 'access_token', // 登录 token
     REFRESH_TOKEN: 'refresh_token', // 刷新令牌
     REMEMBER_ME: 'rememberMe', // 记住我
+    REMEMBER: 'remember',
 }
 
 // 路由拼接参数名的常量
@@ -13,10 +14,14 @@ export const ROUTE_PARAM_NAME = {
     SEARCH_PARAMS: 'searchParams', // 搜索参数
     STATE_PARAMS: 'stateParams', // 状态参数
     STAFF_ID: 'staffId', // 员工id
-    CONSUMER_ID: 'consumerId',
+    CONSUMER_ID: 'consumerId', //用户id
+    FAVOR_ID: 'favorId', //收藏id
     PAGE_TYPE: 'pageType', // 页面类型 1:新增 2:编辑 3:详情
     REDIRECT_INFO: 'redirectInfo', // 完整重定向信息
 }
+
+// 公共路由path
+export const ROUTE_PATH_COMMON = ['/login', '/reset', '/404']
 
 // 路由路径的常量
 export const ROUTE_PATH = {
@@ -35,6 +40,7 @@ export const ROUTE_PATH = {
     EDIT_CONSUMER: 'editConsumer', // 编辑消费者
     CONSUMER_DETAIL: 'consumerDetail', // 消费者详情
     FAVOR_LIST: 'favorList', // 收藏列表
+    FAVOR_DETAIL: 'favorDetail', // 收藏列表
 }
 
 // 路由key的常量
@@ -59,6 +65,7 @@ export const ROUTE_KEY = {
     CONSUMER_DETAIL: 'consumerDetail', // 消费者详情
     DELETE_CONSUMER: 'deleteConsumer', // 删除消费者
     FAVOR_LIST: 'favorList', // 收藏列表
+    FAVOR_DETAIL: 'favorDetail', // 收藏列表
 }
 
 // 路由name的常量
@@ -77,6 +84,7 @@ export const ROUTE_NAME = {
     CONSUMER_DETAIL: '用户详情',
     DELETE_CONSUMER: '删除用户',
     FAVOR_LIST: '收藏列表',
+    FAVOR_DETAIL: '收藏详情',
 }
 
 // 路由权限的常量
@@ -94,6 +102,7 @@ export const ROUTE_PERMISSION = {
     CONSUMER_DETAIL: ':consumer:manage:list:detail', // 消费者详情
     DELETE_CONSUMER: ':consumer:manage:list:delete', // 删除消费者
     FAVOR_LIST: ':consumer:manage:favor', // 收藏列表
+    FAVOR_DETAIL: ':consumer:manage:favor:detail', //收藏详情
 }
 
 // 路由组件地址的常量
@@ -111,6 +120,7 @@ export const ROUTE_ELEMENT_PATH = {
     EDIT_CONSUMER: '../views/Consumer/ConsumerDetail', // 编辑用户
     CONSUMER_DETAIL: '../views/Consumer/ConsumerDetail', // 用户详情
     FAVOR_LIST: '../views/Consumer/FavorList', // 收藏列表
+    FAVOR_DETAIL: '../views/Consumer/FavorDetail', //收藏详情
 }
 
 // 路由图标的常量
@@ -124,20 +134,30 @@ export const ROUTE_ICON: Record<string, React.ComponentType | React.ReactNode> =
 export type INameColor = {
     name: string;
     color: string;
+    id: number
+}
+
+export const STAFF_ROLE_NAME = {
+    SUPER: 'super_admin',
+    ADMIN: 'admin',
+    STAFF: 'staff',
 }
 
 export const STAFF_ROLE: Record<string, INameColor> = {
     'super_admin': {
         name: '超级管理员',
         color: 'success',
+        id: 1
     },
     'admin': {
         name: '管理员',
         color: 'processing',
+        id: 160
     },
     'staff': {
         name: '员工',
         color: 'default',
+        id: 161
     },
 }
 
@@ -147,29 +167,27 @@ export const STAFF_GENDER: Record<number, string> = {
     2: '女',
 }
 
-export const STAFF_EDUCATION: Record<number, string> = {
-    1: '博士',
-    2: '硕士',
-    3: '本科',
-    4: '专科',
-    5: '高中',
-    6: '初中',
-    7: '小学',
+export const STAFF_EDUCATION: Record<string, string> = {
+    'DOCTOR': '博士',
+    'MASTER': '硕士',
+    'BACHELOR': '本科',
+    'COLLEGE': '专科',
+    'HIGH_SCHOOL': '高中',
+    'OTHER': '其他',
 }
 
-export const STAFF_MARRIAGE_STATUS: Record<number, string> = {
-    1: '未婚',
-    2: '已婚',
+export const STAFF_MARRIAGE_STATUS: Record<string, string> = {
+    'SINGLE': '未婚',
+    'MARRIED': '已婚',
+    'DIVORCED': '离异',
+    'WIDOWED': '丧偶'
 }
 
-export const STAFF_CERTIFICATE_TYPE: Record<number, string> = {
-    1: '居民身份证',
-    2: '护照',
-    3: '驾驶证',
-    4: '军官证',
-    5: '港澳居民来往内地通行证',
-    6: '台湾居民来往内地通行证',
-    7: '外国人永久居留身份证',
+export const STAFF_CERTIFICATE_TYPE: Record<string, string> = {
+    'ID_CARD': '居民身份证',
+    'PASSPORT': '护照',
+    'MILITARY_ID': '军官证',
+    'OTHER': '其他',
 }
 
 export const CONSUMER_SOURCE: Record<number, string> = {

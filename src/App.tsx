@@ -1,19 +1,28 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Suspense } from 'react'
 import { useRoutes, useLocation } from 'react-router-dom'
 import { Spin } from 'antd'
 import { useRoutesHook } from './hooks/useRoutes';
 import routes from './router';
-import { ROUTE_KEY } from './utils/constants';
-import { useAppSelector } from '@/hooks/useAppStore';
+import { ROUTE_KEY, ROUTE_PATH_COMMON } from './utils/constants';
+import { useAppSelector, useAppDispatch } from '@/hooks/useAppStore';
+import { getLoginInfoAsync, getLoginPermissionInfoAsync } from './redux/asyncs/login';
 
 function App() {
+  const dispatch = useAppDispatch();
   const { addTab, getCurrentRoute, getRoutes, authRoutes } = useRoutesHook();
-  const allRoutes = getRoutes;
   const { activeKey } = useAppSelector(state => state.route);
 
   // 获取登录用户信息
-
+  useEffect(() => {
+    const pathname = location.pathname;
+    if (ROUTE_PATH_COMMON.includes(pathname)) {
+      // console.log('pathname', pathname);
+    } else {
+      dispatch(getLoginInfoAsync())
+      dispatch(getLoginPermissionInfoAsync())
+    }
+  }, []);
   // console.log('所有路由:', allRoutes);
 
   // 获取路由
@@ -41,7 +50,7 @@ function App() {
         </div>
       }>
         <div className="App">
-          {useRoutes(allRoutes)}
+          {useRoutes(getRoutes)}
           {/* {useRoutes(routes)} */}
         </div>
       </Suspense>

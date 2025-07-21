@@ -1,4 +1,5 @@
 import { useAppSelector } from "@/hooks/useAppStore";
+import { STAFF_ROLE_NAME } from "@/utils/constants";
 
 // 权限检查
 export const usePermissionCheck = () => {
@@ -6,15 +7,13 @@ export const usePermissionCheck = () => {
 
     // 检查角色权限
     const hasRole = (requiredRole: string[] | undefined): boolean => {
-        const superAdmin = 'super_admin'; // 超级管理员
-
         if (!requiredRole) {
             throw new Error('请设置角色权限标签值');
         }
 
         // 超级管理员或者用户权限大于等于所需角色权限
         return userRole.some(role =>
-            superAdmin === role || requiredRole.includes(role)
+            STAFF_ROLE_NAME.SUPER === role || requiredRole.includes(role)
         );
     };
 

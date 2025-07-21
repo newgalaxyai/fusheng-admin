@@ -5,7 +5,7 @@ import './css/index.scss'
 import { removeAccessToken, removeRefreshToken } from '@/utils/storge'
 import { useNavigate } from 'react-router-dom'
 import { ROUTE_PATH } from '@/utils/constants'
-import { useAppDispatch } from '@/hooks/useAppStore'
+import { useAppDispatch, useAppSelector } from '@/hooks/useAppStore'
 import { resetRouteAction } from '@/redux/modules/route'
 import { resetUserAction } from '@/redux/modules/user'
 
@@ -13,6 +13,12 @@ const LayoutUser = () => {
   const navigate = useNavigate()
   const { modal } = App.useApp()
   const dispatch = useAppDispatch()
+  const {
+    user: {
+      userInfo,
+      userRole
+    }
+  } = useAppSelector(state => state)
   // 下拉菜单项的配置
   const items: MenuProps['items'] = [
     // {
@@ -74,7 +80,7 @@ const LayoutUser = () => {
             }}
           />
           <Space>
-            超级管理员
+            {userInfo?.nickname}
           </Space>
         </a>
       </Dropdown>

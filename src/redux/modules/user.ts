@@ -7,6 +7,8 @@ const initialState: IUserState = {
   loading: false,
   userRole: ['super_admin'],
   permissions: ['*:*:*'],
+  // userRole: [''],
+  // permissions: [''],
   userInfo: null,
 }
 

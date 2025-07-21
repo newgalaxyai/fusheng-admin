@@ -12,18 +12,20 @@ import {
   ProFormCaptcha,
   ProFormCheckbox,
   ProFormText,
+  ProFormInstance
 } from '@ant-design/pro-components';
 import { Button, Divider, Space, Tabs, theme, App } from 'antd';
 import type { CSSProperties } from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { getRememberMe, setRememberMe, setAccessToken, setRefreshToken } from '@/utils/storge';
+import { getRememberMe, setRememberMe, setAccessToken, setRefreshToken, setAccountPassword, getAccountPassword } from '@/utils/storge';
 import { getLocationParamsByName } from '@/utils/location';
 import { ROUTE_PARAM_NAME, ROUTE_PATH } from '@/utils/constants';
 import { loginAPI } from '@/api/login';
 import { decodeRedirectInfo } from '@/utils/auth';
 import { useAppDispatch, useAppSelector } from '@/hooks/useAppStore';
 import { getLoginInfoAsync, getLoginPermissionInfoAsync } from '@/redux/asyncs/login';
+import { encode } from 'punycode';
 
 type LoginType = 'phone' | 'account';
 
@@ -35,6 +37,7 @@ const iconStyles: CSSProperties = {
 };
 
 const Page = () => {
+  const loginForm = useRef<ProFormInstance<any>>(null);
   const { message } = App.useApp();
   const dispatch = useAppDispatch();
   const {
@@ -48,36 +51,23 @@ const Page = () => {
   const { token } = theme.useToken();
   const navigate = useNavigate();
   const location = useLocation();
-  // 账号密码登录
-  const [username, setUsername] = useState('admin');
-  const [password, setPassword] = useState('admin123');
-  // 记住我
-  const [rememberMeChecked, setRememberMeChecked] = useState(false);
   useEffect(() => {
     const rememberMe = getRememberMe();
     if (rememberMe) {
-      setRememberMeChecked(rememberMe === 'true');
+      const loginData = getAccountPassword()
+      if (loginData) {
+        // console.log('loginData', loginData);
+        loginForm.current?.setFieldsValue({
+          ...loginData,
+          rememberMe: rememberMe === 'true'
+        })
+      }
     }
   }, []);
 
-  useEffect(() => {
-    // console.log('userInfo: ', userInfo);
-    // console.log('userRole: ', userRole);
-
-    if (userInfo) {
-      message.success('登录成功');
-      const encodedRedirectInfo = getLocationParamsByName(location, ROUTE_PARAM_NAME.REDIRECT_INFO)
-      if (encodedRedirectInfo) {
-        const paramsRedirect = decodeRedirectInfo(encodedRedirectInfo)
-        navigate(paramsRedirect.pathname + (paramsRedirect.search || '') + (paramsRedirect.hash || ''), { replace: true, state: paramsRedirect.state })
-      } else {
-        navigate(ROUTE_PATH.HOME, { replace: true })
-      }
-    }
-  }, [userInfo]);
-
   return (
     <LoginFormPage
+      formRef={loginForm}
       style={{
         minHeight: '100%',
         height: 'max-content',
@@ -85,22 +75,27 @@ const Page = () => {
       }}
       // 表单提交
       onFinish={async (values) => {
+        // console.log('valus', values);
         if (loginType === 'account') {
+          const queryParams = {
+            username: values.username,
+            password: values.password,
+          };
+          if (values.rememberMe) {
+            setAccountPassword(queryParams);
+          }
           // 调用登录接口
-          const accountRes = await loginAPI(
-            {
-              username: values.username || username,
-              password: values.password || password,
-            }
-          )
+          const accountRes = await loginAPI(queryParams);
           // console.log('accountRes', accountRes);
           if (accountRes.success) {
             setAccessToken(accountRes.data.accessToken)
             setRefreshToken(accountRes.data.refreshToken)
             dispatch(getLoginInfoAsync())
-            // dispatch(getLoginPermissionInfoAsync())
+            dispatch(getLoginPermissionInfoAsync())
+            message.success('登录成功');
           } else {
             message.error(accountRes.errMsg);
+            return;
           }
         } else {
           const phoneRes = await loginAPI(
@@ -111,9 +106,18 @@ const Page = () => {
           )
           if (phoneRes.success) {
             console.log('登录成功', phoneRes.data);
+            message.success('登录成功');
           } else {
             message.error(phoneRes.errMsg);
+            return;
           }
+        }
+        const encodedRedirectInfo = getLocationParamsByName(location, ROUTE_PARAM_NAME.REDIRECT_INFO)
+        if (encodedRedirectInfo) {
+          const paramsRedirect = decodeRedirectInfo(encodedRedirectInfo)
+          navigate(paramsRedirect.pathname + (paramsRedirect.search || '') + (paramsRedirect.hash || ''), { replace: true, state: paramsRedirect.state })
+        } else {
+          navigate(ROUTE_PATH.HOME, { replace: true })
         }
       }}
       // 表单请求入参
@@ -255,7 +259,6 @@ const Page = () => {
             name="username"
             fieldProps={{
               size: 'large',
-              defaultValue: username,
               prefix: (
                 <UserOutlined
                   style={{
@@ -269,7 +272,7 @@ const Page = () => {
             rules={[
               {
                 validator: (_rule, value) => {
-                  if (!value && !username) {
+                  if (!value) {
                     console.log('用户名不能为空!')
                     return Promise.reject('用户名不能为空!')
                   }
@@ -283,7 +286,6 @@ const Page = () => {
             name="password"
             fieldProps={{
               size: 'large',
-              defaultValue: password,
               prefix: (
                 <LockOutlined
                   style={{
@@ -297,7 +299,7 @@ const Page = () => {
             rules={[
               {
                 validator: (_rule, value) => {
-                  if (!value && !password) {
+                  if (!value) {
                     return Promise.reject('密码不能为空!')
                   }
                   return Promise.resolve()
@@ -379,10 +381,8 @@ const Page = () => {
           noStyle
           name="rememberMe"
           fieldProps={{
-            checked: rememberMeChecked,
             onChange: (e) => {
               setRememberMe(e.target.checked)
-              setRememberMeChecked(e.target.checked)
             }
           }}
         >

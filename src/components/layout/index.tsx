@@ -9,6 +9,7 @@ import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import LayoutUser from './layoutUser';
 import { ITabsItem } from '@/redux/types/route';
 import { ROUTE_KEY } from '@/utils/constants';
+import { get } from 'https';
 
 // 卡片标签类型
 type TargetKey = React.MouseEvent | React.KeyboardEvent | string;
@@ -105,7 +106,7 @@ const LayoutComponent: React.FC = () => {
         const menuItems = getMenuItems;
         // console.log('menuItems', menuItems);
         return menuItems;
-    }, []);
+    }, [getMenuItems]);
     const levelKeys = getLevelKeys(menuItems as any)
     // 展开当前父级菜单
     const [stateOpenKeys, setStateOpenKeys] = useState<string[]>([]);

@@ -50,31 +50,32 @@ const ConsumerList: FC<IProps> = (_props) => {
       dataIndex: 'openid',
       title: '用户编号',
       width: 180,
+      ellipsis: true,
       // fixed: 'left',
       align: 'center',
-      render: (_, record) => (
-        <PermissionWrapper
-          requiredRole={getRouteRole(ROUTE_KEY.CONSUMER_DETAIL, 3)}
-          requiredPermissions={[ROUTE_PERMISSION.CONSUMER_DETAIL]}
-          fallback={record.openid}
-        >
-          <Button
-            type="link"
-            variant="link"
-            color="primary"
-            onClick={() => {
-              // console.log('record: ', record);
-              navigateTo(ROUTE_KEY.CONSUMER_DETAIL,
-                {
-                  [ROUTE_PARAM_NAME.CONSUMER_ID]: record.id,
-                  [ROUTE_PARAM_NAME.PAGE_TYPE]: '2'
-                });
-            }}
-          >
-            {record.openid}
-          </Button>
-        </PermissionWrapper>
-      ),
+      // render: (_, record) => (
+      //   <PermissionWrapper
+      //     requiredRole={getRouteRole(ROUTE_KEY.CONSUMER_DETAIL, 3)}
+      //     requiredPermissions={[ROUTE_PERMISSION.CONSUMER_DETAIL]}
+      //     fallback={record.openid}
+      //   >
+      //     <Button
+      //       type="link"
+      //       variant="link"
+      //       color="primary"
+      //       onClick={() => {
+      //         // console.log('record: ', record);
+      //         navigateTo(ROUTE_KEY.CONSUMER_DETAIL,
+      //           {
+      //             [ROUTE_PARAM_NAME.CONSUMER_ID]: record.id,
+      //             [ROUTE_PARAM_NAME.PAGE_TYPE]: '2'
+      //           });
+      //       }}
+      //     >
+      //       {record.openid}
+      //     </Button>
+      //   </PermissionWrapper>
+      // ),
     },
     {
       dataIndex: 'id',
@@ -194,7 +195,7 @@ const ConsumerList: FC<IProps> = (_props) => {
       valueType: 'option',
       key: 'option',
       fixed: 'right',
-      width: 120,
+      width: 150,
       render: (text, record, _, action) => [
         <PermissionWrapper
           requiredRole={getRouteRole(ROUTE_KEY.CONSUMER_DETAIL, 3)}
@@ -202,9 +203,11 @@ const ConsumerList: FC<IProps> = (_props) => {
         >
           <Button
             key="view"
-            color="primary" variant="text"
+            color="primary"
+            variant="text"
+            size='small'
             onClick={() => {
-              console.log('record: ', record);
+              // console.log('record: ', record);
               navigateTo(ROUTE_KEY.CONSUMER_DETAIL,
                 {
                   [ROUTE_PARAM_NAME.CONSUMER_ID]: record.id,
@@ -221,9 +224,11 @@ const ConsumerList: FC<IProps> = (_props) => {
         >
           <Button
             key="edit"
-            color="primary" variant="text"
+            color="primary"
+            variant="text"
+            size='small'
             onClick={() => {
-              console.log('record: ', record);
+              // console.log('record: ', record);
               const encodedRedirectInfo = encodeRedirectInfo({
                 pathname: ROUTE_KEY.CONSUMER_LIST,
                 search: '',
@@ -242,78 +247,65 @@ const ConsumerList: FC<IProps> = (_props) => {
             编辑
           </Button>
         </PermissionWrapper>,
-        <TableDropdown
-          menus={[
-            {
-              key: 'status',
-              name: (
-                <PermissionWrapper
-                  requiredRole={getRouteRole(ROUTE_KEY.DELETE_CONSUMER, 3)}
-                  requiredPermissions={[ROUTE_PERMISSION.DELETE_CONSUMER]}
-                >
-                  <Button
-                    key="status"
-                    color={!record.consumerStatus ? 'primary' : 'danger'}
-                    variant="link"
-                    onClick={() => {
-                      modal.confirm({
-                        title: !record.consumerStatus ? '启用用户' : '禁用用户',
-                        content: !record.consumerStatus ? '确定启用该用户吗？' : '确定禁用该用户吗？',
-                        okText: '确定',
-                        cancelText: '取消',
-                        onOk: () => {
-                          message.success(!record.consumerStatus ? '启用成功' : '禁用成功');
-                          // 删除后刷新列表
-                          action?.reload();
-                        },
-                      });
-                    }}
-                  >
-                    {!record.consumerStatus ? '启用' : '禁用'}
-                  </Button>
-                </PermissionWrapper>
-              ),
-            },
-            {
-              key: 'delete',
-              name: (
-                <PermissionWrapper
-                  requiredRole={getRouteRole(ROUTE_KEY.DELETE_CONSUMER, 3)}
-                  requiredPermissions={[ROUTE_PERMISSION.DELETE_CONSUMER]}
-                >
-                  <Button
-                    key="delete"
-                    color="danger"
-                    variant="link"
-                    onClick={() => {
-                      modal.confirm({
-                        title: '删除用户',
-                        content: '确定删除该用户吗？',
-                        okText: '确定',
-                        cancelText: '取消',
-                        onOk: async () => {
-                          // const res = await deleteStaffAPI({
-                          //   id: record.id,
-                          // })
-                          // if (res.success) {
-                          //   message.success('删除成功');
-                          // } else {
-                          //   message.error(res.errMsg);
-                          // }
-                          // 删除后刷新列表
-                          action?.reload();
-                        },
-                      });
-                    }}
-                  >
-                    删除
-                  </Button>
-                </PermissionWrapper>
-              ),
-            }
-          ]}
-
-        />
+        <PermissionWrapper
+          requiredRole={getRouteRole(ROUTE_KEY.DELETE_CONSUMER, 3)}
+          requiredPermissions={[ROUTE_PERMISSION.DELETE_CONSUMER]}
+        >
+          <Button
+            key="status"
+            color={!record.consumerStatus ? 'primary' : 'danger'}
+            variant="text"
+            size='small'
+            onClick={() => {
+              modal.confirm({
+                title: !record.consumerStatus ? '启用用户' : '禁用用户',
+                content: !record.consumerStatus ? '确定启用该用户吗？' : '确定禁用该用户吗？',
+                okText: '确定',
+                cancelText: '取消',
+                onOk: () => {
+                  message.success(!record.consumerStatus ? '启用成功' : '禁用成功');
+                  // 删除后刷新列表
+                  action?.reload();
+                },
+              });
+            }}
+          >
+            {!record.consumerStatus ? '启用' : '禁用'}
+          </Button>
+        </PermissionWrapper>,
+        <PermissionWrapper
+          requiredRole={getRouteRole(ROUTE_KEY.DELETE_CONSUMER, 3)}
+          requiredPermissions={[ROUTE_PERMISSION.DELETE_CONSUMER]}
+        >
+          <Button
+            key="delete"
+            color="danger"
+            variant="text"
+            size='small'
+            onClick={() => {
+              modal.confirm({
+                title: '删除用户',
+                content: '确定删除该用户吗？',
+                okText: '确定',
+                cancelText: '取消',
+                onOk: async () => {
+                  // const res = await deleteStaffAPI({
+                  //   id: record.id,
+                  // })
+                  // if (res.success) {
+                  //   message.success('删除成功');
+                  // } else {
+                  //   message.error(res.errMsg);
+                  // }
+                  // 删除后刷新列表
+                  action?.reload();
+                },
+              });
+            }}
+          >
+            删除
+          </Button>
+        </PermissionWrapper>
       ],
     },
   ]
@@ -515,4 +507,4 @@ const ConsumerList: FC<IProps> = (_props) => {
   )
 }
 
-export default ConsumerList
+export default memo(ConsumerList);

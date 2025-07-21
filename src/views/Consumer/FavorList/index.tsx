@@ -49,6 +49,7 @@ const FavorList: FC<IProps> = (_props) => {
             title: '用户编号',
             width: 200,
             //   fixed: 'left',
+            ellipsis: true,
             align: 'center',
         },
         {
@@ -112,17 +113,18 @@ const FavorList: FC<IProps> = (_props) => {
             valueType: 'option',
             key: 'option',
             fixed: 'right',
-            width: 120,
+            width: 80,
             render: (text, record, _, action) => (
                 <Button
                     key="view"
-                    color="primary" variant="text"
+                    color="primary" 
+                    variant="text"
+                    size='small'
                     onClick={() => {
-                        console.log('record: ', record);
-                        navigateTo(ROUTE_KEY.CONSUMER_DETAIL,
+                        // console.log('record: ', record);
+                        navigateTo(ROUTE_KEY.FAVOR_DETAIL,
                             {
-                                [ROUTE_PARAM_NAME.CONSUMER_ID]: record.id,
-                                [ROUTE_PARAM_NAME.PAGE_TYPE]: '2'
+                                [ROUTE_PARAM_NAME.FAVOR_ID]: record.id,
                             });
                     }}
                 >
@@ -182,6 +184,7 @@ const FavorList: FC<IProps> = (_props) => {
                                 id: 1,
                                 openid: 'oB7RFvsZjYXi1IsY_VjPTXZwCrX4',
                                 nickname: '测试用户',
+                                avatar:'https://i-avatar.csdnimg.cn/587736a80af847d2a1275bc78bac6118_m0_58988036.jpg!1',
                                 mobile: '15898989898',
                                 compareCompany: '上海测试公司',
                                 question: '问题1',
@@ -297,4 +300,4 @@ const FavorList: FC<IProps> = (_props) => {
     )
 }
 
-export default FavorList
+export default memo(FavorList)

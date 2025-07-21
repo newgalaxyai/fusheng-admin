@@ -1,17 +1,20 @@
 import { baseRequest, adminRequest } from '@/service'
-import type { 
-  IStaffListRequest, 
-  IStaffListResponse, 
-  IStaffList, 
+import type {
+  IStaffListRequest,
+  IStaffListResponse,
+  IStaffList,
   IStaffDetailRequest,
+  IStaffAssignRoleRequest,
 } from '@/api/type/staff'
 import { IRequest, IResponse } from '../type'
-import { 
-  staffListURL, 
-  staffDetailURL, 
-  staffEditURL, 
-  staffAddURL, 
-  staffDeleteURL } from '../url/staff'
+import {
+  staffListURL,
+  staffDetailURL,
+  staffEditURL,
+  staffAddURL,
+  staffDeleteURL,
+  staffGiveRoleURL
+} from '../url/staff'
 
 /**
  * 获取员工列表
@@ -78,6 +81,16 @@ export const deleteStaffAPI = async (params: IRequest<IStaffDetailRequest>): Pro
   const response = await adminRequest.delete<IResponse<any>>({
     url: staffDeleteURL,
     params
+  })
+
+  return response
+}
+
+// 赋予员工角色
+export const assignStaffRoleAPI = async (params: IRequest<IStaffAssignRoleRequest>): Promise<IResponse<boolean>> => {
+  const response = await adminRequest.post<IResponse<boolean>>({
+    url: staffGiveRoleURL,
+    data: params
   })
 
   return response

@@ -67,6 +67,7 @@ export type IFavorList = {
     id: number // 收藏记录ID
     openid: string // 用户编号
     nickname: string // 用户昵称
+    avatar: string // 用户头像
     mobile: string // 用户手机号
     compareCompany: string // 关联企业
     question: string // 问题: 

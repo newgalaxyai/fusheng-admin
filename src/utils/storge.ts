@@ -1,4 +1,5 @@
 import { LOCAL_STORAGE_NAME } from "./constants"
+import { encrypt, decrypt, IAccountLogin } from './aes_gcm'
 
 // 获取accessToken
 export const getAccessToken = () => {
@@ -39,4 +40,20 @@ export const getRememberMe = () => {
 // 设置记住我
 export const setRememberMe = (rememberMe: boolean) => {
     localStorage.setItem(LOCAL_STORAGE_NAME.REMEMBER_ME, rememberMe.toString())
+}
+
+// 设置账号密码
+export const setAccountPassword = async (data: IAccountLogin) => {
+    const encodeData = encrypt(data)
+    localStorage.setItem(LOCAL_STORAGE_NAME.REMEMBER, encodeData)
+}
+
+// 获取账号密码
+export const getAccountPassword = () => {
+    const encodeData = localStorage.getItem(LOCAL_STORAGE_NAME.REMEMBER)
+    if (encodeData) {
+        const decodeData = decrypt(encodeData)
+        return JSON.parse(decodeData)
+    }
+    return null
 }

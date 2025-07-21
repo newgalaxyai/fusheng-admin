@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import type { FC, ReactNode } from 'react'
 import { Button, Descriptions, Spin } from 'antd'
-import { ROUTE_PARAM_NAME } from '@/utils/constants'
+import { ROUTE_PARAM_NAME, STAFF_ROLE_NAME } from '@/utils/constants'
 import { getLocationParamsByName } from '@/utils/location'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
@@ -36,9 +36,10 @@ import {
 import PermissionWrapper from '@/components/permission/PermissionWrapper'
 import { ROUTE_KEY, ROUTE_PERMISSION } from '@/utils/constants'
 import { useRoutesHook } from '@/hooks/useRoutes'
-import { getStaffDetailAPI, editStaffAPI, addStaffAPI } from '@/api/staff'
+import { getStaffDetailAPI, editStaffAPI, addStaffAPI, assignStaffRoleAPI } from '@/api/staff'
 import { decodeRedirectInfo, encodeRedirectInfo } from '@/utils/auth'
 import CopyComponent from '@/components/copy'
+import { isLetterAndNumber } from '@/utils/reg'
 
 interface IProps {
   children?: ReactNode
@@ -73,7 +74,7 @@ const StaffDetail: FC<IProps> = (_props) => {
     } else {
       setLoading(false);
     }
-  }, [])
+  }, [location.pathname])
   const staffInfoItems: DescriptionsProps['items'] = (staffId && pageType === '2') ? [
     {
       key: 'username',
@@ -108,34 +109,34 @@ const StaffDetail: FC<IProps> = (_props) => {
       ),
     },
     {
-      key: 'certificateType',
+      key: 'idType',
       label: '证件类型',
-      children: STAFF_CERTIFICATE_TYPE[staffInfo.certificateType],
+      children: STAFF_CERTIFICATE_TYPE[staffInfo.idType],
     },
     {
-      key: 'certificateNumber',
+      key: 'idNumber',
       label: '证件号码',
-      children: staffInfo.certificateNumber,
+      children: staffInfo.idNumber,
     },
     {
-      key: 'inTime',
+      key: 'hireDate',
       label: '入职日期',
-      children: staffInfo.inTime,
+      children: staffInfo.hireDate?.join('-'),
     },
     {
       key: 'sex',
       label: '性别',
-      children: STAFF_GENDER[staffInfo.sex || 0] || '未知',
+      children: STAFF_GENDER[staffInfo.sex || 0] || '保密',
     },
     {
       key: 'education',
       label: '学历',
-      children: STAFF_EDUCATION[staffInfo.education || 0] || '未知',
+      children: STAFF_EDUCATION[staffInfo.education || 'OTHER'] || '其他',
     },
     {
       key: 'marriageStatus',
       label: '婚姻状态',
-      children: STAFF_MARRIAGE_STATUS[staffInfo.marriageStatus || 0] || '未知',
+      children: STAFF_MARRIAGE_STATUS[staffInfo.marriageStatus || 'SINGLE'] || '未婚',
     },
     {
       key: 'email',
@@ -211,15 +212,29 @@ const StaffDetail: FC<IProps> = (_props) => {
                 },
               }}
               onFinish={async (values) => {
+                // console.log('values', values);
+
                 let res = null;
                 if (staffId) {
+                  // 修改员工角色
+                  const assignStaffRoleRes = await assignStaffRoleAPI({
+                    userId: Number(staffId),
+                    roleIds: [STAFF_ROLE[STAFF_ROLE_NAME.SUPER].id, STAFF_ROLE[values.staffRole].id],
+                  })
+                  if (!assignStaffRoleRes.success) {
+                    message.error(assignStaffRoleRes.errMsg)
+                    return;
+                  }
+                  // 修改员工信息
                   res = await editStaffAPI({
                     ...values,
+                    employeeNo: values.username.toUpperCase(),
                     id: Number(staffId),
                   })
                 } else {
                   res = await addStaffAPI({
                     ...values,
+                    employeeNo: values.username.toUpperCase(),
                     password: 'fusheng@' + values.username, // 初始密码
                   })
                 }
@@ -261,7 +276,7 @@ const StaffDetail: FC<IProps> = (_props) => {
               <ProFormText
                 name="username"
                 label="员工编号"
-                tooltip="最长为 10 位"
+                tooltip="最长为 20 位，只允许包含字母与数字！"
                 placeholder="请输入"
                 // colProps={{ md: 12, xl: 8 }}
                 validateTrigger={['onSubmit', 'onFinish', 'onBlur', 'onChange']}
@@ -269,8 +284,11 @@ const StaffDetail: FC<IProps> = (_props) => {
                   {
                     required: true,
                     validator: (_rule, value) => {
-                      if (value && value.length && value.length > 10) {
-                        return Promise.reject('员工编号最长10位！')
+                      if (!isLetterAndNumber(value)) {
+                        return Promise.reject('只允许包含字母与数字！');
+                      }
+                      if (value && value.length && value.length > 20) {
+                        return Promise.reject('员工编号最长20位！')
                       }
                       return Promise.resolve()
                     },
@@ -414,10 +432,10 @@ const StaffDetail: FC<IProps> = (_props) => {
               />
               <ProFormSelect
                 label="证件类型"
-                name="certificateType"
+                name="idType"
                 // colProps={{ xl: 8, md: 12 }}
                 options={Object.keys(STAFF_CERTIFICATE_TYPE).map((key) => ({
-                  label: STAFF_CERTIFICATE_TYPE[Number(key)],
+                  label: STAFF_CERTIFICATE_TYPE[key],
                   value: key,
                 }))}
                 validateTrigger={['onSubmit', 'onFinish', 'onBlur']}
@@ -436,7 +454,7 @@ const StaffDetail: FC<IProps> = (_props) => {
               />
               <ProFormText
                 label="证件号码"
-                name="certificateNumber"
+                name="idNumber"
                 // colProps={{ xl: 8, md: 12 }}
                 validateTrigger={['onSubmit', 'onFinish', 'onBlur']}
                 rules={[
@@ -457,7 +475,7 @@ const StaffDetail: FC<IProps> = (_props) => {
                 name="education"
                 // colProps={{ xl: 8, md: 12 }}
                 options={Object.keys(STAFF_EDUCATION).map((key) => ({
-                  label: STAFF_EDUCATION[Number(key)],
+                  label: STAFF_EDUCATION[key],
                   value: key,
                 }))}
               />
@@ -466,7 +484,7 @@ const StaffDetail: FC<IProps> = (_props) => {
                 name="marriageStatus"
                 // colProps={{ xl: 8, md: 12 }}
                 options={Object.keys(STAFF_MARRIAGE_STATUS).map((key) => ({
-                  label: STAFF_MARRIAGE_STATUS[Number(key)],
+                  label: STAFF_MARRIAGE_STATUS[key],
                   value: key,
                 }))}
               />
@@ -486,7 +504,7 @@ const StaffDetail: FC<IProps> = (_props) => {
               />
               <ProFormDatePicker
                 label="入职日期"
-                name="inTime"
+                name="hireDate"
                 className="staff-form-date-picker"
                 // colProps={{ xl: 8, md: 12 }}
                 validateTrigger={['onSubmit', 'onFinish', 'onBlur']}
