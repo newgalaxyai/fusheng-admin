@@ -79,6 +79,7 @@ const initialState: IRouteState = {
       hideInMenu: true,
       requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN],
       requiredPermission: ROUTE_PERMISSION.ADD_STAFF,  // 新增员工
+      order: 11,
       type: 2, // 菜单
     },
     {
@@ -90,6 +91,7 @@ const initialState: IRouteState = {
       hideInMenu: true,
       requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN],
       requiredPermission: ROUTE_PERMISSION.EDIT_STAFF,  // 编辑员工
+      order: 21,
       type: 2, // 菜单
     },
     {
@@ -101,6 +103,7 @@ const initialState: IRouteState = {
       hideInMenu: true,
       requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN, STAFF_ROLE_NAME.STAFF],
       requiredPermission: ROUTE_PERMISSION.STAFF_DETAIL,  // 员工详情
+      order: 31,
       type: 2, // 菜单
     },
     // 用户管理
@@ -113,7 +116,7 @@ const initialState: IRouteState = {
       redirect: ROUTE_PATH.CONSUMER_LIST,
       requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN, STAFF_ROLE_NAME.STAFF],
       requiredPermission: ROUTE_PERMISSION.CONSUMER_MANAGE,  // 用户管理
-      order: 1,
+      order: 11,
       type: 1,
     },
     {
@@ -134,7 +137,6 @@ const initialState: IRouteState = {
       parentKey: ROUTE_KEY.CONSUMER_MANAGE,
       requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN, STAFF_ROLE_NAME.STAFF],
       requiredPermission: ROUTE_PERMISSION.ADD_CONSUMER,  // 新增用户
-      order: 3,
       type: 3,
     },
     {
@@ -143,7 +145,6 @@ const initialState: IRouteState = {
       parentKey: ROUTE_KEY.CONSUMER_MANAGE,
       requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN, STAFF_ROLE_NAME.STAFF],
       requiredPermission: ROUTE_PERMISSION.EDIT_CONSUMER,  // 编辑用户
-      order: 4,
       type: 3,
     },
     {
@@ -172,7 +173,7 @@ const initialState: IRouteState = {
       hideInMenu: true,
       requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN, STAFF_ROLE_NAME.STAFF],
       requiredPermission: ROUTE_PERMISSION.ADD_CONSUMER,  // 新增用户
-      order: 1,
+      order: 11,
       type: 2,
     },
     {
@@ -184,7 +185,7 @@ const initialState: IRouteState = {
       hideInMenu: true,
       requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN, STAFF_ROLE_NAME.STAFF],
       requiredPermission: ROUTE_PERMISSION.EDIT_CONSUMER,  // 编辑用户
-      order: 2,
+      order: 21,
       type: 2,
     },
     {
@@ -196,7 +197,7 @@ const initialState: IRouteState = {
       hideInMenu: true,
       requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN, STAFF_ROLE_NAME.STAFF],
       requiredPermission: ROUTE_PERMISSION.CONSUMER_DETAIL,  // 用户详情
-      order: 1,
+      order: 31,
       type: 2,
     },
     {
@@ -208,7 +209,7 @@ const initialState: IRouteState = {
       elementPath: ROUTE_ELEMENT_PATH.FAVOR_LIST,
       requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN, STAFF_ROLE_NAME.STAFF],
       requiredPermission: ROUTE_PERMISSION.FAVOR_LIST,  // 用户收藏列表
-      order: 1,
+      order: 41,
       type: 2,
     },
     {
@@ -220,6 +221,7 @@ const initialState: IRouteState = {
       hideInMenu: true,
       requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN, STAFF_ROLE_NAME.STAFF],
       requiredPermission: ROUTE_PERMISSION.FAVOR_DETAIL,  // 收藏详情
+      order: 51,
       type: 2, // 菜单
     },
     {
@@ -231,7 +233,32 @@ const initialState: IRouteState = {
       elementPath: ROUTE_ELEMENT_PATH.LOGIN_LIST,
       requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN, STAFF_ROLE_NAME.STAFF],
       requiredPermission: ROUTE_PERMISSION.LOGIN_LIST,  // 用户登录日志
-      order: 1,
+      order: 61,
+      type: 2,
+    },
+    // 数据管理
+    {
+      name: ROUTE_NAME.DATA_MANAGE,
+      key: ROUTE_KEY.DATA_MANAGE,
+      parentKey: ROUTE_KEY.AUTH,
+      hideInMenu: false,
+      path: ROUTE_PATH.DATA_MANAGE,
+      redirect: ROUTE_PATH.PAGE_ANALYSIS,
+      requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN, STAFF_ROLE_NAME.STAFF],
+      requiredPermission: ROUTE_PERMISSION.DATA_MANAGE,  // 数据管理
+      order: 21,
+      type: 1, // 目录
+    },
+    {
+      name: ROUTE_NAME.PAGE_ANALYSIS,
+      key: ROUTE_KEY.PAGE_ANALYSIS,
+      parentKey: ROUTE_KEY.DATA_MANAGE,
+      path: ROUTE_PATH.PAGE_ANALYSIS,
+      hideInMenu: false,
+      elementPath: ROUTE_ELEMENT_PATH.PAGE_ANALYSIS,
+      requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN, STAFF_ROLE_NAME.STAFF],
+      requiredPermission: ROUTE_PERMISSION.PAGE_ANALYSIS,  // 用户登录日志
+      order: 61,
       type: 2,
     },
   ],

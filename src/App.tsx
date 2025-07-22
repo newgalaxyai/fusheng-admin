@@ -2,16 +2,16 @@ import { useEffect, useState } from 'react'
 import { Suspense } from 'react'
 import { useRoutes, useLocation } from 'react-router-dom'
 import { Spin } from 'antd'
+import { useLayout } from './hooks/useLayout';
 import { useRoutesHook } from './hooks/useRoutes';
-import routes from './router';
 import { ROUTE_KEY, ROUTE_PATH_COMMON } from './utils/constants';
-import { useAppSelector, useAppDispatch } from '@/hooks/useAppStore';
+import { useAppDispatch } from '@/hooks/useAppStore';
 import { getLoginInfoAsync, getLoginPermissionInfoAsync } from './redux/asyncs/login';
 
 function App() {
   const dispatch = useAppDispatch();
-  const { addTab, getCurrentRoute, getRoutes, authRoutes } = useRoutesHook();
-  const { activeKey } = useAppSelector(state => state.route);
+  const { getRoutes, authRoutes } = useRoutesHook();
+  const { addTab, getCurrentRoute } = useLayout();
 
   // 获取登录用户信息
   useEffect(() => {

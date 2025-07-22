@@ -1,15 +1,14 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, ConfigProvider, Layout, Menu, Tabs, theme, Button, Avatar, Dropdown } from 'antd';
 import { useAppSelector } from '@/hooks/useAppStore';
-import { useRoutesHook } from '@/hooks/useRoutes';
+import { useLayout } from '@/hooks/useLayout';
 import { Outlet } from 'react-router-dom';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 // 右上角用户信息
 import LayoutUser from './layoutUser';
 import { ITabsItem } from '@/redux/types/route';
 import { ROUTE_KEY } from '@/utils/constants';
-import { get } from 'https';
 
 // 卡片标签类型
 type TargetKey = React.MouseEvent | React.KeyboardEvent | string;
@@ -30,7 +29,7 @@ const LayoutComponent: React.FC = () => {
         closeAllTabs,
         getLevelKeys,
         getRoutePath
-    } = useRoutesHook();
+    } = useLayout();
     const { tabsList, activeKey, collapsed } = useAppSelector(state => state.route);
     // 标签页下拉菜单项
     const tabMenuItems = (tabItem: ITabsItem): MenuProps['items'] => tabItem.key === ROUTE_KEY.HOME ? [] : [
@@ -82,19 +81,21 @@ const LayoutComponent: React.FC = () => {
         },
     ]
     // 渲染标签页
-    const renderTabs = tabsList.map((tabItem) => {
-        return {
-            ...tabItem,
-            label: (
-                <Dropdown
-                    menu={{ items: tabMenuItems(tabItem) }}
-                    trigger={['contextMenu']}
-                >
-                    {tabItem.label}
-                </Dropdown>
-            ),
-        }
-    })
+    const renderTabs = useMemo(() => {
+        return tabsList.map((tabItem) => {
+            return {
+                ...tabItem,
+                label: (
+                    <Dropdown
+                        menu={{ items: tabMenuItems(tabItem) }}
+                        trigger={['contextMenu']}
+                    >
+                        {tabItem.label}
+                    </Dropdown>
+                ),
+            }
+        })
+    }, [tabsList.length])
 
     // layout主题token
     const {
@@ -276,4 +277,4 @@ const LayoutComponent: React.FC = () => {
     );
 };
 
-export default LayoutComponent;
+export default memo(LayoutComponent);

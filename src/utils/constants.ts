@@ -1,4 +1,9 @@
-import { HomeOutlined, UserOutlined, SolutionOutlined } from "@ant-design/icons";
+import {
+    HomeOutlined,
+    UserOutlined,
+    SolutionOutlined,
+    BarChartOutlined
+} from "@ant-design/icons";
 
 // 本地存储的常量
 export const LOCAL_STORAGE_NAME = {
@@ -42,6 +47,8 @@ export const ROUTE_PATH = {
     FAVOR_LIST: 'favorList', // 收藏列表
     FAVOR_DETAIL: 'favorDetail', // 收藏详情
     LOGIN_LIST: 'loginList', // 用户登录日志
+    DATA_MANAGE: '/dataManage', // 数据管理 
+    PAGE_ANALYSIS: 'pageAnalysis', // 页面分析 
 }
 
 // 路由key的常量
@@ -68,6 +75,8 @@ export const ROUTE_KEY = {
     FAVOR_LIST: 'favorList', // 收藏列表
     FAVOR_DETAIL: 'favorDetail', // 收藏列表
     LOGIN_LIST: 'loginList', // 用户登录日志
+    DATA_MANAGE: 'dataManage', // 数据管理 
+    PAGE_ANALYSIS: 'pageAnalysis', // 页面分析 
 }
 
 // 路由name的常量
@@ -88,6 +97,8 @@ export const ROUTE_NAME = {
     FAVOR_LIST: '收藏列表',
     FAVOR_DETAIL: '收藏详情',
     LOGIN_LIST: '登录日志', // 用户登录日志
+    DATA_MANAGE: '数据管理', // 数据管理 
+    PAGE_ANALYSIS: '页面分析', // 页面分析 
 }
 
 // 路由权限的常量
@@ -107,6 +118,8 @@ export const ROUTE_PERMISSION = {
     FAVOR_LIST: ':consumer:manage:favor', // 收藏列表
     FAVOR_DETAIL: ':consumer:manage:favor:detail', //收藏详情
     LOGIN_LIST: ':consumer:manage:login', // 用户登录日志
+    DATA_MANAGE: ':data:manage', // 数据管理 
+    PAGE_ANALYSIS: 'data:manage:analysis', // 页面分析 
 }
 
 // 路由组件地址的常量
@@ -126,6 +139,7 @@ export const ROUTE_ELEMENT_PATH = {
     FAVOR_LIST: '../views/Consumer/FavorList', // 收藏列表
     FAVOR_DETAIL: '../views/Consumer/FavorDetail', //收藏详情
     LOGIN_LIST: '../views/Consumer/LoginList', // 用户登录日志
+    PAGE_ANALYSIS: '../views/Data/PageAnalysis', // 页面分析 
 }
 
 // 路由图标的常量
@@ -133,6 +147,7 @@ export const ROUTE_ICON: Record<string, React.ComponentType | React.ReactNode> =
     [ROUTE_KEY.HOME]: HomeOutlined, // 首页
     [ROUTE_KEY.STAFF_MANAGE]: SolutionOutlined, // 员工管理
     [ROUTE_KEY.CONSUMER_MANAGE]: UserOutlined, // 用户管理
+    [ROUTE_KEY.DATA_MANAGE]: BarChartOutlined, // 数据管理
 }
 
 // name-color类型

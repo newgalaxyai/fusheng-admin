@@ -35,7 +35,7 @@ import {
 } from '@/api/type/staff'
 import PermissionWrapper from '@/components/permission/PermissionWrapper'
 import { ROUTE_KEY, ROUTE_PERMISSION } from '@/utils/constants'
-import { useRoutesHook } from '@/hooks/useRoutes'
+import { useLayout } from '@/hooks/useLayout';
 import { getStaffDetailAPI, editStaffAPI, addStaffAPI, assignStaffRoleAPI } from '@/api/staff'
 import { decodeRedirectInfo, encodeRedirectInfo } from '@/utils/auth'
 import CopyComponent from '@/components/copy'
@@ -50,7 +50,7 @@ const StaffDetail: FC<IProps> = (_props) => {
   const { message } = App.useApp();
   const navigate = useNavigate();
   const location = useLocation();
-  const { navigateTo, getRouteRole, switchTab, pureRemoveTab } = useRoutesHook();
+  const { navigateTo, getRouteRole, switchTab, pureRemoveTab } = useLayout();
   const pageType = getLocationParamsByName(location, ROUTE_PARAM_NAME.PAGE_TYPE);
   const staffId = getLocationParamsByName(location, ROUTE_PARAM_NAME.STAFF_ID);
   const redirectInfo = getLocationParamsByName(location, ROUTE_PARAM_NAME.REDIRECT_INFO);

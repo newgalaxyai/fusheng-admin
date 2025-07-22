@@ -4,7 +4,7 @@ import { Button, Space, App, Tag, Spin, DatePicker, Input } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { ProTable, ProColumns, TableDropdown } from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
-import { useRoutesHook } from '@/hooks/useRoutes'
+import { useLayout } from '@/hooks/useLayout';
 import { ROUTE_KEY, ROUTE_PARAM_NAME, ROUTE_PERMISSION } from '@/utils/constants'
 import { useAppSelector } from '@/hooks/useAppStore'
 import { IFavorList, IFavorListRequest } from '@/api/type/consumer'
@@ -27,7 +27,7 @@ const FavorList: FC<IProps> = (_props) => {
         }
     } = useAppSelector((state) => state)
     const { message, modal } = App.useApp();
-    const { navigateTo, getRouteRole } = useRoutesHook();
+    const { navigateTo, getRouteRole } = useLayout();
     const {
         dateRangePlaceholder,
     } = useFieldProps()

@@ -1,14 +1,14 @@
 import React from 'react'
 import type { FC, ReactNode } from 'react'
 import { Result, Button } from 'antd'
-import { useRoutesHook } from '@/hooks/useRoutes'
+import { useLayout } from '@/hooks/useLayout';
 
 interface IProps {
   children?: ReactNode
 }
 
 const NotFound: FC<IProps> = (_props) => {
-  const { navigateTo } = useRoutesHook();
+  const { navigateTo } = useLayout();
 
   return (
     <>

@@ -21,6 +21,7 @@ const cascaderOptionsLists: Option[] = [
     },
 ];
 
+// protable筛选表单组件props通用配置
 export function useFieldProps() {
     // 日期范围选择
     const dateRangePlaceholder = ['开始日期', '结束日期'];
