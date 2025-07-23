@@ -5,10 +5,15 @@ import { Spin } from 'antd'
 import { useLayout } from './hooks/useLayout';
 import { useRoutesHook } from './hooks/useRoutes';
 import { ROUTE_KEY, ROUTE_PATH_COMMON } from './utils/constants';
-import { useAppDispatch } from '@/hooks/useAppStore';
+import { useAppDispatch, useAppSelector } from '@/hooks/useAppStore';
 import { getLoginInfoAsync, getLoginPermissionInfoAsync } from './redux/asyncs/login';
 
 function App() {
+  const {
+    user: {
+      loading
+    }
+  } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
   const { getRoutes, authRoutes } = useRoutesHook();
   const { addTab, getCurrentRoute } = useLayout();
@@ -44,16 +49,9 @@ function App() {
 
   return (
     <>
-      <Suspense fallback={
-        <div>
-          <Spin />
-        </div>
-      }>
-        <div className="App">
-          {useRoutes(getRoutes)}
-          {/* {useRoutes(routes)} */}
-        </div>
-      </Suspense>
+      <div className="App">
+        {useRoutes(getRoutes)}
+      </div>
     </>
   )
 }

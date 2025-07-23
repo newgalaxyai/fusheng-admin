@@ -257,8 +257,32 @@ const initialState: IRouteState = {
       hideInMenu: false,
       elementPath: ROUTE_ELEMENT_PATH.PAGE_ANALYSIS,
       requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN, STAFF_ROLE_NAME.STAFF],
-      requiredPermission: ROUTE_PERMISSION.PAGE_ANALYSIS,  // 用户登录日志
-      order: 61,
+      requiredPermission: ROUTE_PERMISSION.PAGE_ANALYSIS,  // 页面分析
+      order: 1,
+      type: 2,
+    },
+    {
+      name: ROUTE_NAME.PAGE_FLOW,
+      key: ROUTE_KEY.PAGE_FLOW,
+      parentKey: ROUTE_KEY.DATA_MANAGE,
+      path: ROUTE_PATH.PAGE_FLOW,
+      hideInMenu: true,
+      elementPath: ROUTE_ELEMENT_PATH.PAGE_FLOW,
+      requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN, STAFF_ROLE_NAME.STAFF],
+      requiredPermission: ROUTE_PERMISSION.PAGE_FLOW,  // 页面流向
+      order: 10,
+      type: 2,
+    },
+    {
+      name: ROUTE_NAME.QA_RECORD,
+      key: ROUTE_KEY.QA_RECORD,
+      parentKey: ROUTE_KEY.DATA_MANAGE,
+      path: ROUTE_PATH.QA_RECORD,
+      hideInMenu: false,
+      elementPath: ROUTE_ELEMENT_PATH.QA_RECORD,
+      requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN, STAFF_ROLE_NAME.STAFF],
+      requiredPermission: ROUTE_PERMISSION.QA_RECORD,  // 问答记录
+      order: 11,
       type: 2,
     },
   ],

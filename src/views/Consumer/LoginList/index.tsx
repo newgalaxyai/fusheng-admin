@@ -116,7 +116,7 @@ const LoginList: FC<IProps> = (_props) => {
         style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
       /> */}
             <ProTable<ILoginList>
-                scroll={{ x: 1000, y: 'calc(100vh - 300px)' }}
+                scroll={{ x: 1000 }}
                 bordered
                 columns={columns}
                 rowSelection={{
@@ -235,6 +235,7 @@ const LoginList: FC<IProps> = (_props) => {
                 }}
                 pagination={{
                     showSizeChanger: true,
+                    defaultPageSize: 10,
                     pageSizeOptions: [10, 20, 30, 40, 50],
                 }}
                 dateFormatter="string"

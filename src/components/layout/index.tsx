@@ -1,6 +1,16 @@
 import React, { memo, useEffect, useMemo, useState } from 'react';
 import type { MenuProps } from 'antd';
-import { Breadcrumb, ConfigProvider, Layout, Menu, Tabs, theme, Button, Avatar, Dropdown } from 'antd';
+import {
+    Breadcrumb,
+    ConfigProvider,
+    Layout,
+    Menu,
+    Tabs,
+    theme,
+    Button,
+    Dropdown,
+    Spin
+} from 'antd';
 import { useAppSelector } from '@/hooks/useAppStore';
 import { useLayout } from '@/hooks/useLayout';
 import { Outlet } from 'react-router-dom';
@@ -31,6 +41,7 @@ const LayoutComponent: React.FC = () => {
         getRoutePath
     } = useLayout();
     const { tabsList, activeKey, collapsed } = useAppSelector(state => state.route);
+    const { loading } = useAppSelector(state => state.user);
     // 标签页下拉菜单项
     const tabMenuItems = (tabItem: ITabsItem): MenuProps['items'] => tabItem.key === ROUTE_KEY.HOME ? [] : [
         {
@@ -269,7 +280,12 @@ const LayoutComponent: React.FC = () => {
                             borderRadius: borderRadiusLG,
                         }}
                     >
-                        <Outlet />
+                        {loading ? <Spin
+                            spinning={true}
+                            tip="加载中..."
+                            style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                        /> : <Outlet />
+                        }
                     </Content>
                 </Layout>
             </Layout>

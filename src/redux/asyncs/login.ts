@@ -11,7 +11,6 @@ export const getLoginInfoAsync = createAsyncThunk<
     undefined,
     IThunkUserState
 >('staff/getLoginInfoAsync', async (_, { dispatch }) => {
-    dispatch(setUserLoadingAction(true))
     // 在此请求接口获取数据
     const res = await getLoginInfoAPI()
     if (res.success) {
@@ -19,15 +18,12 @@ export const getLoginInfoAsync = createAsyncThunk<
         // 设置数据
         dispatch(setUserInfoAction(res.data))
         // 设置等待状态
-        dispatch(setUserLoadingAction(false))
     } else {
         // 请求失败
         // 弹出错误信息
         message.error(res.errMsg)
         // 设置数据
         dispatch(setUserInfoAction(null))
-        // 设置等待状态
-        dispatch(setUserLoadingAction(false))
     }
 })
 
@@ -36,7 +32,6 @@ export const getLoginPermissionInfoAsync = createAsyncThunk<
     undefined,
     IThunkUserState
 >('staff/getLoginPermissionInfoAsync', async (_, { dispatch }) => {
-    dispatch(setUserLoadingAction(true))
     // 在此请求接口获取数据
     const res = await getLoginPermissionInfoAPI()
     if (res.success) {

@@ -18,15 +18,6 @@ interface IProps {
 }
 
 const StaffList: FC<IProps> = (_props) => {
-  const {
-    staff: {
-      staffList
-    },
-    user: {
-      userRole,
-      permissions
-    }
-  } = useAppSelector((state) => state)
   const { message, modal } = App.useApp();
   const { navigateTo, getRouteRole } = useLayout();
   const {
@@ -38,24 +29,6 @@ const StaffList: FC<IProps> = (_props) => {
 
   const actionRef = useRef<ActionType>();
   const formRef = useRef<FormInstance>();
-
-  // useEffect(() => {
-  //   // 解决protable搜索表单参数会同步到url，导致不点重置按钮直接刷新页面时会将上次搜索表单中的数据当作默认数据，重置按钮失效的问题
-  //   const url = new URL(window.location.href);
-  //   const staffNumber = url.searchParams.get('staffNumber');
-  //   const staffName = url.searchParams.get('staffName');
-  //   const staffMobile = url.searchParams.get('staffMobile');
-  //   const staffStatus = url.searchParams.get('staffStatus');
-  //   const staffRole = url.searchParams.get('staffRole');
-  //   const staffCreateTime = url.searchParams.get('staffCreateTime');
-  //   const current = url.searchParams.get('current') || '1';
-  //   const pageSize = url.searchParams.get('pageSize') || '20';
-  //   if (staffNumber || staffName || staffMobile || staffStatus || staffRole || staffCreateTime) {
-  //     window.location.href = `${url.origin}${url.pathname}?current=${current}&pageSize=${pageSize}${url.hash}`;
-  //   } else {
-  //     setIsLoading(false);
-  //   }
-  // }, [])
 
   // 获取员工状态的boolean值
   const staffStatus = (status: number) => {
@@ -299,7 +272,7 @@ const StaffList: FC<IProps> = (_props) => {
         style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
       /> */}
       <ProTable<IStaffList>
-        scroll={{ x: 1500, y: 'calc(100vh - 300px)' }}
+        scroll={{ x: 1500 }}
         bordered
         columns={columns}
         rowSelection={{
@@ -424,6 +397,7 @@ const StaffList: FC<IProps> = (_props) => {
         }}
         pagination={{
           showSizeChanger: true,
+          defaultPageSize: 10,
           pageSizeOptions: [10, 20, 30, 40, 50],
         }}
         dateFormatter="string"

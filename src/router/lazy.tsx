@@ -1,5 +1,6 @@
 import React from 'react'
 import { lazy, Suspense } from 'react'
+import { Spin } from 'antd'
 import type { ComponentType, ReactNode } from 'react'
 
 function Lazy(importer: () => Promise<{ default: ComponentType }>): ReactNode {

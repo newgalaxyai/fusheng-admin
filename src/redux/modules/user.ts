@@ -4,11 +4,11 @@ import { set } from 'lodash-es'
 
 // 用户状态
 const initialState: IUserState = {
-  loading: false,
-  // userRole: ['super_admin'],
-  // permissions: ['*:*:*'],
-  userRole: [],
-  permissions: [],
+  loading: true,
+  userRole: ['super_admin'],
+  permissions: ['*:*:*'],
+  // userRole: [],
+  // permissions: [],
   userInfo: null,
 }
 

@@ -316,7 +316,7 @@ const ConsumerList: FC<IProps> = (_props) => {
         style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
       /> */}
       <ProTable<IConsumerList>
-        scroll={{ x: 2500, y: 'calc(100vh - 300px)' }}
+        scroll={{ x: 2500 }}
         bordered
         columns={columns}
         rowSelection={{
@@ -466,6 +466,7 @@ const ConsumerList: FC<IProps> = (_props) => {
         }}
         pagination={{
           showSizeChanger: true,
+          defaultPageSize: 10,
           pageSizeOptions: [10, 20, 30, 40, 50],
         }}
         dateFormatter="string"

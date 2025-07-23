@@ -21,6 +21,7 @@ export const ROUTE_PARAM_NAME = {
     STAFF_ID: 'staffId', // 员工id
     CONSUMER_ID: 'consumerId', //用户id
     FAVOR_ID: 'favorId', //收藏id
+    ANALYSIS_ID: 'analysisId', //页面分析id
     PAGE_TYPE: 'pageType', // 页面类型 1:新增 2:编辑 3:详情
     REDIRECT_INFO: 'redirectInfo', // 完整重定向信息
 }
@@ -49,6 +50,8 @@ export const ROUTE_PATH = {
     LOGIN_LIST: 'loginList', // 用户登录日志
     DATA_MANAGE: '/dataManage', // 数据管理 
     PAGE_ANALYSIS: 'pageAnalysis', // 页面分析 
+    PAGE_FLOW: 'pageFlow', // 页面流向 
+    QA_RECORD: 'qaRecord', // 问答记录 
 }
 
 // 路由key的常量
@@ -77,6 +80,8 @@ export const ROUTE_KEY = {
     LOGIN_LIST: 'loginList', // 用户登录日志
     DATA_MANAGE: 'dataManage', // 数据管理 
     PAGE_ANALYSIS: 'pageAnalysis', // 页面分析 
+    PAGE_FLOW: 'pageFlow', // 页面流向 
+    QA_RECORD: 'qaRecord', // 问答记录 
 }
 
 // 路由name的常量
@@ -99,6 +104,8 @@ export const ROUTE_NAME = {
     LOGIN_LIST: '登录日志', // 用户登录日志
     DATA_MANAGE: '数据管理', // 数据管理 
     PAGE_ANALYSIS: '页面分析', // 页面分析 
+    PAGE_FLOW: '页面流向', // 页面流向 
+    QA_RECORD: '问答记录', // 问答记录 
 }
 
 // 路由权限的常量
@@ -120,6 +127,8 @@ export const ROUTE_PERMISSION = {
     LOGIN_LIST: ':consumer:manage:login', // 用户登录日志
     DATA_MANAGE: ':data:manage', // 数据管理 
     PAGE_ANALYSIS: 'data:manage:analysis', // 页面分析 
+    PAGE_FLOW: 'data:manage:flow', // 页面流向 
+    QA_RECORD: 'data:manage:record', // 问答记录 
 }
 
 // 路由组件地址的常量
@@ -140,6 +149,8 @@ export const ROUTE_ELEMENT_PATH = {
     FAVOR_DETAIL: '../views/Consumer/FavorDetail', //收藏详情
     LOGIN_LIST: '../views/Consumer/LoginList', // 用户登录日志
     PAGE_ANALYSIS: '../views/Data/PageAnalysis', // 页面分析 
+    PAGE_FLOW: '../views/Data/PageFlow', // 页面流向 
+    QA_RECORD: '../views/Data/QARecord', // 问答记录 
 }
 
 // 路由图标的常量
@@ -157,10 +168,6 @@ export type INameColor = {
     id: number;
 }
 
-export type IValueEnum = {
-    text: string;
-}
-
 export const STAFF_ROLE_NAME = {
     SUPER: 'super_admin',
     ADMIN: 'admin',
@@ -168,17 +175,17 @@ export const STAFF_ROLE_NAME = {
 }
 
 export const STAFF_ROLE: Record<string, INameColor> = {
-    'super_admin': {
+    [STAFF_ROLE_NAME.SUPER]: {
         name: '超级管理员',
         color: 'success',
         id: 1
     },
-    'admin': {
+    [STAFF_ROLE_NAME.ADMIN]: {
         name: '管理员',
         color: 'processing',
         id: 160
     },
-    'staff': {
+    [STAFF_ROLE_NAME.STAFF]: {
         name: '员工',
         color: 'default',
         id: 161
@@ -225,8 +232,21 @@ export const CONSUMER_OFFOPT: Record<number, string> = {
     3: '修改',
 }
 
+export type IValueEnum = {
+    text: string;
+}
+
 export const LOGIN_TYPE: Record<number, IValueEnum> = {
     1: {
         text: '小程序登录'
+    },
+}
+
+export const FLOW_DIRECTION: Record<number, IValueEnum> = {
+    0: {
+        text: '流入'
+    },
+    1: {
+        text: '流出'
     },
 }

@@ -1,47 +1,26 @@
 import React, { useRef, useEffect, memo, useState } from 'react'
 import type { FC, ReactNode } from 'react'
-import { Button, Space, App, Tag, Spin, DatePicker, Input, Cascader } from 'antd'
-import { PlusOutlined } from '@ant-design/icons'
-import { ProTable, ProColumns, TableDropdown } from '@ant-design/pro-components'
+import { Button, Space } from 'antd'
+import { ProTable, ProColumns } from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
-import { useLayout } from '@/hooks/useLayout';
-import { LOGIN_TYPE, ROUTE_KEY, ROUTE_PARAM_NAME, ROUTE_PERMISSION } from '@/utils/constants'
-import { useAppSelector } from '@/hooks/useAppStore'
-import { ILoginList } from '@/api/type/consumer'
 import dayjs from 'dayjs'
 import { useFieldProps } from '@/hooks/useFieldProps'
-import { IPageAnalysisList } from '@/api/type/data'
+import { IQARecordList } from '@/api/type/data'
 
 interface IProps {
     children?: ReactNode
 }
 
-const PageAnalysis: FC<IProps> = (_props) => {
+const QARecord: FC<IProps> = (_props) => {
     const {
-        staff: {
-            staffList
-        },
-        user: {
-            userRole,
-            permissions
-        }
-    } = useAppSelector((state) => state)
-    const { message, modal } = App.useApp();
-    const { navigateTo, getRouteRole } = useLayout();
-    const {
-        cascaderOptions,
-        cascaderLoadData,
         dateRangePlaceholder
     } = useFieldProps()
-
-    // 是否正在加载
-    // const [isLoading, setIsLoading] = useState(true);
 
     const actionRef = useRef<ActionType>();
     const formRef = useRef<FormInstance>();
 
     // 用户列表列数据
-    const columns: ProColumns<IPageAnalysisList>[] = [
+    const columns: ProColumns<IQARecordList>[] = [
         {
             dataIndex: 'index',
             valueType: 'index',
@@ -51,59 +30,38 @@ const PageAnalysis: FC<IProps> = (_props) => {
             align: 'center',
         },
         {
-            dataIndex: 'date',
-            title: '日期',
+            dataIndex: 'sessionName',
+            title: '会话标题',
+            width: 200,
+            //   fixed: 'left',
+            ellipsis: true,
+            align: 'center',
+        },
+        {
+            dataIndex: 'openid',
+            title: '用户编号',
+            width: 200,
+            //   fixed: 'left',
+            ellipsis: true,
+            align: 'center',
+        },
+        {
+            dataIndex: 'consumerName',
+            title: '用户名称',
+            width: 120,
+            //   fixed: 'left',
+            align: 'center',
+        },
+        {
+            dataIndex: 'createTime',
+            title: '创建时间',
             valueType: 'dateRange',
             width: 120,
             align: 'center',
             fieldProps: {
                 placeholder: dateRangePlaceholder,
             },
-            render: (_, record) => dayjs(record.date).format('YYYY-MM-DD'),
-        },
-        {
-            dataIndex: 'pageName',
-            title: '页面名称',
-            width: 200,
-            //   fixed: 'left',
-            ellipsis: true,
-            align: 'center',
-        },
-        {
-            dataIndex: 'pagePath',
-            title: '页面路径',
-            width: 200,
-            //   fixed: 'left',
-            ellipsis: true,
-            align: 'center',
-        },
-        {
-            dataIndex: 'visitPeopleNo',
-            title: '访问人数',
-            width: 100,
-            align: 'center',
-            search: false,
-        },
-        {
-            dataIndex: 'visitPageNo',
-            title: '访问页面数',
-            width: 100,
-            align: 'center',
-            search: false,
-        },
-        {
-            dataIndex: 'perPeopleAvg',
-            title: '人均停留时长（秒）',
-            width: 100,
-            align: 'center',
-            search: false,
-        },
-        {
-            dataIndex: 'perVisitAvg',
-            title: '次均停留时长（秒）',
-            width: 100,
-            align: 'center',
-            search: false,
+            render: (_, record) => dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss'),
         },
         {
             title: '操作',
@@ -119,14 +77,10 @@ const PageAnalysis: FC<IProps> = (_props) => {
                     variant="text"
                     size='small'
                     onClick={() => {
-                        // console.log('record: ', record);
-                        navigateTo(ROUTE_KEY.PAGE_FLOW,
-                            {
-                                [ROUTE_PARAM_NAME.ANALYSIS_ID]: record.id,
-                            });
+                        console.log('查看会话: ', record);
                     }}
                 >
-                    页面流向
+                    查看
                 </Button>
             ),
         },
@@ -134,13 +88,8 @@ const PageAnalysis: FC<IProps> = (_props) => {
 
     return (
         <>
-            {/* <Spin
-        spinning={true}
-        tip="加载中..."
-        style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-      /> */}
-            <ProTable<IPageAnalysisList>
-                scroll={{ x: 1000 }}
+            <ProTable<IQARecordList>
+                scroll={{ x: 600 }}
                 bordered
                 columns={columns}
                 rowSelection={{
@@ -181,13 +130,10 @@ const PageAnalysis: FC<IProps> = (_props) => {
                         data: [
                             {
                                 id: 1,
-                                pageName: 'oB7RFvsZjYXi1IsY_VjPTXZwCrX4',
-                                pagePath: '测试用户',
-                                visitPeopleNo: 9999,
-                                visitPageNo: 9999,
-                                perPeopleAvg: 9999,
-                                perVisitAvg: 9999,
-                                date: 1630000000000,
+                                sessionName: 'oB7RFvsZjYXi1IsY_VjPTXZwCrX4',
+                                openid: 'oB7RFvsZjYXi1IsY_VjPTXZwCrX4',
+                                consumerName: 'oB7RFvsZjYXi1IsY_VjPTXZwCrX4',
+                                createTime: 1630000000000,
                             }
                         ],
                         success: true,
@@ -228,9 +174,6 @@ const PageAnalysis: FC<IProps> = (_props) => {
                     defaultValue: {
                         option: { fixed: 'right', disable: true },
                     },
-                    // onChange(value) {
-                    //   console.log('value: ', value);
-                    // },
                 }}
                 rowKey="id"
                 // 搜索表单配置
@@ -263,40 +206,11 @@ const PageAnalysis: FC<IProps> = (_props) => {
                     pageSizeOptions: [10, 20, 30, 40, 50],
                 }}
                 dateFormatter="string"
-                headerTitle="页面分析"
-            // toolBarRender={() => [
-            //   <PermissionWrapper
-            //     requiredRole={getRouteRole(ROUTE_KEY.ADD_CONSUMER, 3)}
-            //     requiredPermissions={[ROUTE_PERMISSION.ADD_CONSUMER]}
-            //   >
-            //     <Button
-            //       key="add-staff"
-            //       icon={<PlusOutlined />}
-            //       onClick={() => {
-            //         // actionRef.current?.reload();
-            //         const encodedRedirectInfo = encodeRedirectInfo({
-            //           pathname: ROUTE_KEY.CONSUMER_LIST,
-            //           search: '',
-            //           hash: '',
-            //           state: null,
-            //           key: ''
-            //         })
-            //         navigateTo(
-            //           ROUTE_KEY.ADD_CONSUMER,
-            //           {
-            //             [ROUTE_PARAM_NAME.PAGE_TYPE]: '1',
-            //             [ROUTE_PARAM_NAME.REDIRECT_INFO]: encodedRedirectInfo,
-            //           });
-            //       }}
-            //       type="primary"
-            //     >
-            //       新建用户
-            //     </Button>
-            //   </PermissionWrapper>
-            // ]}
+                headerTitle="问答记录"
             />
         </>
     )
 }
 
-export default memo(PageAnalysis)
+export default memo(QARecord)
+

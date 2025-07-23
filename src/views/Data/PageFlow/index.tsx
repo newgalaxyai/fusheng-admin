@@ -5,18 +5,18 @@ import { PlusOutlined } from '@ant-design/icons'
 import { ProTable, ProColumns, TableDropdown } from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
 import { useLayout } from '@/hooks/useLayout';
-import { LOGIN_TYPE, ROUTE_KEY, ROUTE_PARAM_NAME, ROUTE_PERMISSION } from '@/utils/constants'
+import { FLOW_DIRECTION, LOGIN_TYPE, ROUTE_KEY, ROUTE_PARAM_NAME, ROUTE_PERMISSION } from '@/utils/constants'
 import { useAppSelector } from '@/hooks/useAppStore'
 import { ILoginList } from '@/api/type/consumer'
 import dayjs from 'dayjs'
 import { useFieldProps } from '@/hooks/useFieldProps'
-import { IPageAnalysisList } from '@/api/type/data'
+import { IPageAnalysisList, IPageFlowList } from '@/api/type/data'
 
 interface IProps {
     children?: ReactNode
 }
 
-const PageAnalysis: FC<IProps> = (_props) => {
+const PageFlow: FC<IProps> = (_props) => {
     const {
         staff: {
             staffList
@@ -41,7 +41,7 @@ const PageAnalysis: FC<IProps> = (_props) => {
     const formRef = useRef<FormInstance>();
 
     // 用户列表列数据
-    const columns: ProColumns<IPageAnalysisList>[] = [
+    const columns: ProColumns<IPageFlowList>[] = [
         {
             dataIndex: 'index',
             valueType: 'index',
@@ -70,12 +70,12 @@ const PageAnalysis: FC<IProps> = (_props) => {
             align: 'center',
         },
         {
-            dataIndex: 'pagePath',
-            title: '页面路径',
-            width: 200,
-            //   fixed: 'left',
-            ellipsis: true,
+            dataIndex: 'flowDirection',
+            title: '页面流向',
+            width: 80,
             align: 'center',
+            valueType: 'select',
+            valueEnum: FLOW_DIRECTION,
         },
         {
             dataIndex: 'visitPeopleNo',
@@ -91,45 +91,6 @@ const PageAnalysis: FC<IProps> = (_props) => {
             align: 'center',
             search: false,
         },
-        {
-            dataIndex: 'perPeopleAvg',
-            title: '人均停留时长（秒）',
-            width: 100,
-            align: 'center',
-            search: false,
-        },
-        {
-            dataIndex: 'perVisitAvg',
-            title: '次均停留时长（秒）',
-            width: 100,
-            align: 'center',
-            search: false,
-        },
-        {
-            title: '操作',
-            align: 'center',
-            valueType: 'option',
-            key: 'option',
-            fixed: 'right',
-            width: 80,
-            render: (text, record, _, action) => (
-                <Button
-                    key="view"
-                    color="primary"
-                    variant="text"
-                    size='small'
-                    onClick={() => {
-                        // console.log('record: ', record);
-                        navigateTo(ROUTE_KEY.PAGE_FLOW,
-                            {
-                                [ROUTE_PARAM_NAME.ANALYSIS_ID]: record.id,
-                            });
-                    }}
-                >
-                    页面流向
-                </Button>
-            ),
-        },
     ]
 
     return (
@@ -139,7 +100,7 @@ const PageAnalysis: FC<IProps> = (_props) => {
         tip="加载中..."
         style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
       /> */}
-            <ProTable<IPageAnalysisList>
+            <ProTable<IPageFlowList>
                 scroll={{ x: 1000 }}
                 bordered
                 columns={columns}
@@ -182,11 +143,9 @@ const PageAnalysis: FC<IProps> = (_props) => {
                             {
                                 id: 1,
                                 pageName: 'oB7RFvsZjYXi1IsY_VjPTXZwCrX4',
-                                pagePath: '测试用户',
+                                flowDirection: 0,
                                 visitPeopleNo: 9999,
                                 visitPageNo: 9999,
-                                perPeopleAvg: 9999,
-                                perVisitAvg: 9999,
                                 date: 1630000000000,
                             }
                         ],
@@ -299,4 +258,5 @@ const PageAnalysis: FC<IProps> = (_props) => {
     )
 }
 
-export default memo(PageAnalysis)
+export default memo(PageFlow)
+
