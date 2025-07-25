@@ -118,3 +118,19 @@ export const FLOW_DIRECTION: Record<number, IRecord> = {
         text: '流出',
     },
 }
+
+// 消息
+export const MESSAGE_ROLE_NAME = {
+    MESSAGE_ROLE_USER: 'user',
+    MESSAGE_ROLE_AI: 'ai',
+}
+export const MESSAGE_ROLE: Record<string, IRecord> = {
+    [MESSAGE_ROLE_NAME.MESSAGE_ROLE_USER]: {
+        text: '用户',
+        color: '#87d068',
+    },
+    [MESSAGE_ROLE_NAME.MESSAGE_ROLE_AI]: {
+        text: 'AI',
+        color: '#108ee9',
+    },
+}

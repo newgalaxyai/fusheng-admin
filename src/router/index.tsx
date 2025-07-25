@@ -25,7 +25,7 @@ const routes: IRoute[] = [
     type: -1,
     path: ROUTE_PATH.NOT_FOUND,
     hideInMenu: true,
-    element: Lazy(() => import( /* @vite-ignore */ ROUTE_ELEMENT_PATH.NOT_FOUND))
+    element: Lazy(() => import( /* @vite-ignore */ '../views/' + ROUTE_ELEMENT_PATH.NOT_FOUND))
   },
   {
     key: ROUTE_KEY.LOGIN,
@@ -34,7 +34,7 @@ const routes: IRoute[] = [
     type: -1,
     path: ROUTE_PATH.LOGIN,
     hideInMenu: true,
-    element: Lazy(() => import( /* @vite-ignore */ ROUTE_ELEMENT_PATH.LOGIN))
+    element: Lazy(() => import( /* @vite-ignore */ '../views/' + ROUTE_ELEMENT_PATH.LOGIN))
   },
   {
     key: ROUTE_KEY.RESET,
@@ -43,7 +43,7 @@ const routes: IRoute[] = [
     type: -1,
     path: ROUTE_PATH.RESET,
     hideInMenu: true,
-    element: Lazy(() => import( /* @vite-ignore */ ROUTE_ELEMENT_PATH.RESET))
+    element: Lazy(() => import( /* @vite-ignore */ '../views/' + ROUTE_ELEMENT_PATH.RESET))
   },
   {
     key: ROUTE_KEY.DEFAULT,

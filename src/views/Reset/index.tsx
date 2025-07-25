@@ -23,8 +23,9 @@ export default () => {
             <Card
                 title="重置密码"
                 extra={<Button type="link" onClick={() => {
-                    navigate(ROUTE_PATH.LOGIN)
-                }}>返回登录</Button>}
+                    // navigate(ROUTE_PATH.LOGIN)
+                    navigate(-1)
+                }}>返回</Button>}
                 className='reset-password-card'
             >
                 <StepsForm<{
@@ -32,7 +33,67 @@ export default () => {
                 }>
                     formRef={stepsFormRef}
                     submitter={{
-                        render: (_props, _dom) => {
+                        render: (props, _dom) => {
+                            if (props.step === 0) {
+                                return [
+                                    <Button
+                                        key='step0-next'
+                                        type="primary"
+                                        onClick={() => {
+                                            props.onSubmit?.()
+                                        }}
+                                        style={{
+                                            width: '100%',
+                                        }}
+                                    >
+                                        下一步
+                                    </Button>
+                                ]
+                            }
+                            if (props.step === 1) {
+                                return [
+                                    <Button
+                                        key='step1-prev'
+                                        type="primary"
+                                        onClick={() => {
+                                            props.onPre?.()
+                                        }}
+                                        style={{
+                                            width: '100%',
+                                        }}
+                                    >
+                                        上一步
+                                    </Button>,
+                                    <Button
+                                        key='step1-next'
+                                        type="primary"
+                                        onClick={() => {
+                                            props.onSubmit?.()
+                                        }}
+                                        style={{
+                                            width: '100%',
+                                        }}
+                                    >
+                                        提交
+                                    </Button>
+                                ]
+                            }
+                            if (props.step === 2) {
+                                return [
+                                    <Button
+                                        key='step2-login'
+                                        type="primary"
+                                        onClick={() => {
+                                            navigate(ROUTE_PATH.LOGIN);
+                                        }}
+                                        style={{
+                                            width: '100%',
+                                        }}
+                                    >
+                                        去登录
+                                    </Button>
+                                ]
+                            }
                             return []
                         }
                     }}
@@ -61,16 +122,28 @@ export default () => {
                             }}
                             name="mobile"
                             placeholder={'手机号'}
-                            // rules={[
-                            //     {
-                            //         required: true,
-                            //         message: '请输入手机号！',
-                            //     },
-                            //     {
-                            //         pattern: /^1\d{10}$/,
-                            //         message: '手机号格式错误！',
-                            //     },
-                            // ]}
+                        // validateTrigger={['onSubmit', 'onFinish', 'onBlur']}
+                        // rules={[
+                        //     {
+                        //         required: true,
+                        //         validator: (_rule, value) => {
+                        //             if (!value) {
+                        //                 return Promise.reject('请输入手机号！')
+                        //             }
+                        //             return Promise.resolve()
+                        //         },
+                        //         validateTrigger: ['onSubmit', 'onFinish'],
+                        //     },
+                        //     {
+                        //         validator: (_rule, value) => {
+                        //             if (value && value.length && value === '15020202020') {
+                        //                 return Promise.reject('该手机号不存在！')
+                        //             }
+                        //             return Promise.resolve()
+                        //         },
+                        //         validateTrigger: ['onSubmit', 'onFinish', 'onBlur'],
+                        //     }
+                        // ]}
                         />
                         <ProFormCaptcha
                             fieldProps={{
@@ -95,29 +168,23 @@ export default () => {
                                 return '获取验证码';
                             }}
                             name="captcha"
+                            // validateTrigger={['onSubmit', 'onFinish', 'onBlur']}
                             // rules={[
                             //     {
                             //         required: true,
-                            //         message: '请输入验证码！',
+                            //         validator: (_rule, value) => {
+                            //             if (!value) {
+                            //                 return Promise.reject('请输入验证码！')
+                            //             }
+                            //             return Promise.resolve()
+                            //         },
+                            //         validateTrigger: ['onSubmit', 'onFinish', 'onBlur'],
                             //     },
                             // ]}
                             onGetCaptcha={async () => {
                                 message.success('获取验证码成功！验证码为：1234');
                             }}
                         />
-                        <ProForm.Item>
-                            <Button
-                                type="primary"
-                                onClick={() => {
-                                    stepsFormRef.current?.submit();
-                                }}
-                                style={{
-                                    width: '100%',
-                                }}
-                            >
-                                下一步
-                            </Button>
-                        </ProForm.Item>
                     </StepsForm.StepForm>
                     <StepsForm.StepForm<{
                         checkbox: string;
@@ -136,6 +203,19 @@ export default () => {
                             fieldProps={{
                                 size: 'large',
                             }}
+                            validateTrigger={['onSubmit', 'onFinish', 'onBlur']}
+                            rules={[
+                                {
+                                    required: true,
+                                    validator: (_rule, value) => {
+                                        if (!value) {
+                                            return Promise.reject('请输入新密码！')
+                                        }
+                                        return Promise.resolve()
+                                    },
+                                    validateTrigger: ['onSubmit', 'onFinish', 'onBlur'],
+                                },
+                            ]}
                         />
 
                         <ProFormText.Password
@@ -145,20 +225,20 @@ export default () => {
                             fieldProps={{
                                 size: 'large',
                             }}
+                            validateTrigger={['onSubmit', 'onFinish', 'onBlur']}
+                            rules={[
+                                {
+                                    required: true,
+                                    validator: (_rule, value) => {
+                                        if (!value) {
+                                            return Promise.reject('请输入确认密码！')
+                                        }
+                                        return Promise.resolve()
+                                    },
+                                    validateTrigger: ['onSubmit', 'onFinish', 'onBlur'],
+                                },
+                            ]}
                         />
-                        <ProForm.Item>
-                            <Button
-                                type="primary"
-                                onClick={() => {
-                                    stepsFormRef.current?.submit();
-                                }}
-                                style={{
-                                    width: '100%',
-                                }}
-                            >
-                                提交
-                            </Button>
-                        </ProForm.Item>
                     </StepsForm.StepForm>
                     <StepsForm.StepForm
                         name="success"
@@ -169,19 +249,6 @@ export default () => {
                             title="重置密码成功"
                             subTitle="请使用新密码登录"
                         />
-                        <ProForm.Item>
-                            <Button
-                                type="primary"
-                                onClick={() => {
-                                    navigate(ROUTE_PATH.LOGIN);
-                                }}
-                                style={{
-                                    width: '100%',
-                                }}
-                            >
-                                去登录
-                            </Button>
-                        </ProForm.Item>
                     </StepsForm.StepForm>
                 </StepsForm>
             </Card>

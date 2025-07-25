@@ -58,6 +58,13 @@ const LayoutUser = () => {
         })
       },
     },
+    {
+      key: 'reset',
+      label: '重置密码',
+      onClick: () => {
+        navigate(ROUTE_PATH.RESET)
+      },
+    },
   ];
   return (
     <div

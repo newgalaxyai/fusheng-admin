@@ -67,3 +67,19 @@ export type IQARecordListResponse = {
     list: IQARecordList[],
     total: number
 }
+
+export type IMessageListRequest = {
+    id: number // 会话ID
+}
+
+export type IMessageList = {
+    id: number // 消息ID
+    role: 'user' | 'ai' // 角色 user：用户；ai：ai助手
+    content: string // 消息内容
+    createTime: number // 创建时间
+}
+
+export type IMessageListResponse = {
+    list: IMessageList[],
+    total: number
+}

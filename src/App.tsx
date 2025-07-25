@@ -7,6 +7,7 @@ import { useAppDispatch } from '@/hooks/useAppStore';
 import { getLoginInfoAsync, getLoginPermissionInfoAsync } from './redux/asyncs/login';
 
 function App() {
+  
   const dispatch = useAppDispatch();
   const { getRoutes, authRoutes } = useRoutesHook();
   const { addTab, getCurrentRoute } = useLayout();

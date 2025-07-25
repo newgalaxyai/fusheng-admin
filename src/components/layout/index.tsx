@@ -282,7 +282,6 @@ const LayoutComponent: React.FC = () => {
                     >
                         {loading ? <Spin
                             spinning={true}
-                            tip="加载中..."
                             style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
                         /> : <Outlet />
                         }

@@ -12,6 +12,19 @@ body,
   display: none;
 }
 
+// 重置密码页步骤表单按钮宽度设置
+.reset-password-container {
+  .ant-pro-steps-form-container {
+    .ant-space {
+      width: 100%;
+
+      .ant-space-item {
+        width: 100%;
+      }
+    }
+  }
+}
+
 // 布局组件
 .layout-component {
   min-height: 100vh;

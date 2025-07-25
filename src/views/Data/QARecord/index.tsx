@@ -1,11 +1,12 @@
 import React, { useRef, useEffect, memo, useState } from 'react'
 import type { FC, ReactNode } from 'react'
-import { Button, Space } from 'antd'
+import { Button, Space, Drawer } from 'antd'
 import { ProTable, ProColumns } from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
 import dayjs from 'dayjs'
 import { useFieldProps } from '@/hooks/useFieldProps'
-import { IQARecordList } from '@/api/type'
+import { IQARecordList, IMessageList } from '@/api/type'
+import Messages from '@/components/messages'
 
 interface IProps {
     children?: ReactNode
@@ -18,6 +19,35 @@ const QARecord: FC<IProps> = (_props) => {
 
     const actionRef = useRef<ActionType>();
     const formRef = useRef<FormInstance>();
+
+    // 当前选择的会话
+    const [currentSession, setCurrentSession] = useState<IQARecordList>()
+    // 当前查看的会话详情
+    const [messageList, setMessageList] = useState<IMessageList[]>([
+        {
+            id: 1,
+            role: 'user',
+            content: '你好',
+            createTime: 1680000000000,
+        },
+        {
+            id: 2,
+            role: 'ai',
+            content: '你好',
+            createTime: 1680000000000,
+        },
+    ])
+    // 会话详情抽屉是否打开
+    const [sessionDrawerOpen, setSessionDrawerOpen] = useState<boolean>(false)
+    // 会话详情抽屉关闭
+    const onSessionDrawerClose = () => {
+        setSessionDrawerOpen(false)
+    }
+    // 会话详情抽屉打开
+    const onSessionDrawerOpen = (session: IQARecordList) => {
+        setCurrentSession(session)
+        setSessionDrawerOpen(true)
+    }
 
     // 用户列表列数据
     const columns: ProColumns<IQARecordList>[] = [
@@ -78,6 +108,7 @@ const QARecord: FC<IProps> = (_props) => {
                     size='small'
                     onClick={() => {
                         console.log('查看会话: ', record);
+                        onSessionDrawerOpen(record)
                     }}
                 >
                     查看
@@ -87,7 +118,9 @@ const QARecord: FC<IProps> = (_props) => {
     ]
 
     return (
-        <>
+        <div
+        className='qa-record'
+        >
             <ProTable<IQARecordList>
                 scroll={{ x: 600 }}
                 bordered
@@ -132,7 +165,7 @@ const QARecord: FC<IProps> = (_props) => {
                                 id: 1,
                                 sessionName: 'oB7RFvsZjYXi1IsY_VjPTXZwCrX4',
                                 openid: 'oB7RFvsZjYXi1IsY_VjPTXZwCrX4',
-                                consumerName: 'oB7RFvsZjYXi1IsY_VjPTXZwCrX4',
+                                consumerName: '张三',
                                 createTime: 1630000000000,
                             }
                         ],
@@ -205,7 +238,16 @@ const QARecord: FC<IProps> = (_props) => {
                 dateFormatter="string"
                 headerTitle="问答记录"
             />
-        </>
+            {/* 问答记录详情 */}
+            <Drawer
+                title='会话详情'
+                closable={{ 'aria-label': 'Close Button' }}
+                onClose={onSessionDrawerClose}
+                open={sessionDrawerOpen}
+            >
+                <Messages messages={messageList} session={currentSession} />
+            </Drawer>
+        </div>
     )
 }
 

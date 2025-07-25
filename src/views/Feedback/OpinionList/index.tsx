@@ -5,7 +5,7 @@ import { ProTable, ProColumns } from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
 import dayjs from 'dayjs'
 import { useFieldProps } from '@/hooks/useFieldProps'
-import { IQARecordList } from '@/api/type'
+import { IOpinionList } from '@/api/type'
 
 interface IProps {
     children?: ReactNode
@@ -20,7 +20,7 @@ const OpinionList: FC<IProps> = (_props) => {
     const formRef = useRef<FormInstance>();
 
     // 用户列表列数据
-    const columns: ProColumns<IQARecordList>[] = [
+    const columns: ProColumns<IOpinionList>[] = [
         {
             dataIndex: 'index',
             valueType: 'index',
@@ -30,33 +30,37 @@ const OpinionList: FC<IProps> = (_props) => {
             align: 'center',
         },
         {
-            dataIndex: 'sessionName',
-            title: '会话标题',
-            width: 200,
-            //   fixed: 'left',
-            ellipsis: true,
-            align: 'center',
-        },
-        {
-            dataIndex: 'openid',
-            title: '用户编号',
-            width: 200,
-            //   fixed: 'left',
-            ellipsis: true,
+            dataIndex: 'opinionNo',
+            title: '编号',
+            width: 120,
             align: 'center',
         },
         {
             dataIndex: 'consumerName',
-            title: '用户名称',
-            width: 120,
-            //   fixed: 'left',
+            title: '用户昵称',
+            width: 150,
             align: 'center',
+            search: false,
+        },
+        {
+            dataIndex: 'mobile',
+            title: '用户手机号',
+            width: 150,
+            align: 'center',
+        },
+        {
+            dataIndex: 'opinionContent',
+            title: '意见内容',
+            width: 200,
+            align: 'center',
+            ellipsis: true,
+            search: false,
         },
         {
             dataIndex: 'createTime',
             title: '创建时间',
             valueType: 'dateRange',
-            width: 120,
+            width: 150,
             align: 'center',
             fieldProps: {
                 placeholder: dateRangePlaceholder,
@@ -88,8 +92,8 @@ const OpinionList: FC<IProps> = (_props) => {
 
     return (
         <>
-            <ProTable<IQARecordList>
-                scroll={{ x: 600 }}
+            <ProTable<IOpinionList>
+                scroll={{ x: 1000 }}
                 bordered
                 columns={columns}
                 rowSelection={{
@@ -130,9 +134,10 @@ const OpinionList: FC<IProps> = (_props) => {
                         data: [
                             {
                                 id: 1,
-                                sessionName: 'oB7RFvsZjYXi1IsY_VjPTXZwCrX4',
-                                openid: 'oB7RFvsZjYXi1IsY_VjPTXZwCrX4',
-                                consumerName: 'oB7RFvsZjYXi1IsY_VjPTXZwCrX4',
+                                opinionNo: '1',
+                                consumerName: '1',
+                                mobile: '1',
+                                opinionContent: '1',
                                 createTime: 1630000000000,
                             }
                         ],

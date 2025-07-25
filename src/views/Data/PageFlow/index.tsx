@@ -1,12 +1,9 @@
-import React, { useRef, useEffect, memo, useState } from 'react'
+import React, { useRef, memo } from 'react'
 import type { FC, ReactNode } from 'react'
-import { Button, Space, App, Tag, Spin, DatePicker, Input, Cascader } from 'antd'
-import { PlusOutlined } from '@ant-design/icons'
-import { ProTable, ProColumns, TableDropdown } from '@ant-design/pro-components'
+import { Space } from 'antd'
+import { ProTable, ProColumns } from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
-import { useLayout } from '@/hooks/useLayout';
 import { FLOW_DIRECTION } from '@/constants'
-import { useAppSelector } from '@/hooks/useAppStore'
 import dayjs from 'dayjs'
 import { useFieldProps } from '@/hooks/useFieldProps'
 import { IPageFlowList } from '@/api/type'
@@ -17,19 +14,6 @@ interface IProps {
 
 const PageFlow: FC<IProps> = (_props) => {
     const {
-        staff: {
-            staffList
-        },
-        user: {
-            userRole,
-            permissions
-        }
-    } = useAppSelector((state) => state)
-    const { message, modal } = App.useApp();
-    const { navigateTo, getRouteRole } = useLayout();
-    const {
-        cascaderOptions,
-        cascaderLoadData,
         dateRangePlaceholder
     } = useFieldProps()
 

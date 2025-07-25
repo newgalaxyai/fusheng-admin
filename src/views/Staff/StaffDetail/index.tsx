@@ -419,7 +419,7 @@ const StaffDetail: FC<IProps> = (_props) => {
                   },
                   {
                     validator: (_rule, value) => {
-                      if (value && value.length === 15020202020) {
+                      if (value && value.length && value === '15020202020') {
                         return Promise.reject('该手机号已存在！')
                       }
                       return Promise.resolve()
