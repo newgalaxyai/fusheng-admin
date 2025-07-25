@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { IThunkStaffState } from '../types/staff'
-import { IStaffListRequest, IStaffListResponse } from '@/api/type/staff'
+import { IStaffListRequest, IStaffListResponse } from '@/api/type'
 import { getStaffListAPI } from '@/api/staff'
 import { setStaffList, setStaffLoading } from '../modules/staff'
 import { message } from 'antd'

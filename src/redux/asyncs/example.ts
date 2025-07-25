@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { IThunkExampleState } from '../types/example'
-import { IExampleRequest } from '@/api/type/example'
+import { IExampleRequest } from '@/api/type'
 import { getExampleAPI } from '@/api/example'
 import { setExampleData, setExampleLoading } from '../modules/example'
 import { message } from 'antd'

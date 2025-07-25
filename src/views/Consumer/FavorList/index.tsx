@@ -1,14 +1,12 @@
 import React, { useRef, useEffect, memo, useState } from 'react'
 import type { FC, ReactNode } from 'react'
-import { Button, Space, App, Tag, Spin, DatePicker, Input } from 'antd'
-import { PlusOutlined } from '@ant-design/icons'
-import { ProTable, ProColumns, TableDropdown } from '@ant-design/pro-components'
+import { Button, Space, App } from 'antd'
+import { ProTable, ProColumns } from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
 import { useLayout } from '@/hooks/useLayout';
-import { ROUTE_KEY, ROUTE_PARAM_NAME, ROUTE_PERMISSION } from '@/utils/constants'
+import { ROUTE_KEY, ROUTE_PARAM_NAME } from '@/constants'
 import { useAppSelector } from '@/hooks/useAppStore'
-import { IFavorList, IFavorListRequest } from '@/api/type/consumer'
-import { getConsumerListAPI } from '@/api/consumer'
+import { IFavorList, IFavorListRequest } from '@/api/type'
 import dayjs from 'dayjs'
 import { useFieldProps } from '@/hooks/useFieldProps'
 

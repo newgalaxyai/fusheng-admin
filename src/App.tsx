@@ -1,19 +1,12 @@
-import { useEffect, useState } from 'react'
-import { Suspense } from 'react'
+import { useEffect } from 'react'
 import { useRoutes, useLocation } from 'react-router-dom'
-import { Spin } from 'antd'
 import { useLayout } from './hooks/useLayout';
 import { useRoutesHook } from './hooks/useRoutes';
-import { ROUTE_KEY, ROUTE_PATH_COMMON } from './utils/constants';
-import { useAppDispatch, useAppSelector } from '@/hooks/useAppStore';
+import { ROUTE_KEY, ROUTE_PATH_COMMON } from './constants';
+import { useAppDispatch } from '@/hooks/useAppStore';
 import { getLoginInfoAsync, getLoginPermissionInfoAsync } from './redux/asyncs/login';
 
 function App() {
-  const {
-    user: {
-      loading
-    }
-  } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
   const { getRoutes, authRoutes } = useRoutesHook();
   const { addTab, getCurrentRoute } = useLayout();

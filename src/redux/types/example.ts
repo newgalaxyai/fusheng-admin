@@ -1,4 +1,4 @@
-import { IExampleResponse } from '@/api/type/example'
+import { IExampleResponse } from '@/api/type'
 import { DispatchType } from '@/redux'
 
 export interface IExampleState {

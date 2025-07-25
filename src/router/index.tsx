@@ -2,7 +2,7 @@ import { Navigate } from 'react-router-dom'
 import Lazy from './lazy'
 import { IRoute } from '@/redux/types/route'
 import AuthRouteComponent from '@/components/auth'
-import { ROUTE_KEY, ROUTE_PATH, ROUTE_ELEMENT_PATH } from '@/utils/constants'
+import { ROUTE_KEY, ROUTE_PATH, ROUTE_ELEMENT_PATH } from '@/constants'
 
 const routes: IRoute[] = [
   {

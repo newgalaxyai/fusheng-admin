@@ -6,7 +6,7 @@ import publicRoutes from "@/router";
 import { usePermissionCheck } from "./usePermission";
 import LayoutComponent from "@/components/layout";
 import AuthRouteComponent from "@/components/auth";
-import { ROUTE_ELEMENT_PATH, ROUTE_KEY, ROUTE_NAME, ROUTE_PATH } from "@/utils/constants";
+import { ROUTE_ELEMENT_PATH, ROUTE_KEY, ROUTE_NAME, ROUTE_PATH } from "@/constants";
 import { useMemo } from "react";
 
 export type IBreadcrumb = {
@@ -49,7 +49,7 @@ export const useRoutesHook = () => {
           result.push({
             // id: route.key,
             path: parentType === 2 ? route.path : getRoutePath(route.key, authRoutes, ''),
-            element: Lazy(() => import(/* @vite-ignore */ route.elementPath!)),
+            element: Lazy(() => import(/* @vite-ignore */ '../views/' + route.elementPath!)),
             children: getRoutes(routes, route.key, route.type, []),
           })
         } else {

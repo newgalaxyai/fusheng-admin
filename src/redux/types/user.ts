@@ -1,4 +1,4 @@
-import { ILoginInfo } from "@/api/type/login";
+import { ILoginInfo } from "@/api/type";
 import { DispatchType } from '@/redux'
 
 export interface IUserState {

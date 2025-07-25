@@ -5,7 +5,7 @@ import type {
   IStaffList,
   IStaffDetailRequest,
   IStaffAssignRoleRequest,
-} from '@/api/type/staff'
+} from '@/api/type'
 import { IRequest, IResponse } from '../type'
 import {
   staffListURL,

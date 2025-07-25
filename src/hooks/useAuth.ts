@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { getAccessToken } from '@/utils/storge'
 import { getLocationParamsByName } from '@/utils/location'
-import { ROUTE_PARAM_NAME, ROUTE_PATH } from '@/utils/constants'
+import { ROUTE_PARAM_NAME, ROUTE_PATH } from '@/constants'
 import { encodeRedirectInfo, decodeRedirectInfo } from '@/utils/auth'
 
 // 验证登录 token 是否有效的函数

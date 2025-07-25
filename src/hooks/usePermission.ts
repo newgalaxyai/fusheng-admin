@@ -1,5 +1,5 @@
 import { useAppSelector } from "@/hooks/useAppStore";
-import { STAFF_ROLE_NAME } from "@/utils/constants";
+import { STAFF_ROLE_NAME } from "@/constants";
 import { useCallback } from "react";
 
 // 权限检查

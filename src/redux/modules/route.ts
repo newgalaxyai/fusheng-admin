@@ -7,7 +7,7 @@ import {
   ROUTE_PERMISSION,
   ROUTE_ELEMENT_PATH,
   STAFF_ROLE_NAME
-} from '@/utils/constants';
+} from '@/constants';
 
 const initialState: IRouteState = {
   // 路由列表

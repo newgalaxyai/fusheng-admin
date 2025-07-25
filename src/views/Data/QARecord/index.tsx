@@ -5,7 +5,7 @@ import { ProTable, ProColumns } from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
 import dayjs from 'dayjs'
 import { useFieldProps } from '@/hooks/useFieldProps'
-import { IQARecordList } from '@/api/type/data'
+import { IQARecordList } from '@/api/type'
 
 interface IProps {
     children?: ReactNode

@@ -5,12 +5,11 @@ import { PlusOutlined } from '@ant-design/icons'
 import { ProTable, ProColumns, TableDropdown } from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
 import { useLayout } from '@/hooks/useLayout';
-import { FLOW_DIRECTION, LOGIN_TYPE, ROUTE_KEY, ROUTE_PARAM_NAME, ROUTE_PERMISSION } from '@/utils/constants'
+import { FLOW_DIRECTION } from '@/constants'
 import { useAppSelector } from '@/hooks/useAppStore'
-import { ILoginList } from '@/api/type/consumer'
 import dayjs from 'dayjs'
 import { useFieldProps } from '@/hooks/useFieldProps'
-import { IPageAnalysisList, IPageFlowList } from '@/api/type/data'
+import { IPageFlowList } from '@/api/type'
 
 interface IProps {
     children?: ReactNode

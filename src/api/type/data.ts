@@ -35,7 +35,7 @@ export type IPageFlowListRequest = {
 export type IPageFlowList = {
     id: number // 记录ID
     pageName: string // 页面名称
-    flowDirection: number // 页面流向 0：流入；1：流出
+    flowDirection: 0 | 1 // 页面流向 0：流入；1：流出
     visitPeopleNo: number // 访问人数
     visitPageNo: number // 访问页面数
     date: number // 日期

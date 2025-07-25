@@ -5,9 +5,9 @@ import { PlusOutlined } from '@ant-design/icons'
 import { ProTable, ProColumns, TableDropdown } from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
 import { useLayout } from '@/hooks/useLayout';
-import { LOGIN_TYPE, ROUTE_KEY, ROUTE_PARAM_NAME, ROUTE_PERMISSION } from '@/utils/constants'
+import { LOGIN_TYPE } from '@/constants'
 import { useAppSelector } from '@/hooks/useAppStore'
-import { ILoginList } from '@/api/type/consumer'
+import { ILoginList } from '@/api/type'
 import dayjs from 'dayjs'
 import { useFieldProps } from '@/hooks/useFieldProps'
 

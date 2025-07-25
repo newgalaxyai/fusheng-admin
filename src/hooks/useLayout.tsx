@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import type { MenuProps } from "antd";
 import Icon from "@ant-design/icons";
 import type { GetProps } from "antd";
-import { ROUTE_ICON, ROUTE_KEY } from "@/utils/constants";
+import { ROUTE_ICON, ROUTE_KEY } from "@/constants";
 import { useRoutesHook } from './useRoutes'
 
 export type IBreadcrumb = {

@@ -1,4 +1,4 @@
-import { IStaffListResponse } from '@/api/type/staff'
+import { IStaffListResponse } from '@/api/type'
 import { DispatchType } from '@/redux'
 
 export interface IStaffState {

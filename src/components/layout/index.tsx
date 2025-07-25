@@ -18,7 +18,7 @@ import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 // 右上角用户信息
 import LayoutUser from './layoutUser';
 import { ITabsItem } from '@/redux/types/route';
-import { ROUTE_KEY } from '@/utils/constants';
+import { ROUTE_KEY } from '@/constants';
 
 // 卡片标签类型
 type TargetKey = React.MouseEvent | React.KeyboardEvent | string;

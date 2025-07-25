@@ -20,7 +20,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getRememberMe, setRememberMe, setAccessToken, setRefreshToken, setAccountPassword, getAccountPassword } from '@/utils/storge';
 import { getLocationParamsByName } from '@/utils/location';
-import { ROUTE_PARAM_NAME, ROUTE_PATH } from '@/utils/constants';
+import { ROUTE_PARAM_NAME, ROUTE_PATH } from '@/constants';
 import { loginAPI } from '@/api/login';
 import { decodeRedirectInfo } from '@/utils/auth';
 import { useAppDispatch, useAppSelector } from '@/hooks/useAppStore';

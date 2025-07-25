@@ -9,7 +9,7 @@ import { Button, Card, message, Result, theme } from 'antd';
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MobileOutlined, LockOutlined } from '@ant-design/icons';
-import { ROUTE_PATH } from '@/utils/constants';
+import { ROUTE_PATH } from '@/constants';
 
 export default () => {
     const navigate = useNavigate();

@@ -3,7 +3,7 @@ import { IThunkUserState } from '../types/user'
 import { message } from 'antd'
 import { getLoginInfoAPI, getLoginPermissionInfoAPI } from '@/api/login'
 import { setUserLoadingAction, setUserInfoAction, setUserRoleAction } from '../modules/user'
-import { STAFF_ROLE_NAME } from '@/utils/constants'
+import { STAFF_ROLE_NAME } from '@/constants'
 
 // 修改泛型类型：第一个参数是返回数据的类型，而不是void
 export const getLoginInfoAsync = createAsyncThunk<

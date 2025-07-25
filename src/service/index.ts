@@ -5,7 +5,7 @@ import { IResponseData } from '@/api/type'
 import { encodeRedirectInfo, refreshToken } from '@/utils/auth'
 import { getAccessToken, removeAccessToken, removeRefreshToken } from '@/utils/storge'
 import { appURL, adminURL } from '@/api/url'
-import { ROUTE_PATH, ROUTE_PARAM_NAME } from '@/utils/constants'
+import { ROUTE_PATH, ROUTE_PARAM_NAME } from '@/constants'
 
 // 是否正在刷新token
 let isRefreshToken = false

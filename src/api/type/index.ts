@@ -11,3 +11,9 @@ export interface IResponse<T> {
 }
 
 export type IRequest<T>  = T
+
+export * from './staff'
+export * from './consumer'
+export * from './data'
+export * from './login'
+export * from './example'

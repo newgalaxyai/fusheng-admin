@@ -5,8 +5,8 @@ import { PlusOutlined } from '@ant-design/icons'
 import { ProTable, ProColumns, TableDropdown } from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
 import { useLayout } from '@/hooks/useLayout';
-import { ROUTE_KEY, ROUTE_PARAM_NAME, ROUTE_PERMISSION, STAFF_ROLE } from '@/utils/constants'
-import { IStaffList, IStaffListRequest, IStaffListResponse } from '@/api/type/staff'
+import { ROUTE_KEY, ROUTE_PARAM_NAME, ROUTE_PERMISSION, STAFF_ROLE } from '@/constants'
+import { IStaffList, IStaffListRequest, IStaffListResponse } from '@/api/type'
 import { useAppSelector } from '@/hooks/useAppStore'
 import PermissionWrapper from '@/components/permission/PermissionWrapper'
 import { getStaffListAPI, deleteStaffAPI, editStaffAPI } from '@/api/staff'
@@ -119,7 +119,7 @@ const StaffList: FC<IProps> = (_props) => {
       width: 80,
       render: (_, record) => (
         <Tag color={STAFF_ROLE[record.staffRole]?.color || 'default'} key={record.id}>
-          {STAFF_ROLE[record.staffRole]?.name || '未设置'}
+          {STAFF_ROLE[record.staffRole]?.text || '未设置'}
         </Tag>
       ),
       align: 'center',

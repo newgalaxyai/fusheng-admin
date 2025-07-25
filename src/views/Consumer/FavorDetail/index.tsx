@@ -6,7 +6,7 @@ import {
 } from 'antd'
 import {
     IFavorList,
-} from '@/api/type/consumer'
+} from '@/api/type'
 import dayjs from 'dayjs'
 
 interface IProps {

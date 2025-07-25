@@ -20,11 +20,11 @@ import type {
 import {
   ROUTE_KEY,
   ROUTE_PERMISSION,
-  STAFF_GENDER,
+  SEX,
   ROUTE_PARAM_NAME,
   CONSUMER_SOURCE,
-  CONSUMER_OFFOPT
-} from '@/utils/constants'
+  CONSUMER_OPERATION
+} from '@/constants'
 import {
   MobileOutlined,
   UserOutlined
@@ -33,7 +33,7 @@ import { theme } from 'antd'
 import PermissionWrapper from '@/components/permission/PermissionWrapper'
 import { useLayout } from '@/hooks/useLayout';
 import { decodeRedirectInfo, encodeRedirectInfo } from '@/utils/auth'
-import { IConsumerList, IConsumerOffList } from '@/api/type/consumer'
+import { IConsumerList, IConsumerOffList } from '@/api/type'
 import dayjs from 'dayjs'
 import CopyComponent from '@/components/copy'
 import { getConsumerDetailAPI } from '@/api/consumer'
@@ -89,7 +89,7 @@ const ConsumerDetail: FC<IProps> = (_props) => {
     {
       key: 'sex',
       label: '性别',
-      children: STAFF_GENDER[consumerInfo.sex || 0] || '未知',
+      children: SEX[consumerInfo.sex || 0].text || '未知',
     },
     {
       key: 'openid',
@@ -138,7 +138,7 @@ const ConsumerDetail: FC<IProps> = (_props) => {
     {
       key: 'registerSource',
       label: '注册来源',
-      children: CONSUMER_SOURCE[consumerInfo.registerSource],
+      children: CONSUMER_SOURCE[consumerInfo.registerSource].text,
     },
     {
       key: 'createTime',
@@ -182,7 +182,7 @@ const ConsumerDetail: FC<IProps> = (_props) => {
       key: 'operation',
       minWidth: 120,
       align: 'center',
-      render: (operation) => CONSUMER_OFFOPT[operation]
+      render: (operation) => CONSUMER_OPERATION[operation].text,
     },
   ];
 
@@ -380,8 +380,8 @@ const ConsumerDetail: FC<IProps> = (_props) => {
                 label="性别"
                 name="sex"
                 // colProps={{ xl: 8, md: 12 }}
-                options={Object.keys(STAFF_GENDER).map((key) => ({
-                  label: STAFF_GENDER[Number(key)],
+                options={Object.keys(SEX).map((key) => ({
+                  label: SEX[Number(key)].text,
                   value: Number(key),
                 }))}
               />

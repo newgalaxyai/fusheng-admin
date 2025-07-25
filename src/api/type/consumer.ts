@@ -19,7 +19,7 @@ export type IConsumerList = {
     mobile: string // 用户手机号
     compareCompany: string // 关联企业
     consumerPositionName: string // 用户职位名称
-    registerSource: number // 注册来源 0：未知来源 1：小程序 
+    registerSource: 0 | 1 // 注册来源 0：未知来源 1：小程序 
     // registerTime: number // 注册时间戳
     waterMark: number // 水印编号
     loginIp: string // 最后登录IP
@@ -27,7 +27,7 @@ export type IConsumerList = {
     createTime: number // 创建时间戳
     updateTime: number // 更新时间戳
     avatar?: string // 用户头像
-    sex?: number // 用户性别 0:保密 1:男 2:女
+    sex?: 0 | 1 | 2 // 用户性别 0:保密 1:男 2:女
     remark?: string // 备注
     // password?: string // 密码
 }
@@ -48,7 +48,7 @@ export type IConsumerOffListRequest = {
 export type IConsumerOffList = {
     id: number // 记录ID
     offTime: number // 注销时间
-    operation: number // 操作 1:注册 2:注销 3:修改
+    operation: 1 | 2 | 3 // 操作 1:注册 2:注销 3:修改
     operator: string // 操作人
 }
 
@@ -99,7 +99,7 @@ export type ILoginList = {
     loginIp: string // 登录ip
     loginTime: number // 登录时间戳: 
     loginArea: string // 登录地区:
-    loginType: number // 登录方式 1：小程序登录
+    loginType: 1 | 2 // 登录方式 1：小程序登录2：普通登录
 }
 
 export type ILoginListResponse = {

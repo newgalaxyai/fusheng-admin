@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import type { FC, ReactNode } from 'react'
 import { Button, Descriptions, Spin } from 'antd'
-import { ROUTE_PARAM_NAME, STAFF_ROLE_NAME } from '@/utils/constants'
+import { ROUTE_PARAM_NAME, STAFF_ROLE_NAME } from '@/constants'
 import { getLocationParamsByName } from '@/utils/location'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
@@ -21,20 +21,23 @@ import {
 } from 'antd'
 import {
   STAFF_ROLE,
-  STAFF_CERTIFICATE_TYPE,
-  STAFF_GENDER,
-  STAFF_EDUCATION,
-  STAFF_MARRIAGE_STATUS,
-} from '@/utils/constants'
+  CERTIFICATE_TYPE,
+  SEX,
+  EDUCATION,
+  MARRIAGE,
+  SEX_NAME,
+  EDUCATION_NAME,
+  MARRIAGE_NAME
+} from '@/constants'
 import {
   MobileOutlined,
 } from '@ant-design/icons'
 import { theme } from 'antd'
 import {
   IStaffList,
-} from '@/api/type/staff'
+} from '@/api/type'
 import PermissionWrapper from '@/components/permission/PermissionWrapper'
-import { ROUTE_KEY, ROUTE_PERMISSION } from '@/utils/constants'
+import { ROUTE_KEY, ROUTE_PERMISSION } from '@/constants'
 import { useLayout } from '@/hooks/useLayout';
 import { getStaffDetailAPI, editStaffAPI, addStaffAPI, assignStaffRoleAPI } from '@/api/staff'
 import { decodeRedirectInfo, encodeRedirectInfo } from '@/utils/auth'
@@ -99,7 +102,7 @@ const StaffDetail: FC<IProps> = (_props) => {
     {
       key: 'staffRole',
       label: '员工角色',
-      children: STAFF_ROLE[staffInfo.staffRole]?.name || '未设置',
+      children: STAFF_ROLE[staffInfo.staffRole].text,
     },
     {
       key: 'mobile',
@@ -111,7 +114,7 @@ const StaffDetail: FC<IProps> = (_props) => {
     {
       key: 'idType',
       label: '证件类型',
-      children: STAFF_CERTIFICATE_TYPE[staffInfo.idType],
+      children: CERTIFICATE_TYPE[staffInfo.idType].text,
     },
     {
       key: 'idNumber',
@@ -126,17 +129,17 @@ const StaffDetail: FC<IProps> = (_props) => {
     {
       key: 'sex',
       label: '性别',
-      children: STAFF_GENDER[staffInfo.sex || 0] || '保密',
+      children: SEX[staffInfo.sex || SEX_NAME.SEX_SECRET].text,
     },
     {
       key: 'education',
       label: '学历',
-      children: STAFF_EDUCATION[staffInfo.education || 'OTHER'] || '其他',
+      children: EDUCATION[staffInfo.education || EDUCATION_NAME.EDUCATION_OTHER].text,
     },
     {
       key: 'marriageStatus',
       label: '婚姻状态',
-      children: STAFF_MARRIAGE_STATUS[staffInfo.marriageStatus || 'SINGLE'] || '未婚',
+      children: MARRIAGE[staffInfo.marriageStatus || MARRIAGE_NAME.MARRIAGE_SINGLE].text,
     },
     {
       key: 'email',
@@ -219,7 +222,7 @@ const StaffDetail: FC<IProps> = (_props) => {
                   // 修改员工角色
                   const assignStaffRoleRes = await assignStaffRoleAPI({
                     userId: Number(staffId),
-                    roleIds: [STAFF_ROLE[STAFF_ROLE_NAME.SUPER].id, STAFF_ROLE[values.staffRole].id],
+                    roleIds: [STAFF_ROLE[STAFF_ROLE_NAME.SUPER].id!, STAFF_ROLE[values.staffRole].id!],
                   })
                   if (!assignStaffRoleRes.success) {
                     message.error(assignStaffRoleRes.errMsg)
@@ -375,7 +378,7 @@ const StaffDetail: FC<IProps> = (_props) => {
                 label="员工角色"
                 // colProps={{ md: 12, xl: 8 }}
                 options={Object.keys(STAFF_ROLE).map((key) => ({
-                  label: STAFF_ROLE[key].name,
+                  label: STAFF_ROLE[key].text,
                   value: key,
                 }))}
                 placeholder="请选择"
@@ -434,8 +437,8 @@ const StaffDetail: FC<IProps> = (_props) => {
                 label="证件类型"
                 name="idType"
                 // colProps={{ xl: 8, md: 12 }}
-                options={Object.keys(STAFF_CERTIFICATE_TYPE).map((key) => ({
-                  label: STAFF_CERTIFICATE_TYPE[key],
+                options={Object.keys(CERTIFICATE_TYPE).map((key) => ({
+                  label: CERTIFICATE_TYPE[key].text,
                   value: key,
                 }))}
                 validateTrigger={['onSubmit', 'onFinish', 'onBlur']}
@@ -474,8 +477,8 @@ const StaffDetail: FC<IProps> = (_props) => {
                 label="学历"
                 name="education"
                 // colProps={{ xl: 8, md: 12 }}
-                options={Object.keys(STAFF_EDUCATION).map((key) => ({
-                  label: STAFF_EDUCATION[key],
+                options={Object.keys(EDUCATION).map((key) => ({
+                  label: EDUCATION[key].text,
                   value: key,
                 }))}
               />
@@ -483,8 +486,8 @@ const StaffDetail: FC<IProps> = (_props) => {
                 label="婚姻状态"
                 name="marriageStatus"
                 // colProps={{ xl: 8, md: 12 }}
-                options={Object.keys(STAFF_MARRIAGE_STATUS).map((key) => ({
-                  label: STAFF_MARRIAGE_STATUS[key],
+                options={Object.keys(MARRIAGE).map((key) => ({
+                  label: MARRIAGE[key].text,
                   value: key,
                 }))}
               />
@@ -497,8 +500,8 @@ const StaffDetail: FC<IProps> = (_props) => {
                 label="性别"
                 name="sex"
                 // colProps={{ xl: 8, md: 12 }}
-                options={Object.keys(STAFF_GENDER).map((key) => ({
-                  label: STAFF_GENDER[Number(key)],
+                options={Object.keys(SEX).map((key) => ({
+                  label: SEX[Number(key)].text,
                   value: Number(key),
                 }))}
               />
