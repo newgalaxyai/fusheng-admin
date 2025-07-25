@@ -62,8 +62,6 @@ const ConsumerDetail: FC<IProps> = (_props) => {
       }).then((res) => {
         if (res.success) {
           setConsumerInfo(res.data || {} as IConsumerList)
-        } else {
-          message.error(res.errMsg)
         }
       }).finally(() => {
         setLoading(false);
@@ -199,8 +197,6 @@ const ConsumerDetail: FC<IProps> = (_props) => {
       // }).then((res) => {
       //   if (res.success) {
       //     setOffList(res.data);
-      //   } else {
-      //     message.error(res.errMsg);
       //   }
       // }).finally(() => {
       //   setOffTableLoading(false);
@@ -282,8 +278,6 @@ const ConsumerDetail: FC<IProps> = (_props) => {
                     }
                     navigateTo(redirect.pathname, redirect.search, redirect.state);
                   }
-                } else {
-                  message.error(res.errMsg);
                 }
                 // message.success('提交成功');
               }}

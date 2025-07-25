@@ -291,8 +291,6 @@ const ConsumerList: FC<IProps> = (_props) => {
                   // })
                   // if (res.success) {
                   //   message.success('删除成功');
-                  // } else {
-                  //   message.error(res.errMsg);
                   // }
                   // 删除后刷新列表
                   action?.reload();
@@ -415,9 +413,6 @@ const ConsumerList: FC<IProps> = (_props) => {
             }
           }
           const res = await getConsumerListAPI(queryParams)
-          if (res.errMsg) {
-            message.error(res.errMsg)
-          }
           return {
             data: res.data.list,
             total: res.data.total,

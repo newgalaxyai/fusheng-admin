@@ -94,7 +94,6 @@ const Page = () => {
             dispatch(getLoginPermissionInfoAsync())
             message.success('登录成功');
           } else {
-            message.error(accountRes.errMsg);
             return;
           }
         } else {
@@ -108,7 +107,6 @@ const Page = () => {
             console.log('登录成功', phoneRes.data);
             message.success('登录成功');
           } else {
-            message.error(phoneRes.errMsg);
             return;
           }
         }

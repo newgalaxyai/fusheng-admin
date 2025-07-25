@@ -2,7 +2,9 @@ import {
     HomeOutlined,
     UserOutlined,
     SolutionOutlined,
-    BarChartOutlined
+    BarChartOutlined,
+    AppstoreOutlined,
+    BookOutlined,
 } from "@ant-design/icons";
 
 // 路由拼接参数名的常量
@@ -44,6 +46,13 @@ export const ROUTE_PATH = {
     PAGE_ANALYSIS: 'pageAnalysis', // 页面分析 
     PAGE_FLOW: 'pageFlow', // 页面流向 
     QA_RECORD: 'qaRecord', // 问答记录 
+    EVALUATE_LIST: 'evaluateList', // AI问答评价列表
+    SYS_ABNORMAL_LIST: 'sysAbnormalList', // 系统异常列表
+    COMPANY_MANAGE: '/companyManage', // 企业名单管理
+    COMPANY_LIST: 'companyList', // 企业列表
+    COM_FEEDBACK_LIST: 'comFeedbackList', // 企业反馈列表
+    FEEDBACK_MANAGE: 'feedbackManage', // 反馈管理
+    OPINION_LIST: 'opinionList', // 意见列表
 }
 
 // 路由key的常量
@@ -74,6 +83,13 @@ export const ROUTE_KEY = {
     PAGE_ANALYSIS: 'pageAnalysis', // 页面分析 
     PAGE_FLOW: 'pageFlow', // 页面流向 
     QA_RECORD: 'qaRecord', // 问答记录 
+    EVALUATE_LIST: 'evaluateList', // AI问答评价列表
+    SYS_ABNORMAL_LIST: 'sysAbnormalList', // 系统异常列表
+    COMPANY_MANAGE: 'companyManage', // 企业名单管理
+    COMPANY_LIST: 'companyList', // 企业列表
+    COM_FEEDBACK_LIST: 'comFeedbackList', // 企业反馈列表
+    FEEDBACK_MANAGE: 'feedbackManage', // 反馈管理
+    OPINION_LIST: 'opinionList', // 意见列表
 }
 
 // 路由name的常量
@@ -98,6 +114,13 @@ export const ROUTE_NAME = {
     PAGE_ANALYSIS: '页面分析', // 页面分析 
     PAGE_FLOW: '页面流向', // 页面流向 
     QA_RECORD: '问答记录', // 问答记录 
+    EVALUATE_LIST: 'AI问答评价', // AI问答评价列表
+    SYS_ABNORMAL_LIST: '系统异常', // 系统异常列表
+    COMPANY_MANAGE: '企业名单管理', // 企业名单管理
+    COMPANY_LIST: '企业列表', // 企业列表
+    COM_FEEDBACK_LIST: '企业反馈列表', // 企业反馈列表
+    FEEDBACK_MANAGE: '反馈管理', // 反馈管理
+    OPINION_LIST: '意见反馈列表', // 意见列表
 }
 
 // 路由权限的常量
@@ -121,6 +144,13 @@ export const ROUTE_PERMISSION = {
     PAGE_ANALYSIS: 'data:manage:analysis', // 页面分析 
     PAGE_FLOW: 'data:manage:flow', // 页面流向 
     QA_RECORD: 'data:manage:record', // 问答记录 
+    EVALUATE_LIST: 'data:manage:evaluate', // AI问答评价列表
+    SYS_ABNORMAL_LIST: 'data:manage:abnormal', // 系统异常列表
+    COMPANY_MANAGE: 'company:manage', // 企业名单管理
+    COMPANY_LIST: 'company:manage:list', // 企业名单列表
+    COM_FEEDBACK_LIST: 'company:manage:feedback', // 企业反馈列表
+    FEEDBACK_MANAGE: 'feedback:manage', // 反馈管理
+    OPINION_LIST: 'feedback:manage:opinion', // 意见列表
 }
 
 // 路由组件地址的常量
@@ -143,6 +173,11 @@ export const ROUTE_ELEMENT_PATH = {
     PAGE_ANALYSIS: 'Data/PageAnalysis', // 页面分析 
     PAGE_FLOW: 'Data/PageFlow', // 页面流向 
     QA_RECORD: 'Data/QARecord', // 问答记录 
+    EVALUATE_LIST: 'Data/EvaluateList', // AI问答评价列表
+    SYS_ABNORMAL_LIST: 'Data/SystemAbnormal', // 系统异常列表
+    COMPANY_LIST: 'Company/CompanyList', // 企业列表
+    COM_FEEDBACK_LIST: 'Company/ComFeedbackList', // 企业反馈列表
+    OPINION_LIST: 'Feedback/OpinionList', // 意见列表
 }
 
 // 路由图标的常量
@@ -151,4 +186,6 @@ export const ROUTE_ICON: Record<string, React.ComponentType | React.ReactNode> =
     [ROUTE_KEY.STAFF_MANAGE]: SolutionOutlined, // 员工管理
     [ROUTE_KEY.CONSUMER_MANAGE]: UserOutlined, // 用户管理
     [ROUTE_KEY.DATA_MANAGE]: BarChartOutlined, // 数据管理
+    [ROUTE_KEY.COMPANY_MANAGE]: AppstoreOutlined, // 企业名单管理   
+    [ROUTE_KEY.FEEDBACK_MANAGE]: BookOutlined, // 反馈管理
 }

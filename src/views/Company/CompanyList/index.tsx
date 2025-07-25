@@ -1,12 +1,11 @@
-import React, { useRef, useEffect, memo, useState } from 'react'
+import React, { useRef, memo } from 'react'
 import type { FC, ReactNode } from 'react'
-import { Button, Space, App } from 'antd'
+import { Button, Space, Progress } from 'antd'
 import { ProTable, ProColumns } from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
 import { useLayout } from '@/hooks/useLayout';
 import { ROUTE_KEY, ROUTE_PARAM_NAME } from '@/constants'
-import { useAppSelector } from '@/hooks/useAppStore'
-import { IFavorList, IFavorListRequest } from '@/api/type'
+import { ICompanyList } from '@/api/type'
 import dayjs from 'dayjs'
 import { useFieldProps } from '@/hooks/useFieldProps'
 
@@ -14,20 +13,12 @@ interface IProps {
     children?: ReactNode
 }
 
-const FavorList: FC<IProps> = (_props) => {
-    const {
-        staff: {
-            staffList
-        },
-        user: {
-            userRole,
-            permissions
-        }
-    } = useAppSelector((state) => state)
-    const { message, modal } = App.useApp();
-    const { navigateTo, getRouteRole } = useLayout();
+const CompanyList: FC<IProps> = (_props) => {
+    const { navigateTo } = useLayout();
     const {
         dateRangePlaceholder,
+        cascaderOptions,
+        cascaderLoadData,
     } = useFieldProps()
 
     // 是否正在加载
@@ -37,7 +28,7 @@ const FavorList: FC<IProps> = (_props) => {
     const formRef = useRef<FormInstance>();
 
     // 用户列表列数据
-    const columns: ProColumns<IFavorList>[] = [
+    const columns: ProColumns<ICompanyList>[] = [
         {
             dataIndex: 'index',
             valueType: 'index',
@@ -47,61 +38,152 @@ const FavorList: FC<IProps> = (_props) => {
             align: 'center',
         },
         {
-            dataIndex: 'openid',
-            title: '用户编号',
-            width: 200,
-            //   fixed: 'left',
-            ellipsis: true,
-            align: 'center',
-        },
-        {
-            dataIndex: 'nickname',
-            title: '用户昵称',
-            width: 100,
-            align: 'center',
-        },
-        {
-            dataIndex: 'mobile',
-            title: '手机号',
+            dataIndex: 'companyNo',
+            title: '编号',
             width: 120,
-            copyable: true,
             align: 'center',
         },
         {
-            dataIndex: 'compareCompany',
-            title: '关联企业',
-            width: 180,
+            dataIndex: 'companyName',
+            title: '企业名称',
+            width: 200,
+            align: 'center',
+            ellipsis: true,
+        },
+        {
+            dataIndex: 'taxNo',
+            title: '税号',
+            width: 200,
+            align: 'center',
+        },
+        {
+            dataIndex: 'companyIntroduction',
+            title: '企业简介',
+            width: 200,
+            align: 'center',
+            ellipsis: true,
+            search: false,
+        },
+        {
+            dataIndex: 'provinceName',
+            title: '省',
+            width: 120,
             align: 'center',
             search: false,
         },
         {
-            dataIndex: 'question',
-            title: '问题',
-            width: 180,
+            dataIndex: 'cityName',
+            title: '市',
+            width: 120,
             align: 'center',
             search: false,
-            ellipsis: true,
         },
         {
-            dataIndex: 'answer',
-            title: '回答',
-            width: 180,
+            dataIndex: 'districtName',
+            title: '区/县',
+            width: 120,
             align: 'center',
-            ellipsis: true,
-            formItemProps: {
-                label: '内容'
+            search: false,
+        },
+        {
+            title: '地区',
+            hidden: true,
+            valueType: 'cascader',
+            fieldProps: {
+                options: cascaderOptions,
+                loadData: cascaderLoadData,
             },
         },
         {
-            dataIndex: 'createTime',
-            title: '收藏时间',
+            dataIndex: 'legalPersonName',
+            title: '法人',
+            width: 150,
+            align: 'center',
+            search: false,
+        },
+        {
+            dataIndex: 'personScale',
+            title: '人员规模',
+            width: 150,
+            align: 'center',
+            search: false,
+        },
+        {
+            dataIndex: 'registerTime',
+            title: '注册时间',
             valueType: 'dateRange',
             width: 150,
             align: 'center',
-            render: (_, record) => dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss'),
             fieldProps: {
                 placeholder: dateRangePlaceholder,
             },
+            render: (_, record) => dayjs(record.registerTime).format('YYYY-MM-DD'),
+        },
+        {
+            dataIndex: 'registeredCapital',
+            title: '注册资本',
+            width: 150,
+            align: 'center',
+            valueType: 'money',
+            search: false,
+        },
+        {
+            dataIndex: 'industry',
+            title: '行业',
+            width: 150,
+            align: 'center',
+            search: false,
+        },
+        {
+            dataIndex: 'productLabel',
+            title: '产品应用标签',
+            width: 150,
+            align: 'center',
+            search: false,
+        },
+        {
+            dataIndex: 'website',
+            title: '公司网站',
+            width: 150,
+            align: 'center',
+            ellipsis: true,
+            render: (_, record) => <a href={record.website} target="_blank">{_}</a>,
+            search: false,
+        },
+        {
+            dataIndex: 'status',
+            title: '公司登记状态',
+            width: 150,
+            align: 'center',
+            valueType: 'select',
+            search: false,
+        },
+        {
+            dataIndex: 'insuredNum',
+            title: '参保人数',
+            width: 150,
+            align: 'center',
+            search: false,
+        },
+        {
+            dataIndex: 'matchScore',
+            title: '匹配度',
+            width: 200,
+            align: 'center',
+            valueType: 'slider',
+            fieldProps: {
+                min: 0,
+                max: 100,
+                range: true,
+            },
+            render:(_,record) =>  <Progress percent={record.matchScore} />
+        },
+        {
+            dataIndex: 'businessScope',
+            title: '经营范围',
+            width: 150,
+            align: 'center',
+            search: false,
         },
         {
             title: '操作',
@@ -109,8 +191,8 @@ const FavorList: FC<IProps> = (_props) => {
             valueType: 'option',
             key: 'option',
             fixed: 'right',
-            width: 80,
-            render: (text, record, _, action) => (
+            width: 150,
+            render: (text, record, _, action) => [
                 <Button
                     key="view"
                     color="primary"
@@ -118,15 +200,30 @@ const FavorList: FC<IProps> = (_props) => {
                     size='small'
                     onClick={() => {
                         // console.log('record: ', record);
-                        navigateTo(ROUTE_KEY.FAVOR_DETAIL,
+                        navigateTo(ROUTE_KEY.PAGE_FLOW,
                             {
-                                [ROUTE_PARAM_NAME.FAVOR_ID]: record.id,
+                                [ROUTE_PARAM_NAME.ANALYSIS_ID]: record.id,
                             });
                     }}
                 >
-                    查看
+                    查看详情
+                </Button>,
+                <Button
+                    key="view"
+                    color="primary"
+                    variant="text"
+                    size='small'
+                    onClick={() => {
+                        // console.log('record: ', record);
+                        navigateTo(ROUTE_KEY.PAGE_FLOW,
+                            {
+                                [ROUTE_PARAM_NAME.ANALYSIS_ID]: record.id,
+                            });
+                    }}
+                >
+                    联系人
                 </Button>
-            ),
+            ]
         },
     ]
 
@@ -137,8 +234,8 @@ const FavorList: FC<IProps> = (_props) => {
         tip="加载中..."
         style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
       /> */}
-            <ProTable<IFavorList>
-                scroll={{ x: 1500 }}
+            <ProTable<ICompanyList>
+                scroll={{ x: 3500 }}
                 bordered
                 columns={columns}
                 rowSelection={{
@@ -174,18 +271,33 @@ const FavorList: FC<IProps> = (_props) => {
                 actionRef={actionRef}
                 cardBordered
                 request={async (params, sort, filter) => {
+                    // console.log('params: ', params);
                     return {
                         data: [
                             {
                                 id: 1,
-                                openid: 'oB7RFvsZjYXi1IsY_VjPTXZwCrX4',
-                                nickname: '测试用户',
-                                avatar: 'https://i-avatar.csdnimg.cn/587736a80af847d2a1275bc78bac6118_m0_58988036.jpg!1',
-                                mobile: '15898989898',
-                                compareCompany: '上海测试公司',
-                                question: '问题1',
-                                answer: '答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案',
-                                createTime: 1672531200000,
+                                companyNo: '123',
+                                companyName: '123',
+                                taxNo: '123',
+                                companyIntroduction: '999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999',
+                                provinceId: 1,
+                                provinceName: '123',
+                                cityId: 1,
+                                cityName: '123',
+                                districtId: 1,
+                                districtName: '123',
+                                address: '123',
+                                legalPersonName: '123',
+                                personScale: 123,
+                                registerTime: 1753409768000,
+                                registeredCapital: 123,
+                                industry: 123,
+                                productLabel: 123,
+                                website: '123',
+                                status: 123,
+                                insuredNum: 123,
+                                matchScore: 95,
+                                businessScope: 123,
                             }
                         ],
                         success: true,
@@ -258,7 +370,7 @@ const FavorList: FC<IProps> = (_props) => {
                     pageSizeOptions: [10, 20, 30, 40, 50],
                 }}
                 dateFormatter="string"
-                headerTitle="收藏列表"
+                headerTitle="企业列表"
             // toolBarRender={() => [
             //   <PermissionWrapper
             //     requiredRole={getRouteRole(ROUTE_KEY.ADD_CONSUMER, 3)}
@@ -294,4 +406,4 @@ const FavorList: FC<IProps> = (_props) => {
     )
 }
 
-export default memo(FavorList)
+export default memo(CompanyList)

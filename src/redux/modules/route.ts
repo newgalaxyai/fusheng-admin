@@ -285,6 +285,92 @@ const initialState: IRouteState = {
       order: 11,
       type: 2,
     },
+    {
+      name: ROUTE_NAME.EVALUATE_LIST,
+      key: ROUTE_KEY.EVALUATE_LIST,
+      parentKey: ROUTE_KEY.DATA_MANAGE,
+      path: ROUTE_PATH.EVALUATE_LIST,
+      hideInMenu: false,
+      elementPath: ROUTE_ELEMENT_PATH.EVALUATE_LIST,
+      requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN, STAFF_ROLE_NAME.STAFF],
+      requiredPermission: ROUTE_PERMISSION.EVALUATE_LIST,  //AI问答评价
+      order: 21,
+      type: 2,
+    },
+    {
+      name: ROUTE_NAME.SYS_ABNORMAL_LIST,
+      key: ROUTE_KEY.SYS_ABNORMAL_LIST,
+      parentKey: ROUTE_KEY.DATA_MANAGE,
+      path: ROUTE_PATH.SYS_ABNORMAL_LIST,
+      hideInMenu: false,
+      elementPath: ROUTE_ELEMENT_PATH.SYS_ABNORMAL_LIST,
+      requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN, STAFF_ROLE_NAME.STAFF],
+      requiredPermission: ROUTE_PERMISSION.SYS_ABNORMAL_LIST,  //系统异常
+      order: 31,
+      type: 2,
+    },
+    // 企业名单管理
+    {
+      name: ROUTE_NAME.COMPANY_MANAGE,
+      key: ROUTE_KEY.COMPANY_MANAGE,
+      parentKey: ROUTE_KEY.AUTH,
+      hideInMenu: false,
+      path: ROUTE_PATH.COMPANY_MANAGE,
+      redirect: ROUTE_PATH.COMPANY_LIST,
+      requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN, STAFF_ROLE_NAME.STAFF],
+      requiredPermission: ROUTE_PERMISSION.COMPANY_MANAGE,  // 企业名单管理
+      order: 31,
+      type: 1, // 目录
+    },
+    {
+      name: ROUTE_NAME.COMPANY_LIST,
+      key: ROUTE_KEY.COMPANY_LIST,
+      parentKey: ROUTE_KEY.COMPANY_MANAGE,
+      path: ROUTE_PATH.COMPANY_LIST,
+      hideInMenu: false,
+      elementPath: ROUTE_ELEMENT_PATH.COMPANY_LIST,
+      requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN, STAFF_ROLE_NAME.STAFF],
+      requiredPermission: ROUTE_PERMISSION.COMPANY_LIST,  //企业列表
+      order: 1,
+      type: 2,
+    },
+    {
+      name: ROUTE_NAME.COM_FEEDBACK_LIST,
+      key: ROUTE_KEY.COM_FEEDBACK_LIST,
+      parentKey: ROUTE_KEY.COMPANY_MANAGE,
+      path: ROUTE_PATH.COM_FEEDBACK_LIST,
+      hideInMenu: false,
+      elementPath: ROUTE_ELEMENT_PATH.COM_FEEDBACK_LIST,
+      requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN, STAFF_ROLE_NAME.STAFF],
+      requiredPermission: ROUTE_PERMISSION.COM_FEEDBACK_LIST,  //企业反馈列表
+      order: 11,
+      type: 2,
+    },
+    // 反馈管理
+    {
+      name: ROUTE_NAME.FEEDBACK_MANAGE,
+      key: ROUTE_KEY.FEEDBACK_MANAGE,
+      parentKey: ROUTE_KEY.AUTH,
+      hideInMenu: false,
+      path: ROUTE_PATH.FEEDBACK_MANAGE,
+      redirect: ROUTE_PATH.OPINION_LIST,
+      requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN, STAFF_ROLE_NAME.STAFF],
+      requiredPermission: ROUTE_PERMISSION.FEEDBACK_MANAGE,  // 反馈管理
+      order: 41,
+      type: 1, // 目录
+    },
+    {
+      name: ROUTE_NAME.OPINION_LIST,
+      key: ROUTE_KEY.OPINION_LIST,
+      parentKey: ROUTE_KEY.FEEDBACK_MANAGE,
+      path: ROUTE_PATH.OPINION_LIST,
+      hideInMenu: false,
+      elementPath: ROUTE_ELEMENT_PATH.OPINION_LIST,
+      requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN, STAFF_ROLE_NAME.STAFF],
+      requiredPermission: ROUTE_PERMISSION.OPINION_LIST,  //意见列表
+      order: 1,
+      type: 2,
+    },
   ],
   // 标签列表
   tabsList: [

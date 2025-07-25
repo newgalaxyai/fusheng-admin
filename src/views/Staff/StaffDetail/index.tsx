@@ -68,8 +68,6 @@ const StaffDetail: FC<IProps> = (_props) => {
       }).then((res) => {
         if (res.success) {
           setStaffInfo(res.data)
-        } else {
-          message.error(res.errMsg)
         }
       }).finally(() => {
         setLoading(false);
@@ -225,7 +223,6 @@ const StaffDetail: FC<IProps> = (_props) => {
                     roleIds: [STAFF_ROLE[STAFF_ROLE_NAME.SUPER].id!, STAFF_ROLE[values.staffRole].id!],
                   })
                   if (!assignStaffRoleRes.success) {
-                    message.error(assignStaffRoleRes.errMsg)
                     return;
                   }
                   // 修改员工信息
@@ -256,8 +253,6 @@ const StaffDetail: FC<IProps> = (_props) => {
                     }
                     navigateTo(redirect.pathname, redirect.search, redirect.state);
                   }
-                } else {
-                  message.error(res.errMsg);
                 }
                 // message.success('提交成功');
               }}

@@ -216,8 +216,6 @@ const StaffList: FC<IProps> = (_props) => {
                       message.success(!staffStatus(record.status) ? '启用成功' : '禁用成功');
                       // 删除后刷新列表
                       action?.reload();
-                    } else {
-                      message.error('操作失败');
                     }
                   })
                 },
@@ -248,8 +246,6 @@ const StaffList: FC<IProps> = (_props) => {
                   })
                   if (res.success) {
                     message.success('删除成功');
-                  } else {
-                    message.error(res.errMsg);
                   }
                   // 删除后刷新列表
                   action?.reload();
@@ -348,9 +344,6 @@ const StaffList: FC<IProps> = (_props) => {
             }
           }
           const res = await getStaffListAPI(queryParams)
-          if (res.errMsg) {
-            message.error(res.errMsg)
-          }
           return {
             data: res.data.list,
             total: res.data.total,

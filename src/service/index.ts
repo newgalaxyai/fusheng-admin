@@ -117,17 +117,24 @@ const createRequest = (baseURL: string, headerAuth?: string) => {
       },
       requestFailureFn(error) {
         console.log('请求失败', error);
-        // 处理请求超时
-        if (error.code === 'ECONNABORTED' && error.message.includes('timeout')) {
-          message.error('请求超时，请检查网络连接后重试');
-        } else {
-          message.error(error.message || '接口请求失败');
+        let errMsg
+        switch (error.status) {
+          case 500:
+            // 处理系统异常情况
+            message.error('系统异常');
+            errMsg = '系统异常'
+            break
+          default:
+            // 处理其他错误情况
+            message.error(error.message || '接口请求失败');
+            errMsg = error.message || '接口请求失败'
+            break
         }
-        // 将错误继续抛出，以便在业务代码中可以继续捕获
+        // 继续抛出错误，以便在业务代码中可以继续捕获
         return Promise.reject({
           success: false,
           data: null,
-          errMsg: error.message || '接口请求失败'
+          errMsg,
         })
       },
       responseSuccessFn(response: any) {
@@ -146,7 +153,7 @@ const createRequest = (baseURL: string, headerAuth?: string) => {
             return handleTokenRefresh(response.config, requestInstance)
           // 其他失败情况
           default:
-            // message.error(res.msg || '接口响应失败')
+            message.error(res.msg || '接口响应失败')
             return {
               success: false,
               data: res.data,
@@ -155,20 +162,25 @@ const createRequest = (baseURL: string, headerAuth?: string) => {
         }
       },
       responseFailureFn(error) {
-        console.log('响应失败', error);
-
-        // 处理请求超时
-        if (error.code === 'ECONNABORTED' && error.message.includes('timeout')) {
-          message.error('请求超时，请检查网络连接后重试');
-        } else {
-          message.error(error.message || '接口响应失败');
+        let errMsg
+        switch (error.status) {
+          case 500:
+            // 处理系统异常情况
+            message.error('系统异常');
+            errMsg = '系统异常'
+            break
+          default:
+            // 处理其他错误情况
+            message.error(error.message || '接口响应失败');
+            errMsg = error.message || '接口响应失败'
+            break
         }
-
-        // 将错误继续抛出，以便在业务代码中可以继续捕获
+        // 继续抛出错误，以便在业务代码中可以继续捕获
+        console.log('响应失败', error);
         return Promise.reject({
           success: false,
           data: null,
-          errMsg: error.message || '接口响应失败'
+          errMsg,
         })
       }
     },

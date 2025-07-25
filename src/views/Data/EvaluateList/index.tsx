@@ -1,49 +1,40 @@
 import React, { useRef, useEffect, memo, useState } from 'react'
 import type { FC, ReactNode } from 'react'
-import { Button, Space, App } from 'antd'
+import { Button, Space } from 'antd'
 import { ProTable, ProColumns } from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
-import { useLayout } from '@/hooks/useLayout';
-import { ROUTE_KEY, ROUTE_PARAM_NAME } from '@/constants'
-import { useAppSelector } from '@/hooks/useAppStore'
-import { IFavorList, IFavorListRequest } from '@/api/type'
 import dayjs from 'dayjs'
 import { useFieldProps } from '@/hooks/useFieldProps'
+import { IQARecordList } from '@/api/type'
 
 interface IProps {
     children?: ReactNode
 }
 
-const FavorList: FC<IProps> = (_props) => {
+const EvaluateList: FC<IProps> = (_props) => {
     const {
-        staff: {
-            staffList
-        },
-        user: {
-            userRole,
-            permissions
-        }
-    } = useAppSelector((state) => state)
-    const { message, modal } = App.useApp();
-    const { navigateTo, getRouteRole } = useLayout();
-    const {
-        dateRangePlaceholder,
+        dateRangePlaceholder
     } = useFieldProps()
-
-    // 是否正在加载
-    // const [isLoading, setIsLoading] = useState(true);
 
     const actionRef = useRef<ActionType>();
     const formRef = useRef<FormInstance>();
 
     // 用户列表列数据
-    const columns: ProColumns<IFavorList>[] = [
+    const columns: ProColumns<IQARecordList>[] = [
         {
             dataIndex: 'index',
             valueType: 'index',
             title: '序号',
             width: 48,
             fixed: 'left',
+            align: 'center',
+        },
+        {
+            dataIndex: 'sessionName',
+            title: '会话标题',
+            width: 200,
+            //   fixed: 'left',
+            ellipsis: true,
             align: 'center',
         },
         {
@@ -55,53 +46,22 @@ const FavorList: FC<IProps> = (_props) => {
             align: 'center',
         },
         {
-            dataIndex: 'nickname',
-            title: '用户昵称',
-            width: 100,
-            align: 'center',
-        },
-        {
-            dataIndex: 'mobile',
-            title: '手机号',
+            dataIndex: 'consumerName',
+            title: '用户名称',
             width: 120,
-            copyable: true,
+            //   fixed: 'left',
             align: 'center',
-        },
-        {
-            dataIndex: 'compareCompany',
-            title: '关联企业',
-            width: 180,
-            align: 'center',
-            search: false,
-        },
-        {
-            dataIndex: 'question',
-            title: '问题',
-            width: 180,
-            align: 'center',
-            search: false,
-            ellipsis: true,
-        },
-        {
-            dataIndex: 'answer',
-            title: '回答',
-            width: 180,
-            align: 'center',
-            ellipsis: true,
-            formItemProps: {
-                label: '内容'
-            },
         },
         {
             dataIndex: 'createTime',
-            title: '收藏时间',
+            title: '创建时间',
             valueType: 'dateRange',
-            width: 150,
+            width: 120,
             align: 'center',
-            render: (_, record) => dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss'),
             fieldProps: {
                 placeholder: dateRangePlaceholder,
             },
+            render: (_, record) => dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss'),
         },
         {
             title: '操作',
@@ -117,11 +77,7 @@ const FavorList: FC<IProps> = (_props) => {
                     variant="text"
                     size='small'
                     onClick={() => {
-                        // console.log('record: ', record);
-                        navigateTo(ROUTE_KEY.FAVOR_DETAIL,
-                            {
-                                [ROUTE_PARAM_NAME.FAVOR_ID]: record.id,
-                            });
+                        console.log('查看会话: ', record);
                     }}
                 >
                     查看
@@ -132,13 +88,8 @@ const FavorList: FC<IProps> = (_props) => {
 
     return (
         <>
-            {/* <Spin
-        spinning={true}
-        tip="加载中..."
-        style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-      /> */}
-            <ProTable<IFavorList>
-                scroll={{ x: 1500 }}
+            <ProTable<IQARecordList>
+                scroll={{ x: 600 }}
                 bordered
                 columns={columns}
                 rowSelection={{
@@ -174,18 +125,15 @@ const FavorList: FC<IProps> = (_props) => {
                 actionRef={actionRef}
                 cardBordered
                 request={async (params, sort, filter) => {
+                    // console.log('params: ', params);
                     return {
                         data: [
                             {
                                 id: 1,
+                                sessionName: 'oB7RFvsZjYXi1IsY_VjPTXZwCrX4',
                                 openid: 'oB7RFvsZjYXi1IsY_VjPTXZwCrX4',
-                                nickname: '测试用户',
-                                avatar: 'https://i-avatar.csdnimg.cn/587736a80af847d2a1275bc78bac6118_m0_58988036.jpg!1',
-                                mobile: '15898989898',
-                                compareCompany: '上海测试公司',
-                                question: '问题1',
-                                answer: '答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案答案',
-                                createTime: 1672531200000,
+                                consumerName: 'oB7RFvsZjYXi1IsY_VjPTXZwCrX4',
+                                createTime: 1630000000000,
                             }
                         ],
                         success: true,
@@ -223,9 +171,6 @@ const FavorList: FC<IProps> = (_props) => {
                     defaultValue: {
                         option: { fixed: 'right', disable: true },
                     },
-                    // onChange(value) {
-                    //   console.log('value: ', value);
-                    // },
                 }}
                 rowKey="id"
                 // 搜索表单配置
@@ -258,40 +203,11 @@ const FavorList: FC<IProps> = (_props) => {
                     pageSizeOptions: [10, 20, 30, 40, 50],
                 }}
                 dateFormatter="string"
-                headerTitle="收藏列表"
-            // toolBarRender={() => [
-            //   <PermissionWrapper
-            //     requiredRole={getRouteRole(ROUTE_KEY.ADD_CONSUMER, 3)}
-            //     requiredPermissions={[ROUTE_PERMISSION.ADD_CONSUMER]}
-            //   >
-            //     <Button
-            //       key="add-staff"
-            //       icon={<PlusOutlined />}
-            //       onClick={() => {
-            //         // actionRef.current?.reload();
-            //         const encodedRedirectInfo = encodeRedirectInfo({
-            //           pathname: ROUTE_KEY.CONSUMER_LIST,
-            //           search: '',
-            //           hash: '',
-            //           state: null,
-            //           key: ''
-            //         })
-            //         navigateTo(
-            //           ROUTE_KEY.ADD_CONSUMER,
-            //           {
-            //             [ROUTE_PARAM_NAME.PAGE_TYPE]: '1',
-            //             [ROUTE_PARAM_NAME.REDIRECT_INFO]: encodedRedirectInfo,
-            //           });
-            //       }}
-            //       type="primary"
-            //     >
-            //       新建用户
-            //     </Button>
-            //   </PermissionWrapper>
-            // ]}
+                headerTitle="AI回答评价"
             />
         </>
     )
 }
 
-export default memo(FavorList)
+export default memo(EvaluateList)
+

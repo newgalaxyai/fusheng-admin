@@ -27,9 +27,6 @@ export const getExampleAsync = createAsyncThunk<
     // 设置等待状态
     dispatch(setStaffLoading(false))
   } else {
-    // 请求失败
-    // 弹出错误信息
-    message.error(res.errMsg)
     // 设置数据
     dispatch(setStaffList([]))
     // 设置等待状态

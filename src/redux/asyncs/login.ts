@@ -19,9 +19,6 @@ export const getLoginInfoAsync = createAsyncThunk<
         dispatch(setUserInfoAction(res.data))
         // 设置等待状态
     } else {
-        // 请求失败
-        // 弹出错误信息
-        message.error(res.errMsg)
         // 设置数据
         dispatch(setUserInfoAction(null))
     }
@@ -42,9 +39,6 @@ export const getLoginPermissionInfoAsync = createAsyncThunk<
         // 设置等待状态
         dispatch(setUserLoadingAction(false))
     } else {
-        // 请求失败
-        // 弹出错误信息
-        message.error(res.errMsg)
         // 设置数据
         dispatch(setUserInfoAction(null))
         // 设置等待状态

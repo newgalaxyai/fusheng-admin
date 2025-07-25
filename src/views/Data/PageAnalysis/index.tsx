@@ -1,12 +1,10 @@
-import React, { useRef, useEffect, memo, useState } from 'react'
+import React, { useRef, memo } from 'react'
 import type { FC, ReactNode } from 'react'
-import { Button, Space, App, Tag, Spin, DatePicker, Input, Cascader } from 'antd'
-import { PlusOutlined } from '@ant-design/icons'
-import { ProTable, ProColumns, TableDropdown } from '@ant-design/pro-components'
+import { Button, Space } from 'antd'
+import { ProTable, ProColumns } from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
 import { useLayout } from '@/hooks/useLayout';
 import { ROUTE_KEY, ROUTE_PARAM_NAME } from '@/constants'
-import { useAppSelector } from '@/hooks/useAppStore'
 import { IPageAnalysisList } from '@/api/type'
 import dayjs from 'dayjs'
 import { useFieldProps } from '@/hooks/useFieldProps'
@@ -16,20 +14,8 @@ interface IProps {
 }
 
 const PageAnalysis: FC<IProps> = (_props) => {
+    const { navigateTo } = useLayout();
     const {
-        staff: {
-            staffList
-        },
-        user: {
-            userRole,
-            permissions
-        }
-    } = useAppSelector((state) => state)
-    const { message, modal } = App.useApp();
-    const { navigateTo, getRouteRole } = useLayout();
-    const {
-        cascaderOptions,
-        cascaderLoadData,
         dateRangePlaceholder
     } = useFieldProps()
 
@@ -95,6 +81,7 @@ const PageAnalysis: FC<IProps> = (_props) => {
             title: '人均停留时长（秒）',
             width: 100,
             align: 'center',
+            valueType: 'second',
             search: false,
         },
         {
@@ -102,6 +89,7 @@ const PageAnalysis: FC<IProps> = (_props) => {
             title: '次均停留时长（秒）',
             width: 100,
             align: 'center',
+            valueType: 'second',
             search: false,
         },
         {
@@ -208,9 +196,6 @@ const PageAnalysis: FC<IProps> = (_props) => {
                     //     }
                     // }
                     // const res = await getConsumerListAPI(queryParams)
-                    // if (res.errMsg) {
-                    //     message.error(res.errMsg)
-                    // }
                     // return {
                     //     data: res.data.list,
                     //     total: res.data.total,

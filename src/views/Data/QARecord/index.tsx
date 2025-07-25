@@ -155,9 +155,6 @@ const QARecord: FC<IProps> = (_props) => {
                     //     }
                     // }
                     // const res = await getConsumerListAPI(queryParams)
-                    // if (res.errMsg) {
-                    //     message.error(res.errMsg)
-                    // }
                     // return {
                     //     data: res.data.list,
                     //     total: res.data.total,
