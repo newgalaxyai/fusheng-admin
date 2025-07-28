@@ -1,6 +1,6 @@
 import React, { useRef, memo } from 'react'
 import type { FC, ReactNode } from 'react'
-import { Button, Space, Progress } from 'antd'
+import { Button, Space, Progress, ConfigProvider } from 'antd'
 import { ProTable, ProColumns } from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
 import { useLayout } from '@/hooks/useLayout';
@@ -27,7 +27,7 @@ const CompanyList: FC<IProps> = (_props) => {
     const actionRef = useRef<ActionType>();
     const formRef = useRef<FormInstance>();
 
-    // 用户列表列数据
+    // 列表列数据
     const columns: ProColumns<ICompanyList>[] = [
         {
             dataIndex: 'index',
@@ -176,7 +176,7 @@ const CompanyList: FC<IProps> = (_props) => {
                 max: 100,
                 range: true,
             },
-            render:(_,record) =>  <Progress percent={record.matchScore} />
+            render: (_, record) => <Progress percent={record.matchScore} />
         },
         {
             dataIndex: 'businessScope',

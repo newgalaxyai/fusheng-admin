@@ -19,7 +19,7 @@ const ComFeedbackList: FC<IProps> = (_props) => {
     const actionRef = useRef<ActionType>();
     const formRef = useRef<FormInstance>();
 
-    // 用户列表列数据
+    // 列表列数据
     const columns: ProColumns<IQARecordList>[] = [
         {
             dataIndex: 'index',

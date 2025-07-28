@@ -217,14 +217,14 @@ const StaffDetail: FC<IProps> = (_props) => {
 
                 let res = null;
                 if (staffId) {
-                  // 修改员工角色
-                  const assignStaffRoleRes = await assignStaffRoleAPI({
-                    userId: Number(staffId),
-                    roleIds: [STAFF_ROLE[STAFF_ROLE_NAME.SUPER].id!, STAFF_ROLE[values.staffRole].id!],
-                  })
-                  if (!assignStaffRoleRes.success) {
-                    return;
-                  }
+                  // // 修改员工角色
+                  // const assignStaffRoleRes = await assignStaffRoleAPI({
+                  //   userId: Number(staffId),
+                  //   roleIds: [STAFF_ROLE[STAFF_ROLE_NAME.SUPER].id!, STAFF_ROLE[values.staffRole].id!],
+                  // })
+                  // if (!assignStaffRoleRes.success) {
+                  //   return;
+                  // }
                   // 修改员工信息
                   res = await editStaffAPI({
                     ...values,
@@ -368,7 +368,7 @@ const StaffDetail: FC<IProps> = (_props) => {
               //   }
               // ]}
               />
-              <ProFormSelect
+              {/* <ProFormSelect
                 name="staffRole"
                 label="员工角色"
                 // colProps={{ md: 12, xl: 8 }}
@@ -389,7 +389,7 @@ const StaffDetail: FC<IProps> = (_props) => {
                     validateTrigger: ['onSubmit', 'onFinish'],
                   }
                 ]}
-              />
+              /> */}
               <ProFormText
                 fieldProps={{
                   prefix: (

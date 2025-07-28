@@ -2,7 +2,7 @@ import React, { memo } from 'react'
 import type { FC, ReactNode } from 'react'
 import equal from 'fast-deep-equal'
 import { IMessageList, IQARecordList } from '@/api/type'
-import { List, Avatar } from 'antd';
+import { List, ConfigProvider } from 'antd';
 import { MESSAGE_ROLE_NAME, MESSAGE_ROLE } from '@/constants/common';
 import dayjs from 'dayjs';
 
@@ -12,9 +12,18 @@ interface IProps {
     session?: IQARecordList
 }
 
-const Message: FC<IProps> = ({ messages, session }) => {
+const Messages: FC<IProps> = ({ messages, session }) => {
     return (
-        <>
+        <ConfigProvider
+            theme={{
+                components: {
+                    List: {
+                        metaMarginBottom: 0,
+                        titleMarginBottom: '5px',
+                    }
+                }
+            }}
+        >
             <List
                 itemLayout="vertical"
                 size="default"
@@ -34,12 +43,12 @@ const Message: FC<IProps> = ({ messages, session }) => {
                                         {messageItem.role === MESSAGE_ROLE_NAME.MESSAGE_ROLE_USER ? session?.consumerName : MESSAGE_ROLE[messageItem.role].text}
                                     </span>
                                     <span
-                                    style={{
-                                        marginLeft: 10,
-                                        color: '#999',
-                                        fontSize: '12px',
-                                        fontWeight: 'normal',
-                                    }}
+                                        style={{
+                                            marginLeft: 10,
+                                            color: '#999',
+                                            fontSize: '12px',
+                                            fontWeight: 'normal',
+                                        }}
                                     >
                                         {dayjs(messageItem.createTime).format('YYYY-MM-DD HH:mm:ss')}
                                     </span>
@@ -52,11 +61,11 @@ const Message: FC<IProps> = ({ messages, session }) => {
                     </List.Item>
                 )}
             />
-        </>
+        </ConfigProvider>
     )
 }
 
-export default memo(Message, (prevProps, nextProps) => {
+export default memo(Messages, (prevProps, nextProps) => {
     if (!equal(prevProps.messages, nextProps.messages)) {
         return false
     }

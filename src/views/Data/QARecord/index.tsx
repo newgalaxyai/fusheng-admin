@@ -244,6 +244,11 @@ const QARecord: FC<IProps> = (_props) => {
                 closable={{ 'aria-label': 'Close Button' }}
                 onClose={onSessionDrawerClose}
                 open={sessionDrawerOpen}
+                styles={{
+                    body:{
+                        padding: '0 20px',
+                    }
+                }}
             >
                 <Messages messages={messageList} session={currentSession} />
             </Drawer>

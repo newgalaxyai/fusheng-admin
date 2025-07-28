@@ -1,15 +1,31 @@
 import React, { useRef, useEffect, memo, useState } from 'react'
 import type { FC, ReactNode } from 'react'
-import { Button, Space, App, Tag, Spin, DatePicker } from 'antd'
+import {
+  Button,
+  Space,
+  App,
+  Tag,
+  Modal,
+  Dropdown,
+} from 'antd'
+import type {
+  MenuProps,
+} from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
-import { ProTable, ProColumns, TableDropdown } from '@ant-design/pro-components'
+import {
+  ProTable,
+  ProColumns,
+  ProForm,
+  ProFormSelect,
+  ProFormInstance,
+} from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
 import { useLayout } from '@/hooks/useLayout';
-import { ROUTE_KEY, ROUTE_PARAM_NAME, ROUTE_PERMISSION, STAFF_ROLE } from '@/constants'
+import { ROUTE_KEY, ROUTE_PARAM_NAME, ROUTE_PERMISSION, STAFF_ROLE, STAFF_ROLE_NAME } from '@/constants'
 import { IStaffList, IStaffListRequest, IStaffListResponse } from '@/api/type'
 import { useAppSelector } from '@/hooks/useAppStore'
 import PermissionWrapper from '@/components/permission/PermissionWrapper'
-import { getStaffListAPI, deleteStaffAPI, editStaffAPI } from '@/api/staff'
+import { getStaffListAPI, deleteStaffAPI, editStaffAPI, assignStaffRoleAPI } from '@/api/staff'
 import { encodeRedirectInfo } from '@/utils/auth'
 import { useFieldProps } from '@/hooks/useFieldProps'
 
@@ -141,124 +157,194 @@ const StaffList: FC<IProps> = (_props) => {
       key: 'option',
       fixed: 'right',
       width: 150,
-      render: (text, record, _, action) => [
-        <PermissionWrapper
-          requiredRole={getRouteRole(ROUTE_KEY.STAFF_DETAIL, 3)}
-          requiredPermissions={[ROUTE_PERMISSION.STAFF_DETAIL]}
-        >
-          <Button
-            key="view"
-            color="primary"
-            variant="text"
-            size='small'
-            onClick={() => {
-              console.log('record: ', record);
-              navigateTo(ROUTE_KEY.STAFF_DETAIL,
-                {
-                  [ROUTE_PARAM_NAME.STAFF_ID]: record.id,
-                  [ROUTE_PARAM_NAME.PAGE_TYPE]: '2'
-                });
-            }}
+      render: (text, record, _, action) => {
+
+        // 编辑员工下拉菜单
+        const items: MenuProps['items'] = [
+          {
+            key: '1',
+            label: (
+              <a
+                onClick={() => {
+                  // console.log('record: ', record);
+                  const encodedRedirectInfo = encodeRedirectInfo({
+                    pathname: ROUTE_KEY.STAFF_LIST,
+                    search: '',
+                    hash: '',
+                    state: null,
+                    key: ''
+                  })
+                  navigateTo(ROUTE_KEY.EDIT_STAFF,
+                    {
+                      [ROUTE_PARAM_NAME.STAFF_ID]: record.id,
+                      [ROUTE_PARAM_NAME.PAGE_TYPE]: '1',
+                      [ROUTE_PARAM_NAME.REDIRECT_INFO]: encodedRedirectInfo,
+                    });
+                }}>
+                编辑员工
+              </a>
+            ),
+          },
+          {
+            key: '2',
+            label: (
+              <a
+                onClick={() => {
+                  setCurrentStaff(record);
+                  // 打开修改角色弹窗
+                  setStaffRoleModalOpen(true);
+                }}
+              >
+                修改角色
+              </a>
+            ),
+          },
+        ];
+        return [
+          <PermissionWrapper
+            requiredRole={getRouteRole(ROUTE_KEY.STAFF_DETAIL, 3)}
+            requiredPermissions={[ROUTE_PERMISSION.STAFF_DETAIL]}
           >
-            查看
-          </Button>
-        </PermissionWrapper>,
-        <PermissionWrapper
-          requiredRole={getRouteRole(ROUTE_KEY.EDIT_STAFF, 3)}
-          requiredPermissions={[ROUTE_PERMISSION.EDIT_STAFF]}
-        >
-          <Button
-            key="edit"
-            color="primary"
-            variant="text"
-            size='small'
-            onClick={() => {
-              // console.log('record: ', record);
-              const encodedRedirectInfo = encodeRedirectInfo({
-                pathname: ROUTE_KEY.STAFF_LIST,
-                search: '',
-                hash: '',
-                state: null,
-                key: ''
-              })
-              navigateTo(ROUTE_KEY.EDIT_STAFF,
-                {
-                  [ROUTE_PARAM_NAME.STAFF_ID]: record.id,
-                  [ROUTE_PARAM_NAME.PAGE_TYPE]: '1',
-                  [ROUTE_PARAM_NAME.REDIRECT_INFO]: encodedRedirectInfo,
-                });
-            }}
+            <Button
+              key="view"
+              color="primary"
+              variant="text"
+              size='small'
+              onClick={() => {
+                console.log('record: ', record);
+                navigateTo(ROUTE_KEY.STAFF_DETAIL,
+                  {
+                    [ROUTE_PARAM_NAME.STAFF_ID]: record.id,
+                    [ROUTE_PARAM_NAME.PAGE_TYPE]: '2'
+                  });
+              }}
+            >
+              查看
+            </Button>
+          </PermissionWrapper>,
+          <PermissionWrapper
+            requiredRole={getRouteRole(ROUTE_KEY.EDIT_STAFF, 3)}
+            requiredPermissions={[ROUTE_PERMISSION.EDIT_STAFF]}
           >
-            编辑
-          </Button>
-        </PermissionWrapper>,
-        <PermissionWrapper
-          requiredRole={getRouteRole(ROUTE_KEY.DELETE_STAFF, 3)}
-          requiredPermissions={[ROUTE_PERMISSION.DELETE_STAFF]}
-        >
-          <Button
-            key="status"
-            color={!staffStatus(record.status) ? 'primary' : 'danger'}
-            variant="text"
-            size='small'
-            onClick={() => {
-              modal.confirm({
-                title: !staffStatus(record.status) ? '启用员工' : '禁用员工',
-                content: !staffStatus(record.status) ? '确定启用该员工吗？' : '确定禁用该员工吗？',
-                okText: '确定',
-                cancelText: '取消',
-                onOk: () => {
-                  editStaffAPI({
-                    ...record,
-                    status: staffStatus(record.status) ? 1 : 0
-                  }).then((res) => {
+            <Dropdown menu={{ items }} placement="bottom">
+              <Button
+                key="edit"
+                color="primary"
+                variant="text"
+                size='small'
+              >
+                编辑
+              </Button>
+            </Dropdown>
+          </PermissionWrapper>,
+          <PermissionWrapper
+            requiredRole={getRouteRole(ROUTE_KEY.DELETE_STAFF, 3)}
+            requiredPermissions={[ROUTE_PERMISSION.DELETE_STAFF]}
+          >
+            <Button
+              key="status"
+              color={!staffStatus(record.status) ? 'primary' : 'danger'}
+              variant="text"
+              size='small'
+              onClick={() => {
+                modal.confirm({
+                  title: !staffStatus(record.status) ? '启用员工' : '禁用员工',
+                  content: !staffStatus(record.status) ? '确定启用该员工吗？' : '确定禁用该员工吗？',
+                  okText: '确定',
+                  cancelText: '取消',
+                  onOk: () => {
+                    editStaffAPI({
+                      ...record,
+                      status: staffStatus(record.status) ? 1 : 0
+                    }).then((res) => {
+                      if (res.success) {
+                        message.success(!staffStatus(record.status) ? '启用成功' : '禁用成功');
+                        // 删除后刷新列表
+                        action?.reload();
+                      }
+                    })
+                  },
+                });
+              }}
+            >
+              {!staffStatus(record.status) ? '启用' : '禁用'}
+            </Button>
+          </PermissionWrapper>,
+          <PermissionWrapper
+            requiredRole={getRouteRole(ROUTE_KEY.DELETE_STAFF, 3)}
+            requiredPermissions={[ROUTE_PERMISSION.DELETE_STAFF]}
+          >
+            <Button
+              key="delete"
+              color="danger"
+              variant="text"
+              size='small'
+              onClick={() => {
+                modal.confirm({
+                  title: '删除员工',
+                  content: '确定删除该员工吗？',
+                  okText: '确定',
+                  cancelText: '取消',
+                  onOk: async () => {
+                    const res = await deleteStaffAPI({
+                      id: record.id,
+                    })
                     if (res.success) {
-                      message.success(!staffStatus(record.status) ? '启用成功' : '禁用成功');
-                      // 删除后刷新列表
-                      action?.reload();
+                      message.success('删除成功');
                     }
-                  })
-                },
-              });
-            }}
-          >
-            {!staffStatus(record.status) ? '启用' : '禁用'}
-          </Button>
-        </PermissionWrapper>,
-        <PermissionWrapper
-          requiredRole={getRouteRole(ROUTE_KEY.DELETE_STAFF, 3)}
-          requiredPermissions={[ROUTE_PERMISSION.DELETE_STAFF]}
-        >
-          <Button
-            key="delete"
-            color="danger"
-            variant="text"
-            size='small'
-            onClick={() => {
-              modal.confirm({
-                title: '删除员工',
-                content: '确定删除该员工吗？',
-                okText: '确定',
-                cancelText: '取消',
-                onOk: async () => {
-                  const res = await deleteStaffAPI({
-                    id: record.id,
-                  })
-                  if (res.success) {
-                    message.success('删除成功');
-                  }
-                  // 删除后刷新列表
-                  action?.reload();
-                },
-              });
-            }}
-          >
-            删除
-          </Button>
-        </PermissionWrapper>
-      ],
+                    // 删除后刷新列表
+                    action?.reload();
+                  },
+                });
+              }}
+            >
+              删除
+            </Button>
+          </PermissionWrapper>
+        ]
+      },
     },
   ]
+
+  // 设置员工角色
+  // 当前选中的员工
+  const [currentStaff, setCurrentStaff] = useState<IStaffList | null>(null);
+  // 员工角色弹窗表单实例
+  const staffRoleModalFormRef = useRef<ProFormInstance<any>>(null);
+  // 员工角色弹窗是否打开
+  const [staffRoleModalOpen, setStaffRoleModalOpen] = useState(false);
+  // 员工角色弹窗确认按钮加载中
+  const [staffRoleModalConfirmLoading, setStaffRoleModalConfirmLoading] = useState(false);
+  // 设置员工角色弹窗确定
+  const handleStaffRoleModalOk = async () => {
+    staffRoleModalFormRef.current?.submit();
+  };
+  // 设置员工角色弹窗取消
+  const handleStaffRoleModalCancel = () => {
+    setStaffRoleModalOpen(false);
+  };
+  // 设置员工角色提交表单
+  const handleStaffRoleModalSubmit = async (values: any) => {
+    setStaffRoleModalConfirmLoading(true);
+    try {
+      // await new Promise((resolve) => setTimeout(resolve, 2000));
+      // 修改员工角色
+      const assignStaffRoleRes = await assignStaffRoleAPI({
+        userId: Number(currentStaff?.id),
+        roleIds: [STAFF_ROLE[STAFF_ROLE_NAME.SUPER].id!, STAFF_ROLE[values.staffRole].id!],
+      })
+      if (!assignStaffRoleRes.success) {
+        throw new Error(assignStaffRoleRes.errMsg);
+      }
+      setStaffRoleModalOpen(false);
+      message.success('设置成功');
+      actionRef.current?.reload();
+    } catch (error) {
+      // console.log('error: ', error);
+    } finally {
+      setStaffRoleModalConfirmLoading(false);
+    }
+  };
 
   return (
     <>
@@ -324,6 +410,29 @@ const StaffList: FC<IProps> = (_props) => {
         actionRef={actionRef}
         cardBordered
         request={async (params, sort, filter) => {
+          // return {
+          //   success: true,
+          //   total: 1,
+          //   data: [
+          //     {
+          //       id: 1,
+          //       employeeNo: 'USER00000001',
+          //       username: 'admin',
+          //       nickname: '超级管理员',
+          //       mobile: '13800000000',
+          //       deptName: '系统管理',
+          //       staffPositionName: '超级管理员',
+          //       staffRole: 'super_admin',
+          //       idType: 'ID_CARD',
+          //       idNumber: '110101199001011234',
+          //       hireDate: [2023, 1, 1],
+          //       createTime: 1765958000000,
+          //       status: 1,
+          //       staffUpdateTime: 1765958000000,
+          //       staffDeleteTime: 1765958000000,
+          //     }
+          //   ]
+          // }
           // console.log('params: ', params);
           // console.log('sort: ', sort);
           // console.log('filter: ', filter);
@@ -426,6 +535,43 @@ const StaffList: FC<IProps> = (_props) => {
           </PermissionWrapper>
         ]}
       />
+      {/* 设置员工角色 */}
+      <Modal
+        title="设置员工角色"
+        open={staffRoleModalOpen}
+        onOk={handleStaffRoleModalOk}
+        confirmLoading={staffRoleModalConfirmLoading}
+        onCancel={handleStaffRoleModalCancel}
+      >
+        <ProForm
+          submitter={false}
+          formRef={staffRoleModalFormRef}
+          onFinish={handleStaffRoleModalSubmit}
+        >
+          <ProFormSelect
+            name="staffRole"
+            label="员工角色"
+            // colProps={{ md: 12, xl: 8 }}
+            options={Object.keys(STAFF_ROLE).map((key) => ({
+              label: STAFF_ROLE[key].text,
+              value: key,
+            }))}
+            placeholder="请选择"
+            rules={[
+              {
+                required: true,
+                validator: (_rule, value) => {
+                  if (!value) {
+                    return Promise.reject('员工角色不能为空！')
+                  }
+                  return Promise.resolve()
+                },
+                validateTrigger: ['onSubmit', 'onFinish'],
+              }
+            ]}
+          />
+        </ProForm>
+      </Modal>
     </>
   )
 }
