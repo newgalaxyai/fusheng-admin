@@ -13,6 +13,7 @@ export type IOpinionList = {
     consumerName: string // 用户名称
     mobile: string // 用户手机号
     opinionContent: string // 意见内容
+    imageList?: string[] // 图片附件
     createTime: number // 创建时间
 }
 

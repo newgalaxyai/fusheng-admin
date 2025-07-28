@@ -1,17 +1,24 @@
 import React, { useEffect, useRef, useState } from 'react'
 import type { FC, ReactNode } from 'react'
-import { Button, Descriptions, Spin } from 'antd'
+import { Button } from 'antd'
 import { getLocationParamsByName } from '@/utils/location'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import {
   ProForm,
   ProFormText,
   ProFormTextArea,
   ProFormSelect,
   ProFormInstance,
+  ProDescriptions,
+  ProDescriptionsItemProps
 } from '@ant-design/pro-components'
 import {
-  Row, Col, Space, DescriptionsProps, Avatar, App, Table,
+  Row, 
+  Col, 
+  Space, 
+  Avatar, 
+  App, 
+  Table,
   Empty
 } from 'antd'
 import type {
@@ -27,7 +34,6 @@ import {
 } from '@/constants'
 import {
   MobileOutlined,
-  UserOutlined
 } from '@ant-design/icons'
 import { theme } from 'antd'
 import PermissionWrapper from '@/components/permission/PermissionWrapper'
@@ -35,7 +41,6 @@ import { useLayout } from '@/hooks/useLayout';
 import { decodeRedirectInfo, encodeRedirectInfo } from '@/utils/auth'
 import { IConsumerList, IConsumerOffList } from '@/api/type'
 import dayjs from 'dayjs'
-import CopyComponent from '@/components/copy'
 import { getConsumerDetailAPI } from '@/api/consumer'
 
 interface IProps {
@@ -45,112 +50,139 @@ interface IProps {
 const ConsumerDetail: FC<IProps> = (_props) => {
   const { token } = theme.useToken();
   const { message } = App.useApp();
-  const navigate = useNavigate();
   const location = useLocation();
-  const { navigateTo, getRouteRole, switchTab, pureRemoveTab } = useLayout();
+  const { navigateTo, getRouteRole, pureRemoveTab } = useLayout();
   const pageType = getLocationParamsByName(location, ROUTE_PARAM_NAME.PAGE_TYPE);
   const consumerId = getLocationParamsByName(location, ROUTE_PARAM_NAME.CONSUMER_ID);
   const redirectInfo = getLocationParamsByName(location, ROUTE_PARAM_NAME.REDIRECT_INFO);
   const formRef = useRef<ProFormInstance<any>>(null);
-  const [consumerInfo, setConsumerInfo] = useState<IConsumerList>({} as IConsumerList);
-  const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    if (consumerId && pageType === '2') {
-      setLoading(true);
-      getConsumerDetailAPI({
-        id: Number(consumerId)
-      }).then((res) => {
-        if (res.success) {
-          setConsumerInfo(res.data || {} as IConsumerList)
-        }
-      }).finally(() => {
-        setLoading(false);
-      })
-    } else {
-      setLoading(false);
-    }
-  }, [])
-  // 描述列表
-  const consumerInfoItems: DescriptionsProps['items'] = (consumerId && pageType === '2') ? [
+
+  // 描述列表columns
+  const descColumn: ProDescriptionsItemProps<IConsumerList>[] = [
     {
+      title: '头像',
       key: 'avatar',
-      label: '用户头像',
-      children: (
-        <Avatar
-          size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 80 }}
-          icon={<UserOutlined />}
-          src={consumerInfo.avatar}
-        />
-      ),
-      span: { xs: 1, sm: 2, md: 3, lg: 3, xl: 4, xxl: 4 },
+      dataIndex: 'avatar',
+      span: 3,
+      render: (_, record) => <Avatar shape='square' size={64} src={record.avatar} />,
     },
     {
-      key: 'sex',
-      label: '性别',
-      children: SEX[consumerInfo.sex || 0].text || '未知',
-    },
-    {
+      title: '用户编号',
       key: 'openid',
-      label: '用户编号',
-      children: (
-        <CopyComponent copyText={consumerInfo.openid} />
-      ),
+      dataIndex: 'openid',
+      copyable: true,
     },
     {
+      title: '用户昵称',
       key: 'nickname',
-      label: '用户昵称',
-      children: consumerInfo.nickname,
+      dataIndex: 'nickname',
     },
     {
+      title: '性别',
+      key: 'sex',
+      dataIndex: 'sex',
+      valueType: 'select',
+      valueEnum: SEX,
+    },
+    {
+      title: '用户状态',
+      key: 'status',
+      dataIndex: 'status',
+      valueType: 'select',
+      valueEnum: {
+        0: {
+          text: '启用',
+          status: 'Success',
+        },
+        1: {
+          text: '禁用',
+          status: 'Error',
+        },
+      },
+    },
+    {
+      title: '用户手机号',
       key: 'mobile',
-      label: '手机号',
-      children: (
-        <CopyComponent copyText={consumerInfo.mobile} />
-      ),
+      dataIndex: 'mobile',
+      copyable: true,
     },
     {
+      title: '最后登录IP',
       key: 'loginIp',
-      label: '最后登录IP',
-      children: consumerInfo.loginIp,
+      dataIndex: 'loginIp',
     },
     {
+      title: '城市',
       key: 'loginCity',
-      label: '城市',
-      children: consumerInfo.loginCity,
+      dataIndex: 'loginCity',
     },
     {
+      title: '关联企业',
       key: 'compareCompany',
-      label: '关联企业',
-      children: consumerInfo.compareCompany,
+      dataIndex: 'compareCompany',
     },
     {
+      title: '职位',
       key: 'consumerPositionName',
-      label: '职位',
-      children: consumerInfo.consumerPositionName,
+      dataIndex: 'consumerPositionName',
     },
     {
+      title: '水印编号',
       key: 'waterMark',
-      label: '水印编号',
-      children: consumerInfo.waterMark,
+      dataIndex: 'waterMark',
     },
     {
+      title: '注册来源',
       key: 'registerSource',
-      label: '注册来源',
-      children: CONSUMER_SOURCE[consumerInfo.registerSource].text,
+      dataIndex: 'registerSource',
+      valueType: 'select',
+      valueEnum: CONSUMER_SOURCE,
     },
     {
+      title: '注册时间',
       key: 'createTime',
-      label: '注册时间',
-      children: dayjs(consumerInfo.createTime).format('YYYY-MM-DD HH:mm:ss'),
-      span: 2,
+      dataIndex: 'createTime',
+      render: (_, record) => dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
+      title: '备注',
       key: 'remark',
-      label: '备注',
-      children: consumerInfo.remark,
-      span: { xs: 1, sm: 2, md: 3, lg: 3, xl: 4, xxl: 4 }
+      dataIndex: 'remark',
+      span: 3,
     },
-  ] : []
+    {
+      title: '操作',
+      valueType: 'option',
+      render: () => [
+        <PermissionWrapper
+          requiredRole={getRouteRole(ROUTE_KEY.EDIT_CONSUMER, 3)}
+          requiredPermissions={[ROUTE_PERMISSION.EDIT_CONSUMER]}
+        >
+          <Button
+            key="edit"
+            color="primary" variant="text"
+            onClick={() => {
+              const encodedRedirectInfo = encodeRedirectInfo({
+                pathname: ROUTE_KEY.CONSUMER_DETAIL,
+                search: `?${ROUTE_PARAM_NAME.CONSUMER_ID}=${consumerId}&${ROUTE_PARAM_NAME.PAGE_TYPE}=2`,
+                hash: '',
+                state: null,
+                key: ''
+              })
+              navigateTo(ROUTE_KEY.EDIT_CONSUMER,
+                {
+                  [ROUTE_PARAM_NAME.CONSUMER_ID]: consumerId,
+                  [ROUTE_PARAM_NAME.PAGE_TYPE]: '1',
+                  [ROUTE_PARAM_NAME.REDIRECT_INFO]: encodedRedirectInfo,
+                });
+            }}
+          >
+            编辑
+          </Button>
+        </PermissionWrapper>
+      ]
+    }
+  ]
 
   // 表单样式
   const formItemLayout = {
@@ -207,19 +239,7 @@ const ConsumerDetail: FC<IProps> = (_props) => {
   return (
     <>
       {
-        loading ? (
-          <div
-            style={{
-              width: '100%',
-              height: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <Spin spinning={true} tip="加载中..." />
-          </div>
-        ) : pageType === '1' ? (
+        pageType === '1' ? (
           <div
             className="staff-form-container"
             style={{
@@ -392,40 +412,29 @@ const ConsumerDetail: FC<IProps> = (_props) => {
           </div>
         ) : (
           <>
-            <Descriptions
-              title="用户信息"
-              // layout="vertical"
-              bordered
-              column={{ xs: 1, sm: 2, md: 3, lg: 3, xl: 4, xxl: 4 }}
-              extra={
-                <PermissionWrapper
-                  requiredRole={getRouteRole(ROUTE_KEY.EDIT_CONSUMER, 3)}
-                  requiredPermissions={[ROUTE_PERMISSION.EDIT_CONSUMER]}
-                >
-                  <Button
-                    key="edit"
-                    color="primary" variant="text"
-                    onClick={() => {
-                      const encodedRedirectInfo = encodeRedirectInfo({
-                        pathname: ROUTE_KEY.CONSUMER_DETAIL,
-                        search: `?${ROUTE_PARAM_NAME.CONSUMER_ID}=${consumerId}&${ROUTE_PARAM_NAME.PAGE_TYPE}=2`,
-                        hash: '',
-                        state: null,
-                        key: ''
-                      })
-                      navigateTo(ROUTE_KEY.EDIT_CONSUMER,
-                        {
-                          [ROUTE_PARAM_NAME.CONSUMER_ID]: consumerId,
-                          [ROUTE_PARAM_NAME.PAGE_TYPE]: '1',
-                          [ROUTE_PARAM_NAME.REDIRECT_INFO]: encodedRedirectInfo,
-                        });
-                    }}
-                  >
-                    编辑
-                  </Button>
-                </PermissionWrapper>
-              }
-              items={consumerInfoItems}
+            <ProDescriptions
+              title="用户详情"
+              request={async () => {
+                // 详情接口
+                const res = await getConsumerDetailAPI({
+                  id: Number(consumerId)
+                })
+                if (res.success) {
+                  return Promise.resolve({
+                    success: true,
+                    data: {
+                      ...res.data,
+                      avatar: 'https://minio-dev.imissniu.com/xfn/assets%2Findex%2Fbg-index.png'
+                    },
+                  });
+                }
+                return Promise.reject({
+                  success: false,
+                  data: null,
+                });
+              }}
+              emptyText={'-'}
+              columns={descColumn}
             />
             <Table<IConsumerOffList>
               style={{

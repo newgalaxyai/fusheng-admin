@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, memo, useState } from 'react'
+import React, { useRef, memo } from 'react'
 import type { FC, ReactNode } from 'react'
 import { Button, Space } from 'antd'
 import { ProTable, ProColumns } from '@ant-design/pro-components'
@@ -6,6 +6,11 @@ import type { FormInstance, ActionType } from '@ant-design/pro-components'
 import dayjs from 'dayjs'
 import { useFieldProps } from '@/hooks/useFieldProps'
 import { IOpinionList } from '@/api/type'
+import {
+    ROUTE_KEY,
+    ROUTE_PARAM_NAME,
+} from '@/constants'
+import { useLayout } from '@/hooks/useLayout'
 
 interface IProps {
     children?: ReactNode
@@ -15,6 +20,8 @@ const OpinionList: FC<IProps> = (_props) => {
     const {
         dateRangePlaceholder
     } = useFieldProps()
+
+    const { navigateTo } = useLayout();
 
     const actionRef = useRef<ActionType>();
     const formRef = useRef<FormInstance>();
@@ -81,7 +88,11 @@ const OpinionList: FC<IProps> = (_props) => {
                     variant="text"
                     size='small'
                     onClick={() => {
-                        console.log('查看会话: ', record);
+                        // console.log('查看会话: ', record);
+                        navigateTo(ROUTE_KEY.OPINION_DETAIL,
+                            {
+                                [ROUTE_PARAM_NAME.OPINION_ID]: record.id,
+                            });
                     }}
                 >
                     查看

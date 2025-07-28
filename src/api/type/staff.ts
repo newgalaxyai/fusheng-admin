@@ -19,7 +19,7 @@ export type IStaffList = {
     mobile: string // 员工手机号
     deptName: string // 员工部门名称
     staffPositionName: string // 员工职位名称
-    staffRole: 'super_admin' | 'admin' | 'staff' // 员工角色 super:超级管理员 admin:管理员 staff:普通用户
+    staffRole:  'super_admin' | 'admin' | 'staff' // 员工角色 super:超级管理员 admin:管理员 staff:普通用户
     idType: 'ID_CARD' | 'PASSPORT' | 'MILITARY_ID' | 'OTHER' // 证件类型 ID_CARD:身份证 PASSPORT:护照 MILITARY_ID:军官证 OTHER:其他
     idNumber: string // 证件号码
     hireDate: number[] // 入职时间
@@ -46,4 +46,16 @@ export type IStaffDetailRequest = {
 export type IStaffAssignRoleRequest = {
     userId: number // 员工ID
     roleIds: number[] // 角色IDs
+}
+
+// 角色
+export type IStaffRole = {
+    id: number // 角色ID
+    name: string // 角色名称
+    code: string // 角色编码
+    description?: string // 角色描述
+}
+
+export type IStaffRoleRequest = {
+    userId: number // 员工ID
 }

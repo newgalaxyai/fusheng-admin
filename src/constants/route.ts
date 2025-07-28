@@ -16,6 +16,7 @@ export const ROUTE_PARAM_NAME = {
     CONSUMER_ID: 'consumerId', //用户id
     FAVOR_ID: 'favorId', //收藏id
     ANALYSIS_ID: 'analysisId', //页面分析id
+    OPINION_ID: 'opinionId', // 意见id
     PAGE_TYPE: 'pageType', // 页面类型 1:新增 2:编辑 3:详情
     REDIRECT_INFO: 'redirectInfo', // 完整重定向信息
 }
@@ -53,6 +54,7 @@ export const ROUTE_PATH = {
     COM_FEEDBACK_LIST: 'comFeedbackList', // 企业反馈列表
     FEEDBACK_MANAGE: 'feedbackManage', // 反馈管理
     OPINION_LIST: 'opinionList', // 意见列表
+    OPINION_DETAIL: 'opinionDetail', // 意见详情
 }
 
 // 路由key的常量
@@ -90,6 +92,7 @@ export const ROUTE_KEY = {
     COM_FEEDBACK_LIST: 'comFeedbackList', // 企业反馈列表
     FEEDBACK_MANAGE: 'feedbackManage', // 反馈管理
     OPINION_LIST: 'opinionList', // 意见列表
+    OPINION_DETAIL: 'opinionDetail', // 意见详情
 }
 
 // 路由name的常量
@@ -121,6 +124,7 @@ export const ROUTE_NAME = {
     COM_FEEDBACK_LIST: '企业反馈列表', // 企业反馈列表
     FEEDBACK_MANAGE: '反馈管理', // 反馈管理
     OPINION_LIST: '意见反馈列表', // 意见列表
+    OPINION_DETAIL: '意见反馈详情', // 意见详情
 }
 
 // 路由权限的常量
@@ -151,6 +155,7 @@ export const ROUTE_PERMISSION = {
     COM_FEEDBACK_LIST: 'company:manage:feedback', // 企业反馈列表
     FEEDBACK_MANAGE: 'feedback:manage', // 反馈管理
     OPINION_LIST: 'feedback:manage:opinion', // 意见列表
+    OPINION_DETAIL: 'feedback:manage:opinion:detail', // 意见详情
 }
 
 // 路由组件地址的常量
@@ -178,6 +183,7 @@ export const ROUTE_ELEMENT_PATH = {
     COMPANY_LIST: 'Company/CompanyList', // 企业列表
     COM_FEEDBACK_LIST: 'Company/ComFeedbackList', // 企业反馈列表
     OPINION_LIST: 'Feedback/OpinionList', // 意见列表
+    OPINION_DETAIL: 'Feedback/OpinionDetail', // 意见详情
 }
 
 // 路由图标的常量

@@ -25,9 +25,19 @@ import { ROUTE_KEY, ROUTE_PARAM_NAME, ROUTE_PERMISSION, STAFF_ROLE, STAFF_ROLE_N
 import { IStaffList, IStaffListRequest, IStaffListResponse } from '@/api/type'
 import { useAppSelector } from '@/hooks/useAppStore'
 import PermissionWrapper from '@/components/permission/PermissionWrapper'
-import { getStaffListAPI, deleteStaffAPI, editStaffAPI, assignStaffRoleAPI } from '@/api/staff'
+import {
+  getStaffListAPI,
+  deleteStaffAPI,
+  editStaffAPI,
+  assignStaffRoleAPI,
+  getStaffRolesAPI
+} from '@/api/staff'
 import { encodeRedirectInfo } from '@/utils/auth'
 import { useFieldProps } from '@/hooks/useFieldProps'
+import {
+  getIDStaffRole,
+} from '@/utils/staff'
+import dayjs from 'dayjs'
 
 interface IProps {
   children?: ReactNode
@@ -132,9 +142,21 @@ const StaffList: FC<IProps> = (_props) => {
     {
       dataIndex: 'staffRole',
       title: '员工角色',
+      valueType: 'select',
+      valueEnum: {
+        ...STAFF_ROLE,
+        'undefined': {
+          text: '未设置',
+        }
+      },
       width: 80,
       render: (_, record) => (
-        <Tag color={STAFF_ROLE[record.staffRole]?.color || 'default'} key={record.id}>
+        <Tag
+          color={STAFF_ROLE[record.staffRole]?.color || 'default'} key={record.id}
+          style={{
+            marginRight: 0
+          }}
+        >
           {STAFF_ROLE[record.staffRole]?.text || '未设置'}
         </Tag>
       ),
@@ -149,6 +171,7 @@ const StaffList: FC<IProps> = (_props) => {
       fieldProps: {
         placeholder: dateRangePlaceholder,
       },
+      render: (_, record) => dayjs(record.createTime).format('YYYY-MM-DD')
     },
     {
       title: '操作',
@@ -158,7 +181,6 @@ const StaffList: FC<IProps> = (_props) => {
       fixed: 'right',
       width: 150,
       render: (text, record, _, action) => {
-
         // 编辑员工下拉菜单
         const items: MenuProps['items'] = [
           {
@@ -211,7 +233,7 @@ const StaffList: FC<IProps> = (_props) => {
               variant="text"
               size='small'
               onClick={() => {
-                console.log('record: ', record);
+                // console.log('record: ', record);
                 navigateTo(ROUTE_KEY.STAFF_DETAIL,
                   {
                     [ROUTE_PARAM_NAME.STAFF_ID]: record.id,
@@ -336,9 +358,10 @@ const StaffList: FC<IProps> = (_props) => {
       if (!assignStaffRoleRes.success) {
         throw new Error(assignStaffRoleRes.errMsg);
       }
-      setStaffRoleModalOpen(false);
       message.success('设置成功');
+      // 刷新员工列表
       actionRef.current?.reload();
+      setStaffRoleModalOpen(false);
     } catch (error) {
       // console.log('error: ', error);
     } finally {
@@ -453,6 +476,14 @@ const StaffList: FC<IProps> = (_props) => {
             }
           }
           const res = await getStaffListAPI(queryParams)
+          for (let staffIndex = 0; staffIndex < res.data.list.length; staffIndex++) {
+            const roles = await getStaffRolesAPI({
+              userId: res.data.list[staffIndex].id,
+            })
+            // console.log('roles: ' + res.data.list[staffIndex].username, roles);
+
+            res.data.list[staffIndex].staffRole = getIDStaffRole(roles.data) as any;
+          }
           return {
             data: res.data.list,
             total: res.data.total,
@@ -542,11 +573,15 @@ const StaffList: FC<IProps> = (_props) => {
         onOk={handleStaffRoleModalOk}
         confirmLoading={staffRoleModalConfirmLoading}
         onCancel={handleStaffRoleModalCancel}
+        destroyOnHidden={true}
       >
         <ProForm
           submitter={false}
           formRef={staffRoleModalFormRef}
           onFinish={handleStaffRoleModalSubmit}
+          initialValues={{
+            staffRole: currentStaff?.staffRole ? currentStaff?.staffRole : null,
+          }}
         >
           <ProFormSelect
             name="staffRole"

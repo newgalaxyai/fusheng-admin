@@ -275,7 +275,7 @@ const LayoutComponent: React.FC = () => {
                             // 首页内容区域添加滚动条
                             // overflow: activeKey !== 'home' ? 'initial' : 'auto',
                             overflow: 'initial',
-                            padding: 10,
+                            padding: 20,
                             background: colorBgContainer,
                             borderRadius: borderRadiusLG,
                         }}

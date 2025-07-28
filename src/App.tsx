@@ -1,13 +1,18 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRoutes, useLocation } from 'react-router-dom'
 import { useLayout } from './hooks/useLayout';
 import { useRoutesHook } from './hooks/useRoutes';
 import { ROUTE_KEY, ROUTE_PATH_COMMON } from './constants';
 import { useAppDispatch } from '@/hooks/useAppStore';
 import { getLoginInfoAsync, getLoginPermissionInfoAsync } from './redux/asyncs/login';
+import { ConfigProvider } from 'antd';
+import enUS from 'antd/locale/en_US';
+import zhCN from 'antd/locale/zh_CN';
 
 function App() {
-  
+  // 语言
+  const [locale, setLocale] = useState(zhCN);
+
   const dispatch = useAppDispatch();
   const { getRoutes, authRoutes } = useRoutesHook();
   const { addTab, getCurrentRoute } = useLayout();
@@ -42,11 +47,11 @@ function App() {
   }, [location.pathname]);
 
   return (
-    <>
+    <ConfigProvider locale={locale}>
       <div className="App">
         {useRoutes(getRoutes)}
       </div>
-    </>
+    </ConfigProvider>
   )
 }
 

@@ -1,9 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { IThunkUserState } from '../types/user'
-import { message } from 'antd'
 import { getLoginInfoAPI, getLoginPermissionInfoAPI } from '@/api/login'
 import { setUserLoadingAction, setUserInfoAction, setUserRoleAction } from '../modules/user'
-import { STAFF_ROLE_NAME } from '@/constants'
+import { getStringStaffRole } from '@/utils/staff'
 
 // 修改泛型类型：第一个参数是返回数据的类型，而不是void
 export const getLoginInfoAsync = createAsyncThunk<
@@ -32,10 +31,14 @@ export const getLoginPermissionInfoAsync = createAsyncThunk<
     // 在此请求接口获取数据
     const res = await getLoginPermissionInfoAPI()
     if (res.success) {
+        let userRole: string[] = []
         // 请求成功
-        const roleData = res.data.roles.length > 1 ? res.data.roles.filter(role => role !== STAFF_ROLE_NAME.SUPER) : res.data.roles
+        const roleData = getStringStaffRole(res.data.roles)
+        if (roleData) {
+            userRole = [roleData]
+        }
         // 设置数据
-        dispatch(setUserRoleAction(roleData))
+        dispatch(setUserRoleAction(userRole))
         // 设置等待状态
         dispatch(setUserLoadingAction(false))
     } else {

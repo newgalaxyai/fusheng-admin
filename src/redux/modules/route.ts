@@ -371,6 +371,18 @@ const initialState: IRouteState = {
       order: 1,
       type: 2,
     },
+    {
+      name: ROUTE_NAME.OPINION_DETAIL,
+      key: ROUTE_KEY.OPINION_DETAIL,
+      parentKey: ROUTE_KEY.FEEDBACK_MANAGE,
+      path: ROUTE_PATH.OPINION_DETAIL,
+      hideInMenu: true,
+      elementPath: ROUTE_ELEMENT_PATH.OPINION_DETAIL,
+      requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN, STAFF_ROLE_NAME.STAFF],
+      requiredPermission: ROUTE_PERMISSION.OPINION_DETAIL,  //意见详情
+      order: 11,
+      type: 2,
+    },
   ],
   // 标签列表
   tabsList: [

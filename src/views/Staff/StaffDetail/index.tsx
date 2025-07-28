@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, {useRef } from 'react'
 import type { FC, ReactNode } from 'react'
-import { Button, Descriptions, Spin } from 'antd'
-import { ROUTE_PARAM_NAME, STAFF_ROLE_NAME } from '@/constants'
+import { Button, Tag } from 'antd'
+import { ROUTE_PARAM_NAME } from '@/constants'
 import { getLocationParamsByName } from '@/utils/location'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import {
   ProForm,
   ProFormText,
@@ -11,13 +11,14 @@ import {
   ProFormDatePicker,
   ProFormSelect,
   ProFormInstance,
+  ProDescriptions,
+  ProDescriptionsItemProps
 } from '@ant-design/pro-components'
 import {
   Row,
   Col,
   Space,
   App,
-  DescriptionsProps
 } from 'antd'
 import {
   STAFF_ROLE,
@@ -25,9 +26,6 @@ import {
   SEX,
   EDUCATION,
   MARRIAGE,
-  SEX_NAME,
-  EDUCATION_NAME,
-  MARRIAGE_NAME
 } from '@/constants'
 import {
   MobileOutlined,
@@ -39,10 +37,10 @@ import {
 import PermissionWrapper from '@/components/permission/PermissionWrapper'
 import { ROUTE_KEY, ROUTE_PERMISSION } from '@/constants'
 import { useLayout } from '@/hooks/useLayout';
-import { getStaffDetailAPI, editStaffAPI, addStaffAPI, assignStaffRoleAPI } from '@/api/staff'
+import { getStaffDetailAPI, editStaffAPI, addStaffAPI, getStaffRolesAPI } from '@/api/staff'
 import { decodeRedirectInfo, encodeRedirectInfo } from '@/utils/auth'
-import CopyComponent from '@/components/copy'
 import { isLetterAndNumber } from '@/utils/reg'
+import { getIDStaffRole } from '@/utils/staff'
 
 interface IProps {
   children?: ReactNode
@@ -51,105 +49,137 @@ interface IProps {
 const StaffDetail: FC<IProps> = (_props) => {
   const { token } = theme.useToken();
   const { message } = App.useApp();
-  const navigate = useNavigate();
   const location = useLocation();
-  const { navigateTo, getRouteRole, switchTab, pureRemoveTab } = useLayout();
+  const { navigateTo, getRouteRole, pureRemoveTab } = useLayout();
   const pageType = getLocationParamsByName(location, ROUTE_PARAM_NAME.PAGE_TYPE);
   const staffId = getLocationParamsByName(location, ROUTE_PARAM_NAME.STAFF_ID);
   const redirectInfo = getLocationParamsByName(location, ROUTE_PARAM_NAME.REDIRECT_INFO);
   const formRef = useRef<ProFormInstance<any>>(null);
-  const [staffInfo, setStaffInfo] = useState<IStaffList>({} as IStaffList);
-  const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    if (staffId && pageType === '2') {
-      setLoading(true);
-      getStaffDetailAPI({
-        id: Number(staffId)
-      }).then((res) => {
-        if (res.success) {
-          setStaffInfo(res.data)
-        }
-      }).finally(() => {
-        setLoading(false);
-      })
-    } else {
-      setLoading(false);
-    }
-  }, [location.pathname])
-  const staffInfoItems: DescriptionsProps['items'] = (staffId && pageType === '2') ? [
+
+  // 描述列表column
+  const descColumn: ProDescriptionsItemProps<IStaffList>[] = [
     {
+      title: '员工编号',
       key: 'username',
-      label: '员工编号',
-      children: staffInfo.username,
+      dataIndex: 'username',
+      copyable: true,
     },
     {
+      title: '员工姓名',
       key: 'nickname',
-      label: '员工姓名',
-      children: staffInfo.nickname,
+      dataIndex: 'nickname',
     },
     {
-      key: 'deptName',
-      label: '员工部门',
-      children: staffInfo.deptName,
+      title: '性别',
+      key: 'sex',
+      dataIndex: 'sex',
+      valueType: 'select',
+      valueEnum: SEX,
     },
     {
-      key: 'staffPositionName',
-      label: '员工职位',
-      children: staffInfo.staffPositionName,
+      title: '员工状态',
+      key: 'status',
+      dataIndex: 'status',
+      valueType: 'select',
+      valueEnum: {
+        0: {
+          text: '启用',
+          status: 'Success',
+        },
+        1: {
+          text: '禁用',
+          status: 'Error',
+        },
+      },
     },
     {
-      key: 'staffRole',
-      label: '员工角色',
-      children: STAFF_ROLE[staffInfo.staffRole].text,
-    },
-    {
-      key: 'mobile',
-      label: '手机号',
-      children: (
-        <CopyComponent copyText={staffInfo.mobile} />
+      dataIndex: 'staffRole',
+      title: '员工角色',
+      valueType: 'select',
+      valueEnum: {
+        ...STAFF_ROLE,
+        'undefined': {
+          text: '未设置',
+        }
+      },
+      render: (_, record) => (
+        <Tag
+          color={STAFF_ROLE[record.staffRole]?.color || 'default'} key={record.id}
+          style={{
+            marginRight: 0
+          }}
+        >
+          {STAFF_ROLE[record.staffRole]?.text || '未设置'}
+        </Tag>
       ),
     },
     {
+      title: '员工手机号',
+      key: 'mobile',
+      dataIndex: 'mobile',
+      copyable: true,
+    },
+    {
+      title: '员工部门',
+      key: 'deptName',
+      dataIndex: 'deptName',
+    },
+    {
+      title: '员工职位',
+      key: 'staffPositionName',
+      dataIndex: 'staffPositionName',
+    },
+    {
+      title: '证件类型',
       key: 'idType',
-      label: '证件类型',
-      children: CERTIFICATE_TYPE[staffInfo.idType].text,
+      dataIndex: 'idType',
+      valueType: 'select',
+      valueEnum: CERTIFICATE_TYPE,
     },
     {
+      title: '证件号码',
       key: 'idNumber',
-      label: '证件号码',
-      children: staffInfo.idNumber,
+      dataIndex: 'idNumber',
     },
     {
+      title: '入职日期',
       key: 'hireDate',
-      label: '入职日期',
-      children: staffInfo.hireDate?.join('-'),
+      dataIndex: 'hireDate',
+      render: (_, record) => record.hireDate?.join('-'),
     },
     {
-      key: 'sex',
-      label: '性别',
-      children: SEX[staffInfo.sex || SEX_NAME.SEX_SECRET].text,
+      title: '操作',
+      valueType: 'option',
+      render: () => [
+        <PermissionWrapper
+          requiredRole={getRouteRole(ROUTE_KEY.EDIT_STAFF, 3)}
+          requiredPermissions={[ROUTE_PERMISSION.EDIT_STAFF]}
+        >
+          <Button
+            key="edit"
+            color="primary" variant="text"
+            onClick={() => {
+              const encodedRedirectInfo = encodeRedirectInfo({
+                pathname: ROUTE_KEY.STAFF_DETAIL,
+                search: `?${ROUTE_PARAM_NAME.STAFF_ID}=${staffId}&${ROUTE_PARAM_NAME.PAGE_TYPE}=2`,
+                hash: '',
+                state: null,
+                key: ''
+              })
+              navigateTo(ROUTE_KEY.EDIT_STAFF,
+                {
+                  [ROUTE_PARAM_NAME.STAFF_ID]: staffId,
+                  [ROUTE_PARAM_NAME.PAGE_TYPE]: '1',
+                  [ROUTE_PARAM_NAME.REDIRECT_INFO]: encodedRedirectInfo,
+                });
+            }}
+          >
+            编辑
+          </Button>
+        </PermissionWrapper>,
+      ],
     },
-    {
-      key: 'education',
-      label: '学历',
-      children: EDUCATION[staffInfo.education || EDUCATION_NAME.EDUCATION_OTHER].text,
-    },
-    {
-      key: 'marriageStatus',
-      label: '婚姻状态',
-      children: MARRIAGE[staffInfo.marriageStatus || MARRIAGE_NAME.MARRIAGE_SINGLE].text,
-    },
-    {
-      key: 'email',
-      label: '邮箱',
-      children: staffInfo.email,
-    },
-    {
-      key: 'remark',
-      label: '备注',
-      children: staffInfo.remark,
-    },
-  ] : []
+  ]
 
   const formItemLayout = {
     labelCol: {
@@ -165,19 +195,7 @@ const StaffDetail: FC<IProps> = (_props) => {
   return (
     <>
       {
-        loading ? (
-          <div
-            style={{
-              width: '100%',
-              height: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <Spin spinning={true} tip="加载中..." />
-          </div>
-        ) : pageType === '1' ? (
+        pageType === '1' ? (
           <div
             className="staff-form-container"
             style={{
@@ -531,40 +549,34 @@ const StaffDetail: FC<IProps> = (_props) => {
             </ProForm>
           </div>
         ) : (
-          <Descriptions
-            title="员工信息"
-            // layout="vertical"
-            bordered
-            column={{ xs: 1, sm: 2, md: 3, lg: 3, xl: 4, xxl: 4 }}
-            extra={
-              <PermissionWrapper
-                requiredRole={getRouteRole(ROUTE_KEY.EDIT_STAFF, 3)}
-                requiredPermissions={[ROUTE_PERMISSION.EDIT_STAFF]}
-              >
-                <Button
-                  key="edit"
-                  color="primary" variant="text"
-                  onClick={() => {
-                    const encodedRedirectInfo = encodeRedirectInfo({
-                      pathname: ROUTE_KEY.STAFF_DETAIL,
-                      search: `?${ROUTE_PARAM_NAME.STAFF_ID}=${staffId}&${ROUTE_PARAM_NAME.PAGE_TYPE}=2`,
-                      hash: '',
-                      state: null,
-                      key: ''
-                    })
-                    navigateTo(ROUTE_KEY.EDIT_STAFF,
-                      {
-                        [ROUTE_PARAM_NAME.STAFF_ID]: staffId,
-                        [ROUTE_PARAM_NAME.PAGE_TYPE]: '1',
-                        [ROUTE_PARAM_NAME.REDIRECT_INFO]: encodedRedirectInfo,
-                      });
-                  }}
-                >
-                  编辑
-                </Button>
-              </PermissionWrapper>
-            }
-            items={staffInfoItems}
+          <ProDescriptions
+            title="员工详情"
+            request={async () => {
+              // 详情接口
+              const res = await getStaffDetailAPI({
+                id: Number(staffId)
+              })
+              if (res.success) {
+                // 角色接口
+                const rolesRes = await getStaffRolesAPI({
+                  userId: res.data.id,
+                })
+                if (rolesRes.success) {
+                  // 角色接口返回值处理
+                  res.data.staffRole = getIDStaffRole(rolesRes.data) as any;
+                  return Promise.resolve({
+                    success: true,
+                    data: res.data,
+                  });
+                }
+              }
+              return Promise.reject({
+                success: false,
+                data: null,
+              });
+            }}
+            emptyText={'-'}
+            columns={descColumn}
           />
         )
       }

@@ -107,7 +107,7 @@ const QARecord: FC<IProps> = (_props) => {
                     variant="text"
                     size='small'
                     onClick={() => {
-                        console.log('查看会话: ', record);
+                        // console.log('查看会话: ', record);
                         onSessionDrawerOpen(record)
                     }}
                 >
