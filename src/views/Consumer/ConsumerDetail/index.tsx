@@ -42,6 +42,7 @@ import { decodeRedirectInfo, encodeRedirectInfo } from '@/utils/auth'
 import { IConsumerList, IConsumerOffList } from '@/api/type'
 import dayjs from 'dayjs'
 import { getConsumerDetailAPI } from '@/api/consumer'
+import { useFieldProps } from '@/hooks/useFieldProps'
 
 interface IProps {
   children?: ReactNode
@@ -52,6 +53,10 @@ const ConsumerDetail: FC<IProps> = (_props) => {
   const { message } = App.useApp();
   const location = useLocation();
   const { navigateTo, getRouteRole, pureRemoveTab } = useLayout();
+  const {
+    dateTimeFormat,
+  } = useFieldProps();
+
   const pageType = getLocationParamsByName(location, ROUTE_PARAM_NAME.PAGE_TYPE);
   const consumerId = getLocationParamsByName(location, ROUTE_PARAM_NAME.CONSUMER_ID);
   const redirectInfo = getLocationParamsByName(location, ROUTE_PARAM_NAME.REDIRECT_INFO);
@@ -142,7 +147,9 @@ const ConsumerDetail: FC<IProps> = (_props) => {
       title: '注册时间',
       key: 'createTime',
       dataIndex: 'createTime',
-      render: (_, record) => dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss'),
+      fieldProps: {
+        format: dateTimeFormat,
+      },
     },
     {
       title: '备注',

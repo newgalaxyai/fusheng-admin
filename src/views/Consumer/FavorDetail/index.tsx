@@ -3,7 +3,6 @@ import type { FC, ReactNode } from 'react'
 import {
     List,
     Avatar,
-    ConfigProvider,
 } from 'antd'
 import {
     IFavorList,
@@ -47,16 +46,7 @@ const FavorDetail: FC<IProps> = (_props) => {
     ]
 
     return (
-        <ConfigProvider
-            theme={{
-                components: {
-                    List: {
-                        titleMarginBottom: 0,
-                        metaMarginBottom: 0,
-                    },
-                },
-            }}
-        >
+        <>
             <List
                 style={{
                     margin: '20px'
@@ -87,7 +77,7 @@ const FavorDetail: FC<IProps> = (_props) => {
                     </List.Item>
                 )}
             />
-        </ConfigProvider>
+        </>
     )
 }
 

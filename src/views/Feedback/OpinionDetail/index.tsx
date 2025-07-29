@@ -14,13 +14,16 @@ import {
 import {
     IOpinionList,
 } from '@/api/type'
-import dayjs from 'dayjs'
+import { useFieldProps } from '@/hooks/useFieldProps'
 
 interface IProps {
     children?: ReactNode
 }
 
 const OpinionDetail: FC<IProps> = (_props) => {
+    const {
+        dateTimeFormat
+    } = useFieldProps()
     const location = useLocation();
     const opinionId = getLocationParamsByName(location, ROUTE_PARAM_NAME.OPINION_ID);
 
@@ -31,7 +34,9 @@ const OpinionDetail: FC<IProps> = (_props) => {
             key: 'createTime',
             dataIndex: 'createTime',
             valueType: 'dateTime',
-            render: (_, record) => dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss'),
+            fieldProps: {
+                format: dateTimeFormat
+            },
         },
         {
             title: '意见内容',

@@ -8,6 +8,7 @@ import { getLoginInfoAsync, getLoginPermissionInfoAsync } from './redux/asyncs/l
 import { ConfigProvider } from 'antd';
 import enUS from 'antd/locale/en_US';
 import zhCN from 'antd/locale/zh_CN';
+import { useAntdTheme } from './hooks/useAntdTheme';
 
 function App() {
   // 语言
@@ -15,6 +16,7 @@ function App() {
 
   const dispatch = useAppDispatch();
   const { getRoutes, authRoutes } = useRoutesHook();
+  const { configTheme } = useAntdTheme();
   const { addTab, getCurrentRoute } = useLayout();
 
   // 获取登录用户信息
@@ -47,7 +49,10 @@ function App() {
   }, [location.pathname]);
 
   return (
-    <ConfigProvider locale={locale}>
+    <ConfigProvider
+      locale={locale}
+      theme={configTheme}
+    >
       <div className="App">
         {useRoutes(getRoutes)}
       </div>

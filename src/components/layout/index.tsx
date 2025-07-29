@@ -2,7 +2,6 @@ import React, { memo, useEffect, useMemo, useState } from 'react';
 import type { MenuProps } from 'antd';
 import {
     Breadcrumb,
-    ConfigProvider,
     Layout,
     Menu,
     Tabs,
@@ -233,28 +232,17 @@ const LayoutComponent: React.FC = () => {
                                 {/* 卡片标签 */}
                                 {
                                     tabsList.length > 0 && (
-                                        <ConfigProvider
-                                            theme={{
-                                                components: {
-                                                    Tabs: {
-                                                        horizontalMargin: '10px 0 0 0',
-                                                        cardBg: colorBgContainer,
-                                                    },
-                                                },
+                                        <Tabs
+                                            hideAdd
+                                            onChange={(key) => {
+                                                switchTab(key);
                                             }}
-                                        >
-                                            <Tabs
-                                                hideAdd
-                                                onChange={(key) => {
-                                                    switchTab(key);
-                                                }}
-                                                activeKey={activeKey}
-                                                type="editable-card"
-                                                onEdit={onEdit}
-                                                items={renderTabs as any}
-                                                size='small'
-                                            />
-                                        </ConfigProvider>
+                                            activeKey={activeKey}
+                                            type="editable-card"
+                                            onEdit={onEdit}
+                                            items={renderTabs as any}
+                                            size='small'
+                                        />
                                     )
                                 }
                             </div>

@@ -298,6 +298,18 @@ const initialState: IRouteState = {
       type: 2,
     },
     {
+      name: ROUTE_NAME.EVALUATE_DETAIL,
+      key: ROUTE_KEY.EVALUATE_DETAIL,
+      parentKey: ROUTE_KEY.DATA_MANAGE,
+      path: ROUTE_PATH.EVALUATE_DETAIL,
+      hideInMenu: true,
+      elementPath: ROUTE_ELEMENT_PATH.EVALUATE_DETAIL,
+      requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN, STAFF_ROLE_NAME.STAFF],
+      requiredPermission: ROUTE_PERMISSION.EVALUATE_DETAIL,  //AI问答评价详情
+      order: 30,
+      type: 2,
+    },
+    {
       name: ROUTE_NAME.SYS_ABNORMAL_LIST,
       key: ROUTE_KEY.SYS_ABNORMAL_LIST,
       parentKey: ROUTE_KEY.DATA_MANAGE,
@@ -332,6 +344,18 @@ const initialState: IRouteState = {
       requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN, STAFF_ROLE_NAME.STAFF],
       requiredPermission: ROUTE_PERMISSION.COMPANY_LIST,  //企业列表
       order: 1,
+      type: 2,
+    },
+    {
+      name: ROUTE_NAME.COMPANY_DETAIL,
+      key: ROUTE_KEY.COMPANY_DETAIL,
+      parentKey: ROUTE_KEY.COMPANY_MANAGE,
+      path: ROUTE_PATH.COMPANY_DETAIL,
+      hideInMenu: true,
+      elementPath: ROUTE_ELEMENT_PATH.COMPANY_DETAIL,
+      requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN, STAFF_ROLE_NAME.STAFF],
+      requiredPermission: ROUTE_PERMISSION.COMPANY_DETAIL,  //企业详情
+      order: 10,
       type: 2,
     },
     {
@@ -380,7 +404,7 @@ const initialState: IRouteState = {
       elementPath: ROUTE_ELEMENT_PATH.OPINION_DETAIL,
       requiredRole: [STAFF_ROLE_NAME.SUPER, STAFF_ROLE_NAME.ADMIN, STAFF_ROLE_NAME.STAFF],
       requiredPermission: ROUTE_PERMISSION.OPINION_DETAIL,  //意见详情
-      order: 11,
+      order: 10,
       type: 2,
     },
   ],

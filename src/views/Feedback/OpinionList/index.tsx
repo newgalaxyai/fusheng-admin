@@ -3,7 +3,6 @@ import type { FC, ReactNode } from 'react'
 import { Button, Space } from 'antd'
 import { ProTable, ProColumns } from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
-import dayjs from 'dayjs'
 import { useFieldProps } from '@/hooks/useFieldProps'
 import { IOpinionList } from '@/api/type'
 import {
@@ -18,7 +17,8 @@ interface IProps {
 
 const OpinionList: FC<IProps> = (_props) => {
     const {
-        dateRangePlaceholder
+        dateRangePlaceholder,
+        dateTimeFormat
     } = useFieldProps()
 
     const { navigateTo } = useLayout();
@@ -66,13 +66,22 @@ const OpinionList: FC<IProps> = (_props) => {
         {
             dataIndex: 'createTime',
             title: '创建时间',
-            valueType: 'dateRange',
+            valueType: 'dateTime',
             width: 150,
             align: 'center',
             fieldProps: {
+                format: dateTimeFormat,
+            },
+            search: false,
+        },
+        {
+            dataIndex: 'createTime',
+            title: '创建时间',
+            valueType: 'dateRange',
+            fieldProps: {
                 placeholder: dateRangePlaceholder,
             },
-            render: (_, record) => dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss'),
+            hidden: true,
         },
         {
             title: '操作',

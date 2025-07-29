@@ -8,7 +8,6 @@ import { useLayout } from '@/hooks/useLayout';
 import { LOGIN_TYPE } from '@/constants'
 import { useAppSelector } from '@/hooks/useAppStore'
 import { ILoginList } from '@/api/type'
-import dayjs from 'dayjs'
 import { useFieldProps } from '@/hooks/useFieldProps'
 
 interface IProps {
@@ -30,7 +29,8 @@ const LoginList: FC<IProps> = (_props) => {
     const {
         cascaderOptions,
         cascaderLoadData,
-        dateRangePlaceholder
+        dateRangePlaceholder,
+        dateTimeFormat
     } = useFieldProps()
 
     // 是否正在加载
@@ -79,13 +79,22 @@ const LoginList: FC<IProps> = (_props) => {
         {
             dataIndex: 'loginTime',
             title: '登录时间',
-            valueType: 'dateRange',
+            valueType: 'dateTime',
             width: 120,
             align: 'center',
             fieldProps: {
+                format: dateTimeFormat,
+            },
+            search: false,
+        },
+        {
+            dataIndex: 'loginTime',
+            title: '登录时间',
+            valueType: 'dateRange',
+            fieldProps: {
                 placeholder: dateRangePlaceholder,
             },
-            render: (_, record) => dayjs(record.loginTime).format('YYYY-MM-DD HH:mm:ss'),
+            hidden: true,
         },
         {
             dataIndex: 'loginArea',

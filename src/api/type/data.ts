@@ -83,3 +83,27 @@ export type IMessageListResponse = {
     list: IMessageList[],
     total: number
 }
+
+export type IEvaluateListRequest = {
+    id: number // 评价ID
+}
+
+export type IEvaluateList = {
+    id: number // 评价ID
+    entry: number // 问答入口 1：追踪大赢家
+    openid: string // 用户编号
+    nickname: string // 用户昵称
+    question: string // 问题
+    questionTime: number // 问题时间
+    think: string // 思考
+    thinkTime: number // 思考时间
+    answer: string // 回答
+    answerTime: number // 回答时间
+    evaluate: number // 评价 1：满意 2：不满意
+    createTime: number // 创建时间
+}
+
+export type IEvaluateListResponse = {
+    list: IEvaluateList[],
+    total: number
+}

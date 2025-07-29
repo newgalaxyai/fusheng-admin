@@ -3,9 +3,15 @@ import type { FC, ReactNode } from 'react'
 import { Button, Space } from 'antd'
 import { ProTable, ProColumns } from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
-import dayjs from 'dayjs'
 import { useFieldProps } from '@/hooks/useFieldProps'
-import { IQARecordList } from '@/api/type'
+import { IEvaluateList } from '@/api/type'
+import {
+    ROUTE_KEY,
+    ROUTE_PARAM_NAME,
+    EVALUATE,
+    QA_ENTRY
+} from '@/constants'
+import { useLayout } from '@/hooks/useLayout'
 
 interface IProps {
     children?: ReactNode
@@ -13,14 +19,19 @@ interface IProps {
 
 const EvaluateList: FC<IProps> = (_props) => {
     const {
-        dateRangePlaceholder
+        dateRangePlaceholder,
+        dateTimeFormat
     } = useFieldProps()
+
+    const {
+        navigateTo
+    } = useLayout()
 
     const actionRef = useRef<ActionType>();
     const formRef = useRef<FormInstance>();
 
     // 用户列表列数据
-    const columns: ProColumns<IQARecordList>[] = [
+    const columns: ProColumns<IEvaluateList>[] = [
         {
             dataIndex: 'index',
             valueType: 'index',
@@ -30,38 +41,68 @@ const EvaluateList: FC<IProps> = (_props) => {
             align: 'center',
         },
         {
-            dataIndex: 'sessionName',
-            title: '会话标题',
-            width: 200,
-            //   fixed: 'left',
-            ellipsis: true,
+            dataIndex: 'entry',
+            title: '问答入口',
+            width: 150,
             align: 'center',
+            valueType: 'select',
+            valueEnum: QA_ENTRY
         },
         {
             dataIndex: 'openid',
             title: '用户编号',
             width: 200,
-            //   fixed: 'left',
             ellipsis: true,
             align: 'center',
         },
         {
-            dataIndex: 'consumerName',
-            title: '用户名称',
-            width: 120,
-            //   fixed: 'left',
+            dataIndex: 'nickname',
+            title: '用户昵称',
+            width: 150,
             align: 'center',
+            ellipsis: true,
+        },
+        {
+            dataIndex: 'question',
+            title: '问题内容',
+            width: 200,
+            align: 'center',
+            ellipsis: true,
+        },
+        {
+            dataIndex: 'answer',
+            title: '回答内容',
+            width: 200,
+            align: 'center',
+            ellipsis: true,
+        },
+        {
+            dataIndex: 'evaluate',
+            title: '评价',
+            width: 120,
+            align: 'center',
+            valueType: 'select',
+            valueEnum: EVALUATE,
         },
         {
             dataIndex: 'createTime',
-            title: '创建时间',
-            valueType: 'dateRange',
-            width: 120,
+            title: '评价时间',
+            valueType: 'dateTime',
+            width: 200,
             align: 'center',
+            fieldProps: {
+                format: dateTimeFormat,
+            },
+            search: false,
+        },
+        {
+            dataIndex: 'createTime',
+            title: '评价时间',
+            valueType: 'dateRange',
             fieldProps: {
                 placeholder: dateRangePlaceholder,
             },
-            render: (_, record) => dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss'),
+            hidden: true,
         },
         {
             title: '操作',
@@ -77,7 +118,11 @@ const EvaluateList: FC<IProps> = (_props) => {
                     variant="text"
                     size='small'
                     onClick={() => {
-                        console.log('查看会话: ', record);
+                        // console.log('查看会话: ', record);
+                        navigateTo(ROUTE_KEY.EVALUATE_DETAIL,
+                            {
+                                [ROUTE_PARAM_NAME.EVALUATE_ID]: record.id,
+                            });
                     }}
                 >
                     查看
@@ -88,8 +133,8 @@ const EvaluateList: FC<IProps> = (_props) => {
 
     return (
         <>
-            <ProTable<IQARecordList>
-                scroll={{ x: 600 }}
+            <ProTable<IEvaluateList>
+                scroll={{ x: 1300 }}
                 bordered
                 columns={columns}
                 rowSelection={{
@@ -130,10 +175,17 @@ const EvaluateList: FC<IProps> = (_props) => {
                         data: [
                             {
                                 id: 1,
-                                sessionName: 'oB7RFvsZjYXi1IsY_VjPTXZwCrX4',
+                                entry: 1,
                                 openid: 'oB7RFvsZjYXi1IsY_VjPTXZwCrX4',
-                                consumerName: 'oB7RFvsZjYXi1IsY_VjPTXZwCrX4',
-                                createTime: 1630000000000,
+                                nickname: '测试用户',
+                                question: '问题1',
+                                think: '思考1',
+                                answer: '回答1',
+                                createTime: 1672531200000,
+                                questionTime: 1672531200000,
+                                thinkTime: 1672531200000,
+                                answerTime: 1672531200000,
+                                evaluate: 3,
                             }
                         ],
                         success: true,

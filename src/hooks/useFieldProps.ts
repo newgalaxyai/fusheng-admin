@@ -25,6 +25,12 @@ const cascaderOptionsLists: Option[] = [
 export function useFieldProps() {
     // 日期范围选择
     const dateRangePlaceholder = ['开始日期', '结束日期'];
+    // 日期格式
+    const dateFormat = 'YYYY-MM-DD';
+    // 时间格式
+    const timeFormat = 'HH:mm:ss';
+    // 日期时间格式
+    const dateTimeFormat = 'YYYY-MM-DD HH:mm:ss';
     // 级联选择器
     const [cascaderOptions, setCascaderOptions] = useState<Option[]>(cascaderOptionsLists);
     const cascaderLoadData = (selectedOptions: Option[]) => {
@@ -50,5 +56,8 @@ export function useFieldProps() {
         cascaderOptions,
         cascaderLoadData,
         dateRangePlaceholder,
+        dateFormat,
+        timeFormat,
+        dateTimeFormat,
     }
 }

@@ -2,7 +2,7 @@ import React, { memo } from 'react'
 import type { FC, ReactNode } from 'react'
 import equal from 'fast-deep-equal'
 import { IMessageList, IQARecordList } from '@/api/type'
-import { List, ConfigProvider } from 'antd';
+import { List } from 'antd';
 import { MESSAGE_ROLE_NAME, MESSAGE_ROLE } from '@/constants/common';
 import dayjs from 'dayjs';
 
@@ -14,16 +14,7 @@ interface IProps {
 
 const Messages: FC<IProps> = ({ messages, session }) => {
     return (
-        <ConfigProvider
-            theme={{
-                components: {
-                    List: {
-                        metaMarginBottom: 0,
-                        titleMarginBottom: '5px',
-                    }
-                }
-            }}
-        >
+        <>
             <List
                 itemLayout="vertical"
                 size="default"
@@ -61,7 +52,7 @@ const Messages: FC<IProps> = ({ messages, session }) => {
                     </List.Item>
                 )}
             />
-        </ConfigProvider>
+        </>
     )
 }
 

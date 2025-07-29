@@ -1,12 +1,12 @@
 import React, { useRef, memo } from 'react'
 import type { FC, ReactNode } from 'react'
-import { Button, Space, Progress, ConfigProvider } from 'antd'
+import { Button, Space, Progress } from 'antd'
 import { ProTable, ProColumns } from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
 import { useLayout } from '@/hooks/useLayout';
-import { ROUTE_KEY, ROUTE_PARAM_NAME } from '@/constants'
+import { BUSINESS_SCOPE, COMPANY_STATUS, INDUSTRY, PERSON_SCALE, ROUTE_KEY, ROUTE_PARAM_NAME } from '@/constants'
 import { ICompanyList } from '@/api/type'
-import dayjs from 'dayjs'
+
 import { useFieldProps } from '@/hooks/useFieldProps'
 
 interface IProps {
@@ -19,6 +19,7 @@ const CompanyList: FC<IProps> = (_props) => {
         dateRangePlaceholder,
         cascaderOptions,
         cascaderLoadData,
+        dateFormat,
     } = useFieldProps()
 
     // 是否正在加载
@@ -40,7 +41,7 @@ const CompanyList: FC<IProps> = (_props) => {
         {
             dataIndex: 'companyNo',
             title: '编号',
-            width: 120,
+            width: 200,
             align: 'center',
         },
         {
@@ -95,6 +96,14 @@ const CompanyList: FC<IProps> = (_props) => {
             },
         },
         {
+            dataIndex: 'address',
+            title: '详细地址',
+            width: 200,
+            align: 'center',
+            ellipsis: true,
+            search: false,
+        },
+        {
             dataIndex: 'legalPersonName',
             title: '法人',
             width: 150,
@@ -106,18 +115,29 @@ const CompanyList: FC<IProps> = (_props) => {
             title: '人员规模',
             width: 150,
             align: 'center',
+            valueType: 'select',
+            valueEnum: PERSON_SCALE,
+            search: false,
+        },
+        {
+            dataIndex: 'registerTime',
+            title: '注册时间',
+            valueType: 'date',
+            width: 150,
+            align: 'center',
+            fieldProps: {
+                format: dateFormat,
+            },
             search: false,
         },
         {
             dataIndex: 'registerTime',
             title: '注册时间',
             valueType: 'dateRange',
-            width: 150,
-            align: 'center',
             fieldProps: {
                 placeholder: dateRangePlaceholder,
             },
-            render: (_, record) => dayjs(record.registerTime).format('YYYY-MM-DD'),
+            hidden: true,
         },
         {
             dataIndex: 'registeredCapital',
@@ -132,6 +152,8 @@ const CompanyList: FC<IProps> = (_props) => {
             title: '行业',
             width: 150,
             align: 'center',
+            valueType: 'select',
+            valueEnum: INDUSTRY,
             search: false,
         },
         {
@@ -147,7 +169,13 @@ const CompanyList: FC<IProps> = (_props) => {
             width: 150,
             align: 'center',
             ellipsis: true,
-            render: (_, record) => <a href={record.website} target="_blank">{_}</a>,
+            render: (_, record) =>
+                <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href={record.website.startsWith('http') ? record.website : `//${record.website}`}
+                    style={{ color: '#1890ff' }}
+                >{record.website}</a>,
             search: false,
         },
         {
@@ -156,6 +184,7 @@ const CompanyList: FC<IProps> = (_props) => {
             width: 150,
             align: 'center',
             valueType: 'select',
+            valueEnum: COMPANY_STATUS,
             search: false,
         },
         {
@@ -183,6 +212,8 @@ const CompanyList: FC<IProps> = (_props) => {
             title: '经营范围',
             width: 150,
             align: 'center',
+            valueType: 'select',
+            valueEnum: BUSINESS_SCOPE,
             search: false,
         },
         {
@@ -200,9 +231,9 @@ const CompanyList: FC<IProps> = (_props) => {
                     size='small'
                     onClick={() => {
                         // console.log('record: ', record);
-                        navigateTo(ROUTE_KEY.PAGE_FLOW,
+                        navigateTo(ROUTE_KEY.COMPANY_DETAIL,
                             {
-                                [ROUTE_PARAM_NAME.ANALYSIS_ID]: record.id,
+                                [ROUTE_PARAM_NAME.COMPANY_ID]: record.id,
                             });
                     }}
                 >
@@ -276,28 +307,44 @@ const CompanyList: FC<IProps> = (_props) => {
                         data: [
                             {
                                 id: 1,
-                                companyNo: '123',
-                                companyName: '123',
-                                taxNo: '123',
-                                companyIntroduction: '999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999',
-                                provinceId: 1,
-                                provinceName: '123',
-                                cityId: 1,
-                                cityName: '123',
-                                districtId: 1,
-                                districtName: '123',
-                                address: '123',
-                                legalPersonName: '123',
-                                personScale: 123,
-                                registerTime: 1753409768000,
-                                registeredCapital: 123,
-                                industry: 123,
-                                productLabel: 123,
-                                website: '123',
-                                status: 123,
-                                insuredNum: 123,
-                                matchScore: 95,
-                                businessScope: 123,
+                                companyNo: 'COM000000000001',
+                                companyName: '测试企业5',
+                                taxNo: '91310000MA00000000',
+                                taxType: 1,
+                                companyType: 1,
+                                companyIntroduction: '简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介',
+                                provinceId: 33,
+                                provinceName: '浙江省',
+                                cityId: 3301,
+                                cityName: '杭州市',
+                                districtId: 330101,
+                                districtName: '西湖区',
+                                address: '西湖风景区',
+                                legalPersonName: '张三',
+                                personScale: 1,
+                                registerTime: 1772531200000,
+                                registeredCapital: 47560000,
+                                actualCapital: 39800000,
+                                industry: 1,
+                                productLabel: 1,
+                                website: 'www.baidu.com',
+                                status: 1,
+                                employeeNum: 90,
+                                insuredNum: 80,
+                                matchScore: 87,
+                                businessScope: 1,
+                                operateTermStart: 1772531200000,
+                                operateTermEnd: 1772531200000,
+                                tags: ['存续', '电子企业'],
+                                creditCode: '91310000MA00000000',
+                                businessLicenseNo: '4401080000000021',
+                                orgCode: '1000006899',
+                                importExportCode: '44011000006899',
+                                seaRegisterCode: '44011000006899',
+                                approvalDate: 1772531200000,
+                                registerOffice: '杭州市市场监督管理局',
+                                oldNames: ['测试企业1', '测试企业2'],
+                                englishName: 'Test Company',
                             }
                         ],
                         success: true,

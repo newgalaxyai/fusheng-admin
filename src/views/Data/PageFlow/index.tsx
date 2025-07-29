@@ -4,7 +4,6 @@ import { Space } from 'antd'
 import { ProTable, ProColumns } from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
 import { FLOW_DIRECTION } from '@/constants'
-import dayjs from 'dayjs'
 import { useFieldProps } from '@/hooks/useFieldProps'
 import { IPageFlowList } from '@/api/type'
 
@@ -14,7 +13,8 @@ interface IProps {
 
 const PageFlow: FC<IProps> = (_props) => {
     const {
-        dateRangePlaceholder
+        dateRangePlaceholder,
+        dateFormat
     } = useFieldProps()
 
     // 是否正在加载
@@ -36,13 +36,22 @@ const PageFlow: FC<IProps> = (_props) => {
         {
             dataIndex: 'date',
             title: '日期',
-            valueType: 'dateRange',
+            valueType: 'date',
             width: 120,
             align: 'center',
             fieldProps: {
+                format: dateFormat,
+            },
+            search: false,
+        },
+        {
+            dataIndex: 'date',
+            title: '日期',
+            valueType: 'dateRange',
+            fieldProps: {
                 placeholder: dateRangePlaceholder,
             },
-            render: (_, record) => dayjs(record.date).format('YYYY-MM-DD'),
+            hidden: true,
         },
         {
             dataIndex: 'pageName',

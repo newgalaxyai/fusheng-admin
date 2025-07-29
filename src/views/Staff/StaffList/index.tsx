@@ -37,7 +37,6 @@ import { useFieldProps } from '@/hooks/useFieldProps'
 import {
   getIDStaffRole,
 } from '@/utils/staff'
-import dayjs from 'dayjs'
 
 interface IProps {
   children?: ReactNode
@@ -48,6 +47,7 @@ const StaffList: FC<IProps> = (_props) => {
   const { navigateTo, getRouteRole } = useLayout();
   const {
     dateRangePlaceholder,
+    dateFormat
   } = useFieldProps()
 
   // 是否正在加载
@@ -143,35 +143,29 @@ const StaffList: FC<IProps> = (_props) => {
       dataIndex: 'staffRole',
       title: '员工角色',
       valueType: 'select',
-      valueEnum: {
-        ...STAFF_ROLE,
-        'undefined': {
-          text: '未设置',
-        }
-      },
+      valueEnum: STAFF_ROLE,
       width: 80,
-      render: (_, record) => (
-        <Tag
-          color={STAFF_ROLE[record.staffRole]?.color || 'default'} key={record.id}
-          style={{
-            marginRight: 0
-          }}
-        >
-          {STAFF_ROLE[record.staffRole]?.text || '未设置'}
-        </Tag>
-      ),
       align: 'center',
     },
     {
       dataIndex: 'createTime',
       title: '创建时间',
-      valueType: 'dateRange',
+      valueType: 'date',
       width: 100,
       align: 'center',
       fieldProps: {
+        format: dateFormat
+      },
+      search: false,
+    },
+    {
+      dataIndex: 'createTime',
+      title: '创建时间',
+      valueType: 'dateRange',
+      fieldProps: {
         placeholder: dateRangePlaceholder,
       },
-      render: (_, record) => dayjs(record.createTime).format('YYYY-MM-DD')
+      hidden: true,
     },
     {
       title: '操作',

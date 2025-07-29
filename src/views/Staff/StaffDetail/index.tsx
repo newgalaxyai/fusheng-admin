@@ -1,4 +1,4 @@
-import React, {useRef } from 'react'
+import React, { useRef } from 'react'
 import type { FC, ReactNode } from 'react'
 import { Button, Tag } from 'antd'
 import { ROUTE_PARAM_NAME } from '@/constants'
@@ -96,22 +96,7 @@ const StaffDetail: FC<IProps> = (_props) => {
       dataIndex: 'staffRole',
       title: '员工角色',
       valueType: 'select',
-      valueEnum: {
-        ...STAFF_ROLE,
-        'undefined': {
-          text: '未设置',
-        }
-      },
-      render: (_, record) => (
-        <Tag
-          color={STAFF_ROLE[record.staffRole]?.color || 'default'} key={record.id}
-          style={{
-            marginRight: 0
-          }}
-        >
-          {STAFF_ROLE[record.staffRole]?.text || '未设置'}
-        </Tag>
-      ),
+      valueEnum: STAFF_ROLE,
     },
     {
       title: '员工手机号',

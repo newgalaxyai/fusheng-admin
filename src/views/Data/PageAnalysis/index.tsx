@@ -6,7 +6,6 @@ import type { FormInstance, ActionType } from '@ant-design/pro-components'
 import { useLayout } from '@/hooks/useLayout';
 import { ROUTE_KEY, ROUTE_PARAM_NAME } from '@/constants'
 import { IPageAnalysisList } from '@/api/type'
-import dayjs from 'dayjs'
 import { useFieldProps } from '@/hooks/useFieldProps'
 
 interface IProps {
@@ -16,7 +15,8 @@ interface IProps {
 const PageAnalysis: FC<IProps> = (_props) => {
     const { navigateTo } = useLayout();
     const {
-        dateRangePlaceholder
+        dateRangePlaceholder,
+        dateFormat
     } = useFieldProps()
 
     // 是否正在加载
@@ -38,13 +38,22 @@ const PageAnalysis: FC<IProps> = (_props) => {
         {
             dataIndex: 'date',
             title: '日期',
-            valueType: 'dateRange',
+            valueType: 'date',
             width: 120,
             align: 'center',
             fieldProps: {
+                format: dateFormat,
+            },
+            search: false,
+        },
+        {
+            dataIndex: 'date',
+            title: '日期',
+            valueType: 'dateRange',
+            fieldProps: {
                 placeholder: dateRangePlaceholder,
             },
-            render: (_, record) => dayjs(record.date).format('YYYY-MM-DD'),
+            hidden: true,
         },
         {
             dataIndex: 'pageName',

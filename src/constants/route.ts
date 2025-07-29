@@ -16,7 +16,9 @@ export const ROUTE_PARAM_NAME = {
     CONSUMER_ID: 'consumerId', //用户id
     FAVOR_ID: 'favorId', //收藏id
     ANALYSIS_ID: 'analysisId', //页面分析id
+    EVALUATE_ID: 'evaluateId', // 评价id
     OPINION_ID: 'opinionId', // 意见id
+    COMPANY_ID: 'companyId', // 企业id
     PAGE_TYPE: 'pageType', // 页面类型 1:新增 2:编辑 3:详情
     REDIRECT_INFO: 'redirectInfo', // 完整重定向信息
 }
@@ -48,9 +50,11 @@ export const ROUTE_PATH = {
     PAGE_FLOW: 'pageFlow', // 页面流向 
     QA_RECORD: 'qaRecord', // 问答记录 
     EVALUATE_LIST: 'evaluateList', // AI问答评价列表
+    EVALUATE_DETAIL: 'evaluateDetail', // AI问答评价详情
     SYS_ABNORMAL_LIST: 'sysAbnormalList', // 系统异常列表
     COMPANY_MANAGE: '/companyManage', // 企业名单管理
     COMPANY_LIST: 'companyList', // 企业列表
+    COMPANY_DETAIL: 'companyDetail', // 企业详情
     COM_FEEDBACK_LIST: 'comFeedbackList', // 企业反馈列表
     FEEDBACK_MANAGE: 'feedbackManage', // 反馈管理
     OPINION_LIST: 'opinionList', // 意见列表
@@ -86,9 +90,11 @@ export const ROUTE_KEY = {
     PAGE_FLOW: 'pageFlow', // 页面流向 
     QA_RECORD: 'qaRecord', // 问答记录 
     EVALUATE_LIST: 'evaluateList', // AI问答评价列表
+    EVALUATE_DETAIL: 'evaluateDetail', // AI问答评价详情
     SYS_ABNORMAL_LIST: 'sysAbnormalList', // 系统异常列表
     COMPANY_MANAGE: 'companyManage', // 企业名单管理
     COMPANY_LIST: 'companyList', // 企业列表
+    COMPANY_DETAIL: 'companyDetail',
     COM_FEEDBACK_LIST: 'comFeedbackList', // 企业反馈列表
     FEEDBACK_MANAGE: 'feedbackManage', // 反馈管理
     OPINION_LIST: 'opinionList', // 意见列表
@@ -118,9 +124,11 @@ export const ROUTE_NAME = {
     PAGE_FLOW: '页面流向', // 页面流向 
     QA_RECORD: '问答记录', // 问答记录 
     EVALUATE_LIST: 'AI问答评价', // AI问答评价列表
+    EVALUATE_DETAIL: '评价详情', // AI问答评价详情
     SYS_ABNORMAL_LIST: '系统异常', // 系统异常列表
     COMPANY_MANAGE: '企业名单管理', // 企业名单管理
     COMPANY_LIST: '企业列表', // 企业列表
+    COMPANY_DETAIL: '企业详情',
     COM_FEEDBACK_LIST: '企业反馈列表', // 企业反馈列表
     FEEDBACK_MANAGE: '反馈管理', // 反馈管理
     OPINION_LIST: '意见反馈列表', // 意见列表
@@ -149,9 +157,11 @@ export const ROUTE_PERMISSION = {
     PAGE_FLOW: 'data:manage:flow', // 页面流向 
     QA_RECORD: 'data:manage:record', // 问答记录 
     EVALUATE_LIST: 'data:manage:evaluate', // AI问答评价列表
+    EVALUATE_DETAIL: 'data:manage:evaluate:detail', // AI问答评价详情
     SYS_ABNORMAL_LIST: 'data:manage:abnormal', // 系统异常列表
     COMPANY_MANAGE: 'company:manage', // 企业名单管理
     COMPANY_LIST: 'company:manage:list', // 企业名单列表
+    COMPANY_DETAIL: 'company:manage:detail', // 企业详情
     COM_FEEDBACK_LIST: 'company:manage:feedback', // 企业反馈列表
     FEEDBACK_MANAGE: 'feedback:manage', // 反馈管理
     OPINION_LIST: 'feedback:manage:opinion', // 意见列表
@@ -179,8 +189,10 @@ export const ROUTE_ELEMENT_PATH = {
     PAGE_FLOW: 'Data/PageFlow', // 页面流向 
     QA_RECORD: 'Data/QARecord', // 问答记录 
     EVALUATE_LIST: 'Data/EvaluateList', // AI问答评价列表
+    EVALUATE_DETAIL: 'Data/EvaluateDetail', // AI问答评价详情
     SYS_ABNORMAL_LIST: 'Data/SystemAbnormal', // 系统异常列表
     COMPANY_LIST: 'Company/CompanyList', // 企业列表
+    COMPANY_DETAIL: 'Company/CompanyDetail', // 企业详情
     COM_FEEDBACK_LIST: 'Company/ComFeedbackList', // 企业反馈列表
     OPINION_LIST: 'Feedback/OpinionList', // 意见列表
     OPINION_DETAIL: 'Feedback/OpinionDetail', // 意见详情

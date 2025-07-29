@@ -7,7 +7,6 @@ import { useLayout } from '@/hooks/useLayout';
 import { ROUTE_KEY, ROUTE_PARAM_NAME } from '@/constants'
 import { useAppSelector } from '@/hooks/useAppStore'
 import { IFavorList, IFavorListRequest } from '@/api/type'
-import dayjs from 'dayjs'
 import { useFieldProps } from '@/hooks/useFieldProps'
 
 interface IProps {
@@ -15,19 +14,10 @@ interface IProps {
 }
 
 const FavorList: FC<IProps> = (_props) => {
-    const {
-        staff: {
-            staffList
-        },
-        user: {
-            userRole,
-            permissions
-        }
-    } = useAppSelector((state) => state)
-    const { message, modal } = App.useApp();
-    const { navigateTo, getRouteRole } = useLayout();
+    const { navigateTo } = useLayout();
     const {
         dateRangePlaceholder,
+        dateTimeFormat,
     } = useFieldProps()
 
     // 是否正在加载
@@ -95,13 +85,22 @@ const FavorList: FC<IProps> = (_props) => {
         {
             dataIndex: 'createTime',
             title: '收藏时间',
-            valueType: 'dateRange',
+            valueType: 'dateTime',
             width: 150,
             align: 'center',
-            render: (_, record) => dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss'),
+            fieldProps: {
+                format: dateTimeFormat,
+            },
+            search: false,
+        },
+        {
+            dataIndex: 'createTime',
+            title: '收藏时间',
+            valueType: 'dateRange',
             fieldProps: {
                 placeholder: dateRangePlaceholder,
             },
+            hidden: true,
         },
         {
             title: '操作',

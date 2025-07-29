@@ -10,7 +10,6 @@ import PermissionWrapper from '@/components/permission/PermissionWrapper'
 import { encodeRedirectInfo } from '@/utils/auth'
 import { IConsumerList, IConsumerListRequest } from '@/api/type'
 import { getConsumerListAPI } from '@/api/consumer'
-import dayjs from 'dayjs'
 import { useFieldProps } from '@/hooks/useFieldProps'
 
 interface IProps {
@@ -30,7 +29,8 @@ const ConsumerList: FC<IProps> = (_props) => {
   const { message, modal } = App.useApp();
   const { navigateTo, getRouteRole } = useLayout();
   const {
-    dateRangePlaceholder
+    dateRangePlaceholder,
+    dateTimeFormat,
   } = useFieldProps()
 
   // 是否正在加载
@@ -165,13 +165,22 @@ const ConsumerList: FC<IProps> = (_props) => {
     {
       dataIndex: 'createTime',
       title: '注册时间',
-      valueType: 'dateRange',
+      valueType: 'dateTime',
       width: 120,
       align: 'center',
       fieldProps: {
+        format: dateTimeFormat,
+      },
+      search: false,
+    },
+    {
+      dataIndex: 'createTime',
+      title: '注册时间',
+      valueType: 'dateRange',
+      fieldProps: {
         placeholder: dateRangePlaceholder,
       },
-      render: (_, record) => dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss'),
+      hidden: true,
     },
     {
       dataIndex: 'waterMark',
