@@ -8,3 +8,5 @@ export const consumerAddURL = '/system/user/create'
 export const consumerEditURL = '/system/user/update'
 // 用户删除
 export const consumerDeleteURL = '/system/user/delete'
+// 登录日志
+export const consumerLoginLogURL = '/system/login-log/page'

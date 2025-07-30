@@ -4,11 +4,14 @@ import {
   IConsumerDetailRequest,
   IConsumerList,
   IConsumerListRequest,
-  IConsumerListResponse
+  IConsumerListResponse,
+  ILoginListRequest,
+  ILoginListResponse
 } from '../type/consumer'
 import {
   consumerListURL,
   consumerDetailURL,
+  consumerLoginLogURL
 } from '../url/consumer'
 
 /**
@@ -33,6 +36,16 @@ export const getConsumerListAPI = async (params: IRequest<IConsumerListRequest>)
 export const getConsumerDetailAPI = async (params: IRequest<IConsumerDetailRequest>): Promise<IResponse<IConsumerList>> => {
   const response = await adminRequest.get<IResponse<IConsumerList>>({
     url: consumerDetailURL,
+    params
+  })
+
+  return response
+}
+
+// 获取用户登录日志
+export const getConsumerLoginLogAPI = async (params: IRequest<ILoginListRequest>): Promise<IResponse<ILoginListResponse>> => {
+  const response = await adminRequest.get<IResponse<ILoginListResponse>>({
+    url: consumerLoginLogURL,
     params
   })
 

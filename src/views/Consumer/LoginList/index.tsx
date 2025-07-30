@@ -1,31 +1,21 @@
-import React, { useRef, useEffect, memo, useState } from 'react'
+import React, { useRef, memo } from 'react'
 import type { FC, ReactNode } from 'react'
-import { Button, Space, App, Tag, Spin, DatePicker, Input, Cascader } from 'antd'
-import { PlusOutlined } from '@ant-design/icons'
-import { ProTable, ProColumns, TableDropdown } from '@ant-design/pro-components'
+import { Space } from 'antd'
+import { ProTable, ProColumns } from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
-import { useLayout } from '@/hooks/useLayout';
 import { LOGIN_TYPE } from '@/constants'
-import { useAppSelector } from '@/hooks/useAppStore'
-import { ILoginList } from '@/api/type'
+import {
+    ILoginList,
+    ILoginListRequest,
+} from '@/api/type'
 import { useFieldProps } from '@/hooks/useFieldProps'
+import { getConsumerLoginLogAPI } from '@/api/consumer'
 
 interface IProps {
     children?: ReactNode
 }
 
 const LoginList: FC<IProps> = (_props) => {
-    const {
-        staff: {
-            staffList
-        },
-        user: {
-            userRole,
-            permissions
-        }
-    } = useAppSelector((state) => state)
-    const { message, modal } = App.useApp();
-    const { navigateTo, getRouteRole } = useLayout();
     const {
         cascaderOptions,
         cascaderLoadData,
@@ -50,34 +40,34 @@ const LoginList: FC<IProps> = (_props) => {
             align: 'center',
         },
         {
-            dataIndex: 'openid',
+            dataIndex: 'userId',
             title: '用户编号',
-            width: 200,
+            width: 80,
             //   fixed: 'left',
             ellipsis: true,
             align: 'center',
         },
         {
-            dataIndex: 'nickname',
+            dataIndex: 'username',
             title: '用户昵称',
-            width: 100,
+            width: 120,
             align: 'center',
         },
         {
             dataIndex: 'mobile',
             title: '手机号',
-            width: 100,
+            width: 120,
             copyable: true,
             align: 'center',
         },
         {
-            dataIndex: 'loginIp',
+            dataIndex: 'userIp',
             title: 'IP',
             width: 120,
             align: 'center',
         },
         {
-            dataIndex: 'loginTime',
+            dataIndex: 'createTime',
             title: '登录时间',
             valueType: 'dateTime',
             width: 120,
@@ -88,7 +78,7 @@ const LoginList: FC<IProps> = (_props) => {
             search: false,
         },
         {
-            dataIndex: 'loginTime',
+            dataIndex: 'createTime',
             title: '登录时间',
             valueType: 'dateRange',
             fieldProps: {
@@ -162,43 +152,20 @@ const LoginList: FC<IProps> = (_props) => {
                 cardBordered
                 request={async (params, sort, filter) => {
                     // console.log('params: ', params);
-                    return {
-                        data: [
-                            {
-                                id: 1,
-                                openid: 'oB7RFvsZjYXi1IsY_VjPTXZwCrX4',
-                                nickname: '测试用户',
-                                mobile: '15898989898',
-                                loginIp: '192.168.1.1',
-                                loginTime: 1630000000000,
-                                loginArea: '浙江杭州',
-                                loginType: 1,
-                            }
-                        ],
-                        success: true,
-                        total: 0
-                    }
-                    // console.log('params: ', params);
                     // console.log('sort: ', sort);
                     // console.log('filter: ', filter);
-                    // let queryParams: IFavorListRequest = {
-                    //     ...params,
-                    //     pageNo: params.current!,
-                    //     pageSize: params.pageSize!,
-                    // }
-                    // if (params.createTime) {
-                    //     queryParams = {
-                    //         ...queryParams,
-                    //         createStartTime: params.createTime[0], // 注册开始时间
-                    //         createEndTime: params.createTime[1], // 注册结束时间
-                    //     }
-                    // }
-                    // const res = await getConsumerListAPI(queryParams)
-                    // return {
-                    //     data: res.data.list,
-                    //     total: res.data.total,
-                    //     success: res.success,
-                    // }
+                    let queryParams: ILoginListRequest = {
+                        ...params,
+                        userType: 1,
+                        pageNo: params.current!,
+                        pageSize: params.pageSize!,
+                    }
+                    const res = await getConsumerLoginLogAPI(queryParams)
+                    return {
+                        data: res.data.list,
+                        total: res.data.total,
+                        success: res.success,
+                    }
                 }
                 }
                 editable={{

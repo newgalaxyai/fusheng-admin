@@ -1,4 +1,4 @@
-import React, { useRef, memo } from 'react'
+import React, { useRef, memo, useState } from 'react'
 import type { FC, ReactNode } from 'react'
 import { Button, Space, Progress } from 'antd'
 import { ProTable, ProColumns } from '@ant-design/pro-components'
@@ -6,8 +6,8 @@ import type { FormInstance, ActionType } from '@ant-design/pro-components'
 import { useLayout } from '@/hooks/useLayout';
 import { BUSINESS_SCOPE, COMPANY_STATUS, INDUSTRY, PERSON_SCALE, ROUTE_KEY, ROUTE_PARAM_NAME } from '@/constants'
 import { ICompanyList } from '@/api/type'
-
 import { useFieldProps } from '@/hooks/useFieldProps'
+import ContactsComponent from '@/components/contacts'
 
 interface IProps {
     children?: ReactNode
@@ -245,11 +245,8 @@ const CompanyList: FC<IProps> = (_props) => {
                     variant="text"
                     size='small'
                     onClick={() => {
-                        // console.log('record: ', record);
-                        navigateTo(ROUTE_KEY.PAGE_FLOW,
-                            {
-                                [ROUTE_PARAM_NAME.ANALYSIS_ID]: record.id,
-                            });
+                        setCompanyID(record.id);
+                        setIsContactsModalOpen(true);
                     }}
                 >
                     联系人
@@ -257,6 +254,10 @@ const CompanyList: FC<IProps> = (_props) => {
             ]
         },
     ]
+
+    // 查看联系人弹窗
+    const [isContactsModalOpen, setIsContactsModalOpen] = useState<boolean>(false);
+    const [companyID, setCompanyID] = useState<number>(0);
 
     return (
         <>
@@ -448,6 +449,11 @@ const CompanyList: FC<IProps> = (_props) => {
             //     </Button>
             //   </PermissionWrapper>
             // ]}
+            />
+            <ContactsComponent
+                companyID={companyID}
+                isModalOpen={isContactsModalOpen}
+                handleCancel={() => setIsContactsModalOpen(false)}
             />
         </>
     )

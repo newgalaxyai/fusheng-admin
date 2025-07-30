@@ -68,24 +68,26 @@ export type IQARecordListResponse = {
     total: number
 }
 
-export type IMessageListRequest = {
+export type IMessageRequest = {
     id: number // 会话ID
 }
 
-export type IMessageList = {
+export type IMessage = {
     id: number // 消息ID
     role: 'user' | 'ai' // 角色 user：用户；ai：ai助手
     content: string // 消息内容
     createTime: number // 创建时间
 }
 
-export type IMessageListResponse = {
-    list: IMessageList[],
-    total: number
-}
-
 export type IEvaluateListRequest = {
-    id: number // 评价ID
+    pageNo: number // 页码
+    pageSize: number // 每页条数
+    openid?: string // 用户编号
+    nickname?: string // 用户昵称
+    content?: string // 问答内容
+    evaluate?: number // 评价
+    createStartTime?: number // 创建时间
+    createEndTime?: number // 创建时间
 }
 
 export type IEvaluateList = {
@@ -99,11 +101,38 @@ export type IEvaluateList = {
     thinkTime: number // 思考时间
     answer: string // 回答
     answerTime: number // 回答时间
-    evaluate: number // 评价 1：满意 2：不满意
+    evaluate: number // 评价
     createTime: number // 创建时间
 }
 
 export type IEvaluateListResponse = {
     list: IEvaluateList[],
+    total: number
+}
+
+export type ISysAbListRequest = {
+    pageNo: number // 页码
+    pageSize: number // 每页条数
+    pageName?: string // 页面名称
+    pagePath?: string // 页面路径
+    errCode?: string // 错误码
+    errMsg?: string // 错误信息
+    device?: string // 设备信息
+    createStartTime?: number // 创建时间
+    createEndTime?: number // 创建时间
+}
+
+export type ISysAbList = {
+    id: number // 异常ID
+    pageName: string // 页面名称
+    pagePath: string // 页面路径
+    errCode: string // 错误码
+    errMsg: string // 错误信息
+    device: string // 设备信息
+    createTime: number // 创建时间
+}
+
+export type ISysAbListResponse = {
+    list: ISysAbList[],
     total: number
 }

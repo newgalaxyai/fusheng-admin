@@ -83,22 +83,21 @@ export type IFavorListResponse = {
 export type ILoginListRequest = {
     pageNo: number // 页码
     pageSize: number // 每页条数
-    openid?: string // 用户编号
+    userType: number // 用户类型 1：员工 2：用户
+    userId?: string // 用户编号
     mobile?: string // 用户手机号
-    nickname?: string // 用户昵称
-    content?: string // 收藏内容
-    createStartTime?: number // 收藏开始时间
-    createEndTime?: number // 收藏结束时间
+    username?: string // 用户昵称
+    createTime?: string[] // 登录时间
 }
 
 export type ILoginList = {
     id: number // 登录日志id
-    openid: string // 用户编号
-    nickname: string // 用户昵称
+    userId: string // 用户编号
+    username: string // 用户昵称
     mobile: string // 用户手机号
-    loginIp: string // 登录ip
-    loginTime: number // 登录时间戳: 
-    loginArea: string // 登录地区:
+    userIp: string // 登录ip
+    createTime: number // 登录时间戳
+    loginArea: string // 登录地区
     loginType: 1 | 2 // 登录方式 1：小程序登录2：普通登录
 }
 

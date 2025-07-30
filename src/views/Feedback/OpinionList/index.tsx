@@ -1,15 +1,23 @@
 import React, { useRef, memo } from 'react'
 import type { FC, ReactNode } from 'react'
-import { Button, Space } from 'antd'
+import { Button, Space, Tag } from 'antd'
 import { ProTable, ProColumns } from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
 import { useFieldProps } from '@/hooks/useFieldProps'
-import { IOpinionList } from '@/api/type'
+import {
+    IOpinionList,
+    IOpinionListRequest,
+} from '@/api/type'
 import {
     ROUTE_KEY,
     ROUTE_PARAM_NAME,
 } from '@/constants'
 import { useLayout } from '@/hooks/useLayout'
+import { getOpinionListAPI } from '@/api/feedback'
+import {
+    FEED_CATEGORY,
+    FEED_STATUS,
+} from '@/constants'
 
 interface IProps {
     children?: ReactNode
@@ -37,31 +45,60 @@ const OpinionList: FC<IProps> = (_props) => {
             align: 'center',
         },
         {
-            dataIndex: 'opinionNo',
-            title: '编号',
+            dataIndex: 'userId',
+            title: '用户ID',
+            width: 80,
+            align: 'center',
+        },
+        {
+            dataIndex: 'contactMsg',
+            title: '用户手机号',
             width: 120,
             align: 'center',
         },
         {
-            dataIndex: 'consumerName',
-            title: '用户昵称',
-            width: 150,
+            dataIndex: 'category',
+            title: '反馈类型',
+            width: 80,
             align: 'center',
-            search: false,
+            valueType: 'select',
+            valueEnum: FEED_CATEGORY,
         },
         {
-            dataIndex: 'mobile',
-            title: '用户手机号',
-            width: 150,
-            align: 'center',
-        },
-        {
-            dataIndex: 'opinionContent',
-            title: '意见内容',
+            dataIndex: 'content',
+            title: '反馈内容',
             width: 200,
             align: 'center',
             ellipsis: true,
+        },
+        {
+            dataIndex: 'status',
+            title: '处理状态',
+            width: 80,
+            align: 'center',
+            valueType: 'select',
+            valueEnum: FEED_STATUS,
+        },
+        {
+            dataIndex: 'priority',
+            title: '优先级',
+            width: 80,
+            align: 'center',
             search: false,
+            sorter: true,
+        },
+        {
+            dataIndex: 'tags',
+            title: '标签',
+            width: 80,
+            align: 'center',
+            search: false,
+            render: (_, record) => {
+                const tags = record.tags?.split(',');
+                return tags?.map((tag) => {
+                    return <Tag style={{ margin: 5 }} key={tag} color='#87d068'>{tag}</Tag>
+                })
+            }
         },
         {
             dataIndex: 'createTime',
@@ -150,41 +187,38 @@ const OpinionList: FC<IProps> = (_props) => {
                 cardBordered
                 request={async (params, sort, filter) => {
                     // console.log('params: ', params);
+                    // console.log('sort: ', sort);
+                    // console.log('filter: ', filter);
+                    let queryParams: IOpinionListRequest = {
+                        ...params,
+                        pageNo: params.current!,
+                        pageSize: params.pageSize!,
+                    }
+                    const res = await getOpinionListAPI(queryParams)
                     return {
                         data: [
                             {
                                 id: 1,
-                                opinionNo: '1',
-                                consumerName: '1',
-                                mobile: '1',
-                                opinionContent: '1',
-                                createTime: 1630000000000,
+                                userId: 1,
+                                contactMsg: '13800000000',
+                                content: '测试反馈内容',
+                                status: 'PENDING',
+                                statusDesc: '待处理',
+                                replyContent: '测试回复内容',
+                                replyTime: 1785958000000,
+                                replyUserId: 1,
+                                category: 'GENERAL',
+                                categoryDesc: '一般',
+                                priority: 1,
+                                tags: '测试标签,测试标签2,测试标签3',
+                                images: ['https://example.com/image1.jpg', 'https://example.com/image2.jpg'],
+                                createTime: 1785958000000,
+                                updateTime: 1785958000000
                             }
                         ],
-                        success: true,
-                        total: 0
+                        total: res.data.total,
+                        success: res.success,
                     }
-                    // console.log('params: ', params);
-                    // console.log('sort: ', sort);
-                    // console.log('filter: ', filter);
-                    // let queryParams: IFavorListRequest = {
-                    //     ...params,
-                    //     pageNo: params.current!,
-                    //     pageSize: params.pageSize!,
-                    // }
-                    // if (params.createTime) {
-                    //     queryParams = {
-                    //         ...queryParams,
-                    //         createStartTime: params.createTime[0], // 注册开始时间
-                    //         createEndTime: params.createTime[1], // 注册结束时间
-                    //     }
-                    // }
-                    // const res = await getConsumerListAPI(queryParams)
-                    // return {
-                    //     data: res.data.list,
-                    //     total: res.data.total,
-                    //     success: res.success,
-                    // }
                 }
                 }
                 editable={{

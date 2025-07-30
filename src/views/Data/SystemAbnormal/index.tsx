@@ -4,7 +4,7 @@ import { Button, Space } from 'antd'
 import { ProTable, ProColumns } from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
 import { useFieldProps } from '@/hooks/useFieldProps'
-import { IQARecordList } from '@/api/type'
+import { ISysAbList } from '@/api/type'
 
 interface IProps {
     children?: ReactNode
@@ -20,7 +20,7 @@ const SystemAbnormal: FC<IProps> = (_props) => {
     const formRef = useRef<FormInstance>();
 
     // 用户列表列数据
-    const columns: ProColumns<IQARecordList>[] = [
+    const columns: ProColumns<ISysAbList>[] = [
         {
             dataIndex: 'index',
             valueType: 'index',
@@ -30,31 +30,35 @@ const SystemAbnormal: FC<IProps> = (_props) => {
             align: 'center',
         },
         {
-            dataIndex: 'sessionName',
-            title: '会话标题',
-            width: 200,
-            //   fixed: 'left',
+            dataIndex: 'pageName',
+            title: '页面名称',
+            width: 150,
             ellipsis: true,
             align: 'center',
         },
         {
-            dataIndex: 'openid',
-            title: '用户编号',
+            dataIndex: 'pagePath',
+            title: '页面路径',
             width: 200,
-            //   fixed: 'left',
             ellipsis: true,
             align: 'center',
         },
         {
-            dataIndex: 'consumerName',
-            title: '用户名称',
+            dataIndex: 'errCode',
+            title: '错误码',
             width: 120,
-            //   fixed: 'left',
+            align: 'center',
+        },
+        {
+            dataIndex: 'errMsg',
+            title: '错误信息',
+            width: 200,
+            ellipsis: true,
             align: 'center',
         },
         {
             dataIndex: 'createTime',
-            title: '创建时间',
+            title: '异常时间',
             valueType: 'dateTime',
             width: 120,
             align: 'center',
@@ -65,40 +69,19 @@ const SystemAbnormal: FC<IProps> = (_props) => {
         },
         {
             dataIndex: 'createTime',
-            title: '创建时间',
+            title: '异常时间',
             valueType: 'dateRange',
             fieldProps: {
                 placeholder: dateRangePlaceholder,
             },
             hidden: true,
         },
-        {
-            title: '操作',
-            align: 'center',
-            valueType: 'option',
-            key: 'option',
-            fixed: 'right',
-            width: 80,
-            render: (text, record, _, action) => (
-                <Button
-                    key="view"
-                    color="primary"
-                    variant="text"
-                    size='small'
-                    onClick={() => {
-                        console.log('查看会话: ', record);
-                    }}
-                >
-                    查看
-                </Button>
-            ),
-        },
     ]
 
     return (
         <>
-            <ProTable<IQARecordList>
-                scroll={{ x: 600 }}
+            <ProTable<ISysAbList>
+                scroll={{ x: 1000 }}
                 bordered
                 columns={columns}
                 rowSelection={{
@@ -139,10 +122,12 @@ const SystemAbnormal: FC<IProps> = (_props) => {
                         data: [
                             {
                                 id: 1,
-                                sessionName: 'oB7RFvsZjYXi1IsY_VjPTXZwCrX4',
-                                openid: 'oB7RFvsZjYXi1IsY_VjPTXZwCrX4',
-                                consumerName: 'oB7RFvsZjYXi1IsY_VjPTXZwCrX4',
-                                createTime: 1630000000000,
+                                pageName: '页面名称',
+                                pagePath: '页面路径',
+                                errCode: '错误码',
+                                errMsg: '错误信息',
+                                device: '设备信息',
+                                createTime: 1672531200000,
                             }
                         ],
                         success: true,

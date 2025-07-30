@@ -3,14 +3,15 @@ import { useRoutes, useLocation } from 'react-router-dom'
 import { useLayout } from './hooks/useLayout';
 import { useRoutesHook } from './hooks/useRoutes';
 import { ROUTE_KEY, ROUTE_PATH_COMMON } from './constants';
-import { useAppDispatch } from '@/hooks/useAppStore';
+import { useAppDispatch, useAppSelector } from '@/hooks/useAppStore';
 import { getLoginInfoAsync, getLoginPermissionInfoAsync } from './redux/asyncs/login';
-import { ConfigProvider } from 'antd';
+import { ConfigProvider, Spin } from 'antd';
 import enUS from 'antd/locale/en_US';
 import zhCN from 'antd/locale/zh_CN';
 import { useAntdTheme } from './hooks/useAntdTheme';
 
 function App() {
+  const { loading } = useAppSelector(state => state.user);
   // 语言
   const [locale, setLocale] = useState(zhCN);
 
@@ -53,9 +54,17 @@ function App() {
       locale={locale}
       theme={configTheme}
     >
-      <div className="App">
+      {loading ? <Spin
+        spinning={true}
+        style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+      /> : (
+        <div className="App">
+          {useRoutes(getRoutes)}
+        </div>
+      )}
+      {/* <div className="App">
         {useRoutes(getRoutes)}
-      </div>
+      </div> */}
     </ConfigProvider>
   )
 }

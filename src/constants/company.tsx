@@ -1,3 +1,4 @@
+import { Tag } from "antd"
 import { IRecord } from "./type"
 
 // 企业经营状态
@@ -73,5 +74,25 @@ export const PERSON_SCALE: Record<number, IRecord> = {
     },
     [PERSON_SCALE_NAME.LARGE]: {
         text: '100人以上',
+    },
+}
+
+// 反馈类型
+export const FEED_TYPE_NAME = {
+    EFFECTIVE: 1,
+    INEFFECTIVE: 2,
+}
+export const FEED_TYPE: Record<number, IRecord> = {
+    [FEED_TYPE_NAME.EFFECTIVE]: {
+        text: <Tag
+            color='processing'>
+            有效线索
+        </Tag>,
+    },
+    [FEED_TYPE_NAME.INEFFECTIVE]: {
+        text: <Tag
+            color='error'>
+            无效线索
+        </Tag>,
     },
 }

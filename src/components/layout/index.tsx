@@ -8,7 +8,6 @@ import {
     theme,
     Button,
     Dropdown,
-    Spin
 } from 'antd';
 import { useAppSelector } from '@/hooks/useAppStore';
 import { useLayout } from '@/hooks/useLayout';
@@ -40,7 +39,6 @@ const LayoutComponent: React.FC = () => {
         getRoutePath
     } = useLayout();
     const { tabsList, activeKey, collapsed } = useAppSelector(state => state.route);
-    const { loading } = useAppSelector(state => state.user);
     // 标签页下拉菜单项
     const tabMenuItems = (tabItem: ITabsItem): MenuProps['items'] => tabItem.key === ROUTE_KEY.HOME ? [] : [
         {
@@ -268,11 +266,7 @@ const LayoutComponent: React.FC = () => {
                             borderRadius: borderRadiusLG,
                         }}
                     >
-                        {loading ? <Spin
-                            spinning={true}
-                            style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-                        /> : <Outlet />
-                        }
+                        <Outlet />
                     </Content>
                 </Layout>
             </Layout>

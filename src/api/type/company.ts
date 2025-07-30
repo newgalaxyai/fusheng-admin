@@ -57,3 +57,17 @@ export type ICompanyListResponse = {
     list: ICompanyList[] // 公司列表
     total: number // 总条数
 }
+
+export type IComFeedbackListRequest = ICompanyListRequest & {
+    feedType?: number // 反馈类型 1：有效；2：无效
+}
+
+export type IComFeedbackList = ICompanyList & {
+    id: number // 反馈ID
+    feedType: number // 反馈类型 1：有效；2：无效
+}
+
+export type IComFeedbackListResponse = {
+    list: IComFeedbackList[],
+    total: number
+}
