@@ -25,7 +25,7 @@ import { loginAPI } from '@/api/login';
 import { decodeRedirectInfo } from '@/utils/auth';
 import { useAppDispatch, useAppSelector } from '@/hooks/useAppStore';
 import { getLoginInfoAsync, getLoginPermissionInfoAsync } from '@/redux/asyncs/login';
-import { encode } from 'punycode';
+import { LoginBg, LoginLogo } from '@/assets/img';
 
 type LoginType = 'phone' | 'account';
 
@@ -134,9 +134,9 @@ const Page = () => {
       //     success: true,
       //   };
       // }}
-      // backgroundImageUrl="https://mdn.alipayobjects.com/huamei_gcee1x/afts/img/A*y0ZTS6WLwvgAAAAAAAAAAAAADml6AQ/fmt.webp"
-      // logo="https://github.githubassets.com/favicons/favicon.png"
-      backgroundVideoUrl="https://gw.alipayobjects.com/v/huamei_gcee1x/afts/video/jXRBRK_VAwoAAAAAAAAAAAAAK4eUAQBr"
+      backgroundImageUrl={LoginBg}
+      // logo={LoginLogo}
+      // backgroundVideoUrl="https://gw.alipayobjects.com/v/huamei_gcee1x/afts/video/jXRBRK_VAwoAAAAAAAAAAAAAK4eUAQBr"
       title="New Galaxy AI"
       containerStyle={{
         // backgroundColor: 'rgba(0, 0, 0,0.65)',

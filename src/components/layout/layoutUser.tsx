@@ -39,6 +39,13 @@ const LayoutUser = () => {
     //   type: 'divider',
     // },
     {
+      key: 'reset',
+      label: '重置密码',
+      onClick: () => {
+        navigate(ROUTE_PATH.RESET)
+      },
+    },
+    {
       key: 'logout',
       label: '退出登录',
       onClick: () => {
@@ -56,13 +63,6 @@ const LayoutUser = () => {
             navigate(ROUTE_PATH.LOGIN)
           },
         })
-      },
-    },
-    {
-      key: 'reset',
-      label: '重置密码',
-      onClick: () => {
-        navigate(ROUTE_PATH.RESET)
       },
     },
   ];

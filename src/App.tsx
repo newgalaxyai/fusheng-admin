@@ -9,6 +9,7 @@ import { ConfigProvider, Spin } from 'antd';
 import enUS from 'antd/locale/en_US';
 import zhCN from 'antd/locale/zh_CN';
 import { useAntdTheme } from './hooks/useAntdTheme';
+import { setUserLoadingAction } from './redux/modules/user';
 
 function App() {
   const { loading } = useAppSelector(state => state.user);
@@ -19,24 +20,27 @@ function App() {
   const { getRoutes, authRoutes } = useRoutesHook();
   const { configTheme } = useAntdTheme();
   const { addTab, getCurrentRoute } = useLayout();
+  // console.log('所有路由:', allRoutes);
+
+  // 获取路由
+  const location = useLocation();
 
   // 获取登录用户信息
   useEffect(() => {
     const pathname = location.pathname;
     if (ROUTE_PATH_COMMON.includes(pathname)) {
       // console.log('pathname', pathname);
+      if (loading) {
+        dispatch(setUserLoadingAction(false));
+      }
     } else {
       dispatch(getLoginInfoAsync())
       dispatch(getLoginPermissionInfoAsync())
     }
   }, []);
-  // console.log('所有路由:', allRoutes);
 
-  // 获取路由
-  const location = useLocation();
-
+  // 根据路由地址获取路由信息
   useEffect(() => {
-    // 根据路由地址获取路由信息
     const keyList = location.pathname.split('/');
     const params = location.search;
     const state = location.state;

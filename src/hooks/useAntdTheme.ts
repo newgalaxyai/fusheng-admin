@@ -1,4 +1,4 @@
-import { theme } from "antd";
+import { theme, Typography } from "antd";
 
 export const useAntdTheme = () => {
     const {
@@ -15,6 +15,9 @@ export const useAntdTheme = () => {
             List: {
                 metaMarginBottom: 0,
                 titleMarginBottom: '5px',
+            },
+            Typography: {
+                titleMarginBottom: 0
             },
         },
     }

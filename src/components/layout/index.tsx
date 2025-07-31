@@ -176,7 +176,7 @@ const LayoutComponent: React.FC = () => {
                 }}
                 className='layout-sider'
             >
-                <div className="demo-logo-vertical" />
+                <div className="logo-vertical" />
                 {/* 菜单 */}
                 <Menu
                     theme='dark'

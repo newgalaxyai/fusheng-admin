@@ -1,6 +1,6 @@
 import React from 'react'
 import type { FC, ReactNode } from 'react'
-import { Tag } from 'antd'
+import { Tag, Typography } from 'antd'
 import { BUSINESS_SCOPE, COMPANY_STATUS, COMPANY_TYPE, INDUSTRY, ROUTE_PARAM_NAME, TAX_TYPE } from '@/constants'
 import { getLocationParamsByName } from '@/utils/location'
 import { useLocation } from 'react-router-dom'
@@ -8,9 +8,6 @@ import {
     ProDescriptions,
     ProDescriptionsItemProps
 } from '@ant-design/pro-components'
-import {
-    Image,
-} from 'antd'
 import {
     ICompanyList,
 } from '@/api/type'
@@ -25,6 +22,7 @@ const CompanyDetail: FC<IProps> = (_props) => {
     const {
         dateFormat,
     } = useFieldProps();
+    const { Paragraph, Title } = Typography;
 
     const location = useLocation();
     const companyId = getLocationParamsByName(location, ROUTE_PARAM_NAME.COMPANY_ID);
@@ -36,6 +34,14 @@ const CompanyDetail: FC<IProps> = (_props) => {
             key: 'companyName',
             dataIndex: 'companyName',
             span: 3,
+            style: {
+                padding: 0
+            },
+            render: (_, record) => {
+                return (
+                    <Title level={3}>{record.companyName}</Title>
+                )
+            }
         },
         {
             title: null,
@@ -57,7 +63,21 @@ const CompanyDetail: FC<IProps> = (_props) => {
             key: 'companyIntroduction',
             dataIndex: 'companyIntroduction',
             span: 3,
-            ellipsis: true,
+            style: {
+                padding: 0
+            },
+            render: (_, record) => {
+                return (
+                    <Typography.Paragraph
+                        ellipsis={{
+                            rows: 1,
+                            expandable: 'collapsible',
+                        }}
+                    >
+                        {record.companyIntroduction}
+                    </Typography.Paragraph>
+                )
+            }
         },
         {
             title: '法定代表人',
@@ -205,7 +225,7 @@ const CompanyDetail: FC<IProps> = (_props) => {
     return (
         <>
             <ProDescriptions
-                title="企业详情"
+                title={null}
                 column={3}
                 layout='vertical'
                 request={async () => {
@@ -218,7 +238,7 @@ const CompanyDetail: FC<IProps> = (_props) => {
                             taxNo: '91310000MA00000000',
                             taxType: 1,
                             companyType: 1,
-                            companyIntroduction: '简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介',
+                            companyIntroduction: '简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介',
                             provinceId: 33,
                             provinceName: '浙江省',
                             cityId: 3301,

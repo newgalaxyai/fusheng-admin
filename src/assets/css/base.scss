@@ -30,6 +30,15 @@ body,
   min-height: 100vh;
 }
 
+// 侧边栏logo
+.logo-vertical {
+  height: 48px;
+  margin: 5px;
+  border-radius: 6px;
+  background-image: url('../img/logo/Galaxy_logo.jpg');
+  background-size: 100% 100%;
+}
+
 // 固定在顶部
 .layout-header,
 .layout-tabs {
@@ -89,6 +98,6 @@ body,
 }
 
 // 标签设置0边距
-.ant-tag{
+.ant-tag {
   margin-right: 0;
 }
