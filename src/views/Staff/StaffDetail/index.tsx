@@ -41,6 +41,7 @@ import { getStaffDetailAPI, editStaffAPI, addStaffAPI, getStaffRolesAPI } from '
 import { decodeRedirectInfo, encodeRedirectInfo } from '@/utils/auth'
 import { isLetterAndNumber } from '@/utils/reg'
 import { getIDStaffRole } from '@/utils/staff'
+import dayjs from 'dayjs'
 
 interface IProps {
   children?: ReactNode
@@ -166,17 +167,6 @@ const StaffDetail: FC<IProps> = (_props) => {
     },
   ]
 
-  const formItemLayout = {
-    labelCol: {
-      xs: { span: 24 },
-      sm: { span: 6 },
-    },
-    wrapperCol: {
-      xs: { span: 24 },
-      sm: { span: 14 },
-    },
-  }
-
   return (
     <>
       {
@@ -191,19 +181,21 @@ const StaffDetail: FC<IProps> = (_props) => {
             }}
           >
             <ProForm<IStaffList>
-              {...formItemLayout}
               autoFocusFirstInput={false}
               formRef={formRef}
-              layout="horizontal"
-              style={{
-                margin: '0 auto',
-                marginTop: 20,
-                maxWidth: 800,
+              layout="vertical"
+              grid={true}
+              rowProps={{
+                gutter: [16, 0],
               }}
-              // grid={true}
-              // rowProps={{
-              //   gutter: [16, 0],
-              // }}
+              colProps={{
+                xs: 24,
+                sm: 12,
+                md: 8,
+                lg: 6,
+                xl: 6,
+                xxl: 6,
+              }}
               submitter={{
                 render: (props, doms) => {
                   return (
@@ -216,27 +208,19 @@ const StaffDetail: FC<IProps> = (_props) => {
                 },
               }}
               onFinish={async (values) => {
-                // console.log('values', values);
-
                 let res = null;
                 if (staffId) {
-                  // // 修改员工角色
-                  // const assignStaffRoleRes = await assignStaffRoleAPI({
-                  //   userId: Number(staffId),
-                  //   roleIds: [STAFF_ROLE[STAFF_ROLE_NAME.SUPER].id!, STAFF_ROLE[values.staffRole].id!],
-                  // })
-                  // if (!assignStaffRoleRes.success) {
-                  //   return;
-                  // }
                   // 修改员工信息
                   res = await editStaffAPI({
                     ...values,
+                    hireDate: values.hireTime,
                     employeeNo: values.username.toUpperCase(),
                     id: Number(staffId),
                   })
                 } else {
                   res = await addStaffAPI({
                     ...values,
+                    hireDate: values.hireTime,
                     employeeNo: values.username.toUpperCase(),
                     password: 'fusheng@' + values.username, // 初始密码
                   })
@@ -257,7 +241,6 @@ const StaffDetail: FC<IProps> = (_props) => {
                     navigateTo(redirect.pathname, redirect.search, redirect.state);
                   }
                 }
-                // message.success('提交成功');
               }}
               params={{}}
               request={async () => {
@@ -266,7 +249,11 @@ const StaffDetail: FC<IProps> = (_props) => {
                     id: Number(staffId)
                   })
                   if (res.success) {
-                    return res.data
+                    const data = {
+                      ...res.data,
+                      hireTime: res.data.hireDate ? dayjs(res.data.hireDate?.join('-')).unix() * 1000 : undefined,
+                    }
+                    return data
                   } else {
                     return {} as IStaffList
                   }
@@ -279,7 +266,7 @@ const StaffDetail: FC<IProps> = (_props) => {
                 label="员工编号"
                 tooltip="最长为 20 位，只允许包含字母与数字！"
                 placeholder="请输入"
-                // colProps={{ md: 12, xl: 8 }}
+                // colProps={{ md: 8, xl: 8 }}
                 validateTrigger={['onSubmit', 'onFinish', 'onBlur', 'onChange']}
                 rules={[
                   {
@@ -374,7 +361,7 @@ const StaffDetail: FC<IProps> = (_props) => {
               {/* <ProFormSelect
                 name="staffRole"
                 label="员工角色"
-                // colProps={{ md: 12, xl: 8 }}
+                colProps={{ md: 12, xl: 8 }}
                 options={Object.keys(STAFF_ROLE).map((key) => ({
                   label: STAFF_ROLE[key].text,
                   value: key,
@@ -505,8 +492,7 @@ const StaffDetail: FC<IProps> = (_props) => {
               />
               <ProFormDatePicker
                 label="入职日期"
-                name="hireDate"
-                className="staff-form-date-picker"
+                name="hireTime"
                 // colProps={{ xl: 8, md: 12 }}
                 validateTrigger={['onSubmit', 'onFinish', 'onBlur']}
                 rules={[
@@ -525,6 +511,9 @@ const StaffDetail: FC<IProps> = (_props) => {
               <ProFormTextArea
                 label="备注"
                 name="remark"
+                colProps={{
+                  span: 24
+                }}
                 fieldProps={{
                   maxLength: 20,
                   showCount: true,

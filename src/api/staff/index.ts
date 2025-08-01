@@ -6,6 +6,7 @@ import type {
   IStaffDetailRequest,
   IStaffAssignRoleRequest,
   IStaffRoleRequest,
+  IStaffAddOrEditRequest,
 } from '@/api/type'
 import { IRequest, IResponse } from '../type'
 import {
@@ -51,7 +52,7 @@ export const getStaffDetailAPI = async (params: IRequest<IStaffDetailRequest>): 
  * @param params 员工信息
  * @returns 结果
  */
-export const addStaffAPI = async (params: IRequest<IStaffList>): Promise<IResponse<IStaffList>> => {
+export const addStaffAPI = async (params: IRequest<IStaffAddOrEditRequest>): Promise<IResponse<any>> => {
   const response = await adminRequest.post<IResponse<any>>({
     url: staffAddURL,
     data: params
@@ -65,7 +66,7 @@ export const addStaffAPI = async (params: IRequest<IStaffList>): Promise<IRespon
  * @param params 员工信息
  * @returns 结果
  */
-export const editStaffAPI = async (params: IRequest<IStaffList>): Promise<IResponse<IStaffList>> => {
+export const editStaffAPI = async (params: IRequest<IStaffAddOrEditRequest>): Promise<IResponse<any>> => {
   const response = await adminRequest.put<IResponse<any>>({
     url: staffEditURL,
     data: params
@@ -79,7 +80,7 @@ export const editStaffAPI = async (params: IRequest<IStaffList>): Promise<IRespo
  * @param params 员工ID
  * @returns 结果
  */
-export const deleteStaffAPI = async (params: IRequest<IStaffDetailRequest>): Promise<IResponse<IStaffList>> => {
+export const deleteStaffAPI = async (params: IRequest<IStaffDetailRequest>): Promise<IResponse<any>> => {
   const response = await adminRequest.delete<IResponse<any>>({
     url: staffDeleteURL,
     params

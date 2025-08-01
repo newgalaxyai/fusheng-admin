@@ -107,7 +107,10 @@ const LayoutComponent: React.FC = () => {
 
     // layout主题token
     const {
-        token: { colorBgContainer, borderRadiusLG },
+        token: {
+            colorBgContainer,
+            borderRadiusLG,
+        },
     } = theme.useToken();
 
     // 菜单列表
@@ -159,15 +162,9 @@ const LayoutComponent: React.FC = () => {
         <Layout
             hasSider
             className='layout-component'
-        // style={{
-        //     // 首页设置最大高度
-        //     maxHeight: activeKey !== 'home' ? '' : '100vh',
-        // }}
         >
             {/* 侧边栏 */}
             <Sider
-                // 首页显示侧边栏底部折叠按钮
-                // trigger={activeKey !== 'home' && null}
                 trigger={null}
                 collapsible
                 collapsed={collapsed}
@@ -176,7 +173,9 @@ const LayoutComponent: React.FC = () => {
                 }}
                 className='layout-sider'
             >
-                <div className="logo-vertical" />
+                <div className="logo-vertical">
+                    <div className={`logo-img ${collapsed ? 'collapsed' : ''}`}></div>
+                </div>
                 {/* 菜单 */}
                 <Menu
                     theme='dark'
@@ -185,7 +184,7 @@ const LayoutComponent: React.FC = () => {
                     selectedKeys={[activeKey]}
                     openKeys={stateOpenKeys}
                     onOpenChange={onOpenChange}
-                    style={{ height: '100%', borderRight: 0 }}
+                    style={{ height: 'calc(100% - 48px)', borderRight: 0 }} 
                     items={menuItems}
                     onSelect={(e) => {
                         navigateTo(e.key);
@@ -193,73 +192,61 @@ const LayoutComponent: React.FC = () => {
                 />
             </Sider>
             <Layout>
-                {/* 首页不显示头部 */}
-                {
-                    // activeKey !== 'home' && (
-                    activeKey !== '' && (
-                        <>
-                            {/* 顶部 */}
-                            <Header
-                                className='layout-header'
-                                style={{
-                                    background: colorBgContainer,
-                                    padding: 0,
+                {/* 顶部 */}
+                <Header
+                    className='layout-header'
+                    style={{
+                        background: colorBgContainer,
+                        padding: 0,
+                    }}
+                >
+                    <Button
+                        type="text"
+                        icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                        onClick={() => setCollapsed(!collapsed)}
+                        style={{
+                            fontSize: '16px',
+                            width: '48px',
+                            height: '48px',
+                            marginRight: '16px',
+                        }}
+                    />
+                    {/* 面包屑 */}
+                    <Breadcrumb
+                        items={getBreadcrumb(authRoutes, activeKey, [])}
+                        style={{ margin: '16px 0' }}
+                    />
+                    <LayoutUser />
+                </Header>
+                <div
+                    className='layout-tabs'
+                >
+                    {/* 卡片标签 */}
+                    {
+                        tabsList.length > 0 && (
+                            <Tabs
+                                hideAdd
+                                onChange={(key) => {
+                                    switchTab(key);
                                 }}
-                            >
-                                <Button
-                                    type="text"
-                                    icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-                                    onClick={() => setCollapsed(!collapsed)}
-                                    style={{
-                                        fontSize: '16px',
-                                        width: '48px',
-                                        height: '48px',
-                                        marginRight: '16px',
-                                    }}
-                                />
-                                {/* 面包屑 */}
-                                <Breadcrumb
-                                    items={getBreadcrumb(authRoutes, activeKey, [])}
-                                    style={{ margin: '16px 0' }}
-                                />
-                                <LayoutUser />
-                            </Header>
-                            <div
-                                className='layout-tabs'
-                            >
-                                {/* 卡片标签 */}
-                                {
-                                    tabsList.length > 0 && (
-                                        <Tabs
-                                            hideAdd
-                                            onChange={(key) => {
-                                                switchTab(key);
-                                            }}
-                                            activeKey={activeKey}
-                                            type="editable-card"
-                                            onEdit={onEdit}
-                                            items={renderTabs as any}
-                                            size='small'
-                                        />
-                                    )
-                                }
-                            </div>
-                        </>
-                    )
-                }
+                                activeKey={activeKey}
+                                type="editable-card"
+                                onEdit={onEdit}
+                                items={renderTabs as any}
+                                size='small'
+                            />
+                        )
+                    }
+                </div>
                 {/* 内容区域 */}
                 <Layout
                     style={{
-                        // 首页四周都显示padding
-                        // padding: activeKey !== 'home' ? '0 24px 24px' : '24px'
                         padding: '0 24px 24px'
                     }}
                 >
                     <Content
                         className='layout-content'
                         style={{
-                            // 首页内容区域添加滚动条
-                            // overflow: activeKey !== 'home' ? 'initial' : 'auto',
                             overflow: 'initial',
                             padding: 20,
                             background: colorBgContainer,

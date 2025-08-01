@@ -3,7 +3,7 @@ import {
     UserOutlined,
     SolutionOutlined,
     BarChartOutlined,
-    AppstoreOutlined,
+    DatabaseOutlined,
     BookOutlined,
 } from "@ant-design/icons";
 
@@ -204,6 +204,6 @@ export const ROUTE_ICON: Record<string, React.ComponentType | React.ReactNode> =
     [ROUTE_KEY.STAFF_MANAGE]: SolutionOutlined, // 员工管理
     [ROUTE_KEY.CONSUMER_MANAGE]: UserOutlined, // 用户管理
     [ROUTE_KEY.DATA_MANAGE]: BarChartOutlined, // 数据管理
-    [ROUTE_KEY.COMPANY_MANAGE]: AppstoreOutlined, // 企业名单管理   
+    [ROUTE_KEY.COMPANY_MANAGE]: DatabaseOutlined, // 企业名单管理   
     [ROUTE_KEY.FEEDBACK_MANAGE]: BookOutlined, // 反馈管理
 }
