@@ -57,3 +57,8 @@ export const getAccountPassword = () => {
     }
     return null
 }
+
+// 删除账号密码
+export const removeAccountPassword = () => {
+    localStorage.removeItem(LOCAL_STORAGE_NAME.REMEMBER)
+}

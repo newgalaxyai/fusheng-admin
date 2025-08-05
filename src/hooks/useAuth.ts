@@ -34,10 +34,6 @@ export function useAuth(requiresAuth: boolean, redirect?: string) {
                 // console.log('paramsRedirect', paramsRedirect)
                 // 如果路由参数存在重定向，则跳转到重定向页面
                 navigate(paramsRedirect.pathname + (paramsRedirect.search || '') + (paramsRedirect.hash || ''), { replace: true, state: paramsRedirect.state })
-            } else if (redirect) {
-                // console.log('redirect', redirect)
-                // 如果路由配置存在重定向，则跳转到重定向页面
-                navigate(redirect, { replace: true })
             } else {
                 // 如果不存在重定向，则跳转到首页
                 navigate(ROUTE_PATH.HOME, { replace: true })

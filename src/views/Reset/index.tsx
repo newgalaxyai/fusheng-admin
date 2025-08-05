@@ -5,16 +5,21 @@ import {
     StepsForm,
     ProFormCaptcha,
 } from '@ant-design/pro-components';
-import { Button, Card, message, Result, theme } from 'antd';
-import { useRef } from 'react';
+import { Button, Card, App, Result, theme, Spin } from 'antd';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MobileOutlined, LockOutlined } from '@ant-design/icons';
 import { ROUTE_PATH } from '@/constants';
+import { resetPasswordAPI, sendMobileCodeAPI, verifyMobileCodeAPI } from '@/api/login';
+import { removeAccessToken, removeAccountPassword, removeRefreshToken, setRememberMe } from '@/utils/storge';
 
 export default () => {
     const navigate = useNavigate();
     const stepsFormRef = useRef<ProFormInstance>();
     const { token } = theme.useToken();
+    const { message } = App.useApp();
+    const [resetResult, setResetResult] = useState<boolean>(false);
+    const [resetLoading, setResetLoading] = useState<boolean>(true);
 
     return (
         <div
@@ -28,9 +33,7 @@ export default () => {
                 }}>返回</Button>}
                 className='reset-password-card'
             >
-                <StepsForm<{
-                    name: string;
-                }>
+                <StepsForm
                     formRef={stepsFormRef}
                     submitter={{
                         render: (props, _dom) => {
@@ -79,33 +82,87 @@ export default () => {
                                 ]
                             }
                             if (props.step === 2) {
-                                return [
+                                return resetLoading ? [] : resetResult ? [
                                     <Button
                                         key='step2-login'
                                         type="primary"
-                                        onClick={() => {
-                                            navigate(ROUTE_PATH.LOGIN);
-                                        }}
                                         style={{
                                             width: '100%',
                                         }}
                                     >
                                         去登录
                                     </Button>
-                                ]
+                                ] : [
+                                    <Button
+                                        key='step2-login'
+                                        type="primary"
+                                        style={{
+                                            width: '100%',
+                                        }}
+                                        onClick={() => {
+                                            navigate(-1);
+                                        }}
+                                    >
+                                        返回
+                                    </Button>,
+                                    <Button
+                                        key='step2-login'
+                                        type="primary"
+                                        style={{
+                                            width: '100%',
+                                        }}
+                                        onClick={() => {
+                                            props.onReset?.();
+                                            setResetLoading(true);
+                                            setResetResult(false);
+                                        }}
+                                    >
+                                        再试一次
+                                    </Button>
+                                ];
                             }
                             return []
                         }
                     }}
+                    onFinish={async (values) => {
+                        const resetRes = await resetPasswordAPI({
+                            mobile: values.mobile,
+                            code: values.captcha,
+                            password: values.newPassword,
+                        });
+                        if (resetRes.success && resetRes.data) {
+                            // message.success('重置密码成功！');
+                            setResetResult(true);
+                            setResetLoading(false);
+                            setRememberMe(false)
+                            removeAccountPassword();
+                            removeAccessToken();
+                            removeRefreshToken();
+                            navigate(ROUTE_PATH.LOGIN);
+                            return true;
+                        } else {
+                            setResetLoading(false);
+                            return false;
+                        }
+                    }}
                 >
                     <StepsForm.StepForm<{
-                        name: string;
+                        mobile: string
+                        captcha: string
                     }>
-                        name="base"
+                        name="identity"
                         title="身份验证"
-                        onFinish={async () => {
-                            console.log(stepsFormRef.current?.getFieldsValue());
-                            return true;
+                        onFinish={async (values) => {
+                            const verifyRes = await verifyMobileCodeAPI({
+                                mobile: values.mobile,
+                                code: values.captcha,
+                                scene: 23
+                            })
+                            if (verifyRes.success && verifyRes.data) {
+                                message.success('验证成功！');
+                                return true;
+                            }
+                            return false;
                         }}
                     >
                         <ProFormText
@@ -122,28 +179,19 @@ export default () => {
                             }}
                             name="mobile"
                             placeholder={'手机号'}
-                        // validateTrigger={['onSubmit', 'onFinish', 'onBlur']}
-                        // rules={[
-                        //     {
-                        //         required: true,
-                        //         validator: (_rule, value) => {
-                        //             if (!value) {
-                        //                 return Promise.reject('请输入手机号！')
-                        //             }
-                        //             return Promise.resolve()
-                        //         },
-                        //         validateTrigger: ['onSubmit', 'onFinish'],
-                        //     },
-                        //     {
-                        //         validator: (_rule, value) => {
-                        //             if (value && value.length && value === '15020202020') {
-                        //                 return Promise.reject('该手机号不存在！')
-                        //             }
-                        //             return Promise.resolve()
-                        //         },
-                        //         validateTrigger: ['onSubmit', 'onFinish', 'onBlur'],
-                        //     }
-                        // ]}
+                            validateTrigger={['onSubmit', 'onFinish', 'onBlur']}
+                            rules={[
+                                {
+                                    required: true,
+                                    validator: (_rule, value) => {
+                                        if (!value || !value.trim()) {
+                                            return Promise.reject('请输入手机号！')
+                                        }
+                                        return Promise.resolve()
+                                    },
+                                    validateTrigger: ['onSubmit', 'onFinish'],
+                                }
+                            ]}
                         />
                         <ProFormCaptcha
                             fieldProps={{
@@ -167,33 +215,44 @@ export default () => {
                                 }
                                 return '获取验证码';
                             }}
+                            phoneName="mobile"
                             name="captcha"
-                            // validateTrigger={['onSubmit', 'onFinish', 'onBlur']}
-                            // rules={[
-                            //     {
-                            //         required: true,
-                            //         validator: (_rule, value) => {
-                            //             if (!value) {
-                            //                 return Promise.reject('请输入验证码！')
-                            //             }
-                            //             return Promise.resolve()
-                            //         },
-                            //         validateTrigger: ['onSubmit', 'onFinish', 'onBlur'],
-                            //     },
-                            // ]}
-                            onGetCaptcha={async () => {
-                                message.success('获取验证码成功！验证码为：1234');
+                            validateTrigger={['onSubmit', 'onFinish', 'onBlur']}
+                            rules={[
+                                {
+                                    required: true,
+                                    validator: (_rule, value) => {
+                                        if (!value || !value.trim()) {
+                                            return Promise.reject('请输入验证码！')
+                                        }
+                                        return Promise.resolve()
+                                    },
+                                    validateTrigger: ['onSubmit', 'onFinish', 'onBlur'],
+                                },
+                            ]}
+                            onGetCaptcha={async (mobile) => {
+                                const captchaRes = await sendMobileCodeAPI({
+                                    mobile,
+                                    scene: 23
+                                })
+                                if (captchaRes.success && captchaRes.data) {
+                                    message.success('获取验证码成功！');
+                                }
+                                // message.success('获取验证码成功！验证码为：1234');
                             }}
                         />
                     </StepsForm.StepForm>
                     <StepsForm.StepForm<{
-                        checkbox: string;
+                        newPassword: string;
                     }>
-                        name="checkbox"
+                        name="reset"
                         title="重置密码"
-                        onFinish={async () => {
-                            console.log(stepsFormRef.current?.getFieldsValue());
-                            return true;
+                        onFinish={async (values) => {
+                            // const mobile = stepsFormRef.current?.getFieldValue('mobile');
+                            // const code = stepsFormRef.current?.getFieldValue('captcha');
+                            // console.log('values', stepsFormRef.current?.getFieldsFormatValue?.(true));
+                            stepsFormRef.current?.submit();
+                            return true
                         }}
                     >
                         <ProFormText.Password
@@ -208,13 +267,20 @@ export default () => {
                                 {
                                     required: true,
                                     validator: (_rule, value) => {
-                                        if (!value) {
+                                        if (!value || !value.trim()) {
                                             return Promise.reject('请输入新密码！')
+                                        } else {
+                                            if (value.length < 4) {
+                                                return Promise.reject('密码长度不能小于4个字符！')
+                                            }
+                                            if (value.length > 16) {
+                                                return Promise.reject('密码长度不能大于16个字符！')
+                                            }
                                         }
                                         return Promise.resolve()
                                     },
                                     validateTrigger: ['onSubmit', 'onFinish', 'onBlur'],
-                                },
+                                }
                             ]}
                         />
 
@@ -230,8 +296,18 @@ export default () => {
                                 {
                                     required: true,
                                     validator: (_rule, value) => {
-                                        if (!value) {
+                                        if (!value || !value.trim()) {
                                             return Promise.reject('请输入确认密码！')
+                                        } else {
+                                            if (value !== stepsFormRef.current?.getFieldValue('newPassword')) {
+                                                return Promise.reject('两次输入密码不一致！')
+                                            }
+                                            if (value.length < 4) {
+                                                return Promise.reject('密码长度不能小于4个字符！')
+                                            }
+                                            if (value.length > 16) {
+                                                return Promise.reject('密码长度不能大于16个字符！')
+                                            }
                                         }
                                         return Promise.resolve()
                                     },
@@ -241,17 +317,38 @@ export default () => {
                         />
                     </StepsForm.StepForm>
                     <StepsForm.StepForm
-                        name="success"
-                        title="操作成功"
+                        title="重置结果"
                     >
-                        <Result
-                            status="success"
-                            title="重置密码成功"
-                            subTitle="请使用新密码登录"
-                        />
+                        {
+                            resetLoading ? (
+                                <div
+                                    style={{
+                                        height: '100%',
+                                        width: '100%',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    <Spin />
+                                </div>
+                            ) : resetResult ? (
+                                <Result
+                                    status="success"
+                                    title="重置成功"
+                                    subTitle="重置密码成功"
+                                />
+                            ) : (
+                                <Result
+                                    status="error"
+                                    title="重置失败"
+                                    subTitle="重置密码失败"
+                                />
+                            )
+                        }
                     </StepsForm.StepForm>
                 </StepsForm>
             </Card>
-        </div>
+        </div >
     );
 };

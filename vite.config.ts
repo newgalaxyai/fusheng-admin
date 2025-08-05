@@ -14,7 +14,7 @@ export default defineConfig(({ mode }): UserConfig => {
       open: false,
       proxy: {
         '/fusheng': {
-          target: 'http://192.168.110.35:10017',
+          target: 'http://192.168.110.20:10017',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/fusheng/, '')
         },

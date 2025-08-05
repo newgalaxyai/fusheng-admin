@@ -1,8 +1,26 @@
-import { refreshTokenURL, loginURL, loginInfoURL, loginPermissionInfoURL } from "@/api/url/login"
+import {
+    refreshTokenURL,
+    loginURL,
+    loginInfoURL,
+    loginPermissionInfoURL,
+    sendMobileCodeURL,
+    verifyMobileCodeURL,
+    resetPasswordURL,
+    phoneLoginURL
+} from "@/api/url/login"
 import { VITE_BASE_URL } from "@/service/config"
 import axios, { AxiosResponse } from "axios"
 import { IResponse, IResponseData } from "../type"
-import { ILoginResponse, ILoginRequest, ILoginInfo, ILoginPermissionInfo } from "../type/login"
+import {
+    ILoginResponse,
+    ILoginRequest,
+    ILoginInfo,
+    ILoginPermissionInfo,
+    ISendMobileCodeRequest,
+    IVerifyMobileCodeRequest,
+    IResetPasswordRequest,
+    IPhoneLoginRequest
+} from "../type/login"
 import { seniorRequest, adminRequest } from "@/service"
 import { SENIOR_TOKEN, SENIOR_TENANT_ID } from "@/service/config"
 
@@ -74,6 +92,46 @@ export const getLoginInfoAPI = async (): Promise<IResponse<ILoginInfo>> => {
 export const getLoginPermissionInfoAPI = async (): Promise<IResponse<ILoginPermissionInfo>> => {
     const response = await adminRequest.get<IResponse<ILoginPermissionInfo>>({
         url: loginPermissionInfoURL,
+    })
+
+    return response
+}
+
+// 发送手机验证码
+export const sendMobileCodeAPI = async (data: ISendMobileCodeRequest): Promise<IResponse<boolean>> => {
+    const response = await seniorRequest.post<IResponse<boolean>>({
+        url: sendMobileCodeURL,
+        data
+    })
+
+    return response
+}
+
+// 校验手机验证码
+export const verifyMobileCodeAPI = async (data: IVerifyMobileCodeRequest): Promise<IResponse<boolean>> => {
+    const response = await seniorRequest.post<IResponse<boolean>>({
+        url: verifyMobileCodeURL,
+        data
+    })
+
+    return response
+}
+
+// 重置密码
+export const resetPasswordAPI = async (data: IResetPasswordRequest): Promise<IResponse<boolean>> => {
+    const response = await seniorRequest.post<IResponse<boolean>>({
+        url: resetPasswordURL,
+        data
+    })
+
+    return response
+}
+
+// 手机号登录
+export const phoneLoginAPI = async (data: IPhoneLoginRequest): Promise<IResponse<ILoginResponse>> => {
+    const response = await seniorRequest.post<IResponse<ILoginResponse>>({
+        url: phoneLoginURL,
+        data
     })
 
     return response

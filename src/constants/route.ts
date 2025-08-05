@@ -28,6 +28,7 @@ export const ROUTE_PATH_COMMON = ['/login', '/reset', '/404']
 
 // 路由路径的常量
 export const ROUTE_PATH = {
+    DEFAULT: '/', // 默认路由
     HOME: '/home', // 首页
     LOGIN: '/login', // 登录
     RESET: '/reset', // 重置密码
@@ -63,13 +64,12 @@ export const ROUTE_PATH = {
 
 // 路由key的常量
 export const ROUTE_KEY = {
+    DEFAULT: 'default', // 默认路由
     AUTH: 'auth', // 认证
     HOME: 'home', // 首页
     LOGIN: 'login', // 登录
     RESET: 'reset', // 重置密码
-    NOT_FOUND: 'not_found', // notfound
-    DEFAULT: 'default', // 默认
-    NOT_404: '404', // 404
+    NOT_FOUND: 'notFound', // 404
     STAFF_MANAGE: 'staffManage', // 员工管理
     STAFF_LIST: 'staffList', // 员工列表
     ADD_STAFF: 'addStaff', // 新增员工

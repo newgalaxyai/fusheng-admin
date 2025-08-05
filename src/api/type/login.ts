@@ -24,3 +24,26 @@ export type ILoginInfo = IStaffList & {
 export type ILoginPermissionInfo = {
     roles: string[]
 }
+
+export type ISendMobileCodeRequest = {
+    mobile: string // 手机号
+    scene: number // 场景
+    captchaVerification?: string // 验证码
+}
+
+export type IVerifyMobileCodeRequest = {
+    mobile: string // 手机号
+    scene: number // 场景 23:重置密码 21:登录
+    code: string // 验证码
+}
+
+export type IResetPasswordRequest = {
+    mobile: string // 手机号
+    code: string // 验证码
+    password: string // 新密码
+}
+
+export type IPhoneLoginRequest = {
+    mobile: string // 手机号
+    code: string // 验证码
+}

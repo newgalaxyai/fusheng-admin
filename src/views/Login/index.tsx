@@ -21,11 +21,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { getRememberMe, setRememberMe, setAccessToken, setRefreshToken, setAccountPassword, getAccountPassword } from '@/utils/storge';
 import { getLocationParamsByName } from '@/utils/location';
 import { ROUTE_PARAM_NAME, ROUTE_PATH } from '@/constants';
-import { loginAPI } from '@/api/login';
+import { loginAPI, phoneLoginAPI, sendMobileCodeAPI } from '@/api/login';
 import { decodeRedirectInfo } from '@/utils/auth';
 import { useAppDispatch, useAppSelector } from '@/hooks/useAppStore';
-import { getLoginInfoAsync, getLoginPermissionInfoAsync } from '@/redux/asyncs/login';
-import { LoginBg, LoginLogo } from '@/assets/img';
+// import { getLoginInfoAsync, getLoginPermissionInfoAsync } from '@/redux/asyncs/login';
+import { LoginBg } from '@/assets/img';
 
 type LoginType = 'phone' | 'account';
 
@@ -71,10 +71,13 @@ const Page = () => {
       style={{
         minHeight: '100%',
         height: 'max-content',
-        alignItems: 'center',
+        // alignItems: 'center',
+        paddingTop: '50px',
+        boxSizing: 'border-box',
       }}
       // 表单提交
       onFinish={async (values) => {
+        let loginRes
         // console.log('valus', values);
         if (loginType === 'account') {
           const queryParams = {
@@ -85,30 +88,23 @@ const Page = () => {
             setAccountPassword(queryParams);
           }
           // 调用登录接口
-          const accountRes = await loginAPI(queryParams);
-          // console.log('accountRes', accountRes);
-          if (accountRes.success) {
-            setAccessToken(accountRes.data.accessToken)
-            setRefreshToken(accountRes.data.refreshToken)
-            dispatch(getLoginInfoAsync())
-            dispatch(getLoginPermissionInfoAsync())
-            message.success('登录成功');
-          } else {
-            return;
-          }
+          loginRes = await loginAPI(queryParams);
         } else {
-          const phoneRes = await loginAPI(
+          loginRes = await phoneLoginAPI(
             {
-              username: values.mobile,
-              password: values.captcha,
+              mobile: values.mobile,
+              code: values.captcha,
             }
           )
-          if (phoneRes.success) {
-            console.log('登录成功', phoneRes.data);
-            message.success('登录成功');
-          } else {
-            return;
-          }
+        }
+        if (loginRes.success) {
+          setAccessToken(loginRes.data.accessToken)
+          setRefreshToken(loginRes.data.refreshToken)
+          // dispatch(getLoginInfoAsync())
+          // dispatch(getLoginPermissionInfoAsync())
+          message.success('登录成功');
+        } else {
+          return;
         }
         const encodedRedirectInfo = getLocationParamsByName(location, ROUTE_PARAM_NAME.REDIRECT_INFO)
         if (encodedRedirectInfo) {
@@ -140,7 +136,7 @@ const Page = () => {
       title="New Galaxy AI"
       containerStyle={{
         // backgroundColor: 'rgba(0, 0, 0,0.65)',
-        // backdropFilter: 'blur(4px)',
+        backdropFilter: 'blur(4px)',
       }}
       subTitle="后台管理系统"
     // 左侧广告配置
@@ -270,8 +266,8 @@ const Page = () => {
             rules={[
               {
                 validator: (_rule, value) => {
-                  if (!value) {
-                    console.log('用户名不能为空!')
+                  if (!value || !value.trim()) {
+                    // console.log('用户名不能为空!')
                     return Promise.reject('用户名不能为空!')
                   }
                   return Promise.resolve()
@@ -297,7 +293,7 @@ const Page = () => {
             rules={[
               {
                 validator: (_rule, value) => {
-                  if (!value) {
+                  if (!value || !value.trim()) {
                     return Promise.reject('密码不能为空!')
                   }
                   return Promise.resolve()
@@ -358,14 +354,21 @@ const Page = () => {
               return '获取验证码';
             }}
             name="captcha"
+            phoneName='mobile'
             rules={[
               {
                 required: true,
                 message: '请输入验证码！',
               },
             ]}
-            onGetCaptcha={async () => {
-              message.success('获取验证码成功！验证码为：1234');
+            onGetCaptcha={async (mobile) => {
+              const captchaRes = await sendMobileCodeAPI({
+                mobile,
+                scene: 21
+              })
+              if (captchaRes.success && captchaRes.data) {
+                message.success('获取验证码成功！');
+              }
             }}
           />
         </>
@@ -375,17 +378,21 @@ const Page = () => {
           marginBlockEnd: 24,
         }}
       >
-        <ProFormCheckbox
-          noStyle
-          name="rememberMe"
-          fieldProps={{
-            onChange: (e) => {
-              setRememberMe(e.target.checked)
-            }
-          }}
-        >
-          记住我
-        </ProFormCheckbox>
+        {
+          loginType === 'account' && (
+            <ProFormCheckbox
+              noStyle
+              name="rememberMe"
+              fieldProps={{
+                onChange: (e) => {
+                  setRememberMe(e.target.checked)
+                }
+              }}
+            >
+              记住我
+            </ProFormCheckbox>
+          )
+        }
         <Button
           type="link"
           style={{

@@ -10,19 +10,6 @@ const routes: IRoute[] = [
     parentKey: '',
     order: -1,
     type: -1,
-    path: '*',
-    hideInMenu: true,
-    element: (
-      <AuthRouteComponent requiresAuth={false} redirect={ROUTE_PATH.NOT_FOUND}>
-        <Navigate to={ROUTE_PATH.NOT_FOUND} replace />
-      </AuthRouteComponent>
-    )
-  },
-  {
-    key: ROUTE_KEY.NOT_404,
-    parentKey: '',
-    order: -1,
-    type: -1,
     path: ROUTE_PATH.NOT_FOUND,
     hideInMenu: true,
     element: Lazy(() => import( /* @vite-ignore */ '../views/' + ROUTE_ELEMENT_PATH.NOT_FOUND))
