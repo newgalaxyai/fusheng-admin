@@ -108,3 +108,9 @@ export type ILoginListResponse = {
     list: ILoginList[],
     total: number
 }
+
+// 修改用户状态
+export type IConsumerChangeStatusRequest = {
+    id: number // 用户ID
+    status: number // 用户状态 0:启用 1:禁用
+}

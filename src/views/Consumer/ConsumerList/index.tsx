@@ -4,12 +4,12 @@ import { Button, Space, App } from 'antd'
 import { ProTable, ProColumns } from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
 import { useLayout } from '@/hooks/useLayout';
-import { CONSUMER_SOURCE, CONSUMER_STATUS, ROUTE_KEY, ROUTE_PARAM_NAME, ROUTE_PERMISSION, SEX } from '@/constants'
+import { CONSUMER_SOURCE, ROUTE_KEY, ROUTE_PARAM_NAME, ROUTE_PERMISSION, SEX, STATUS, STATUS_NAME } from '@/constants'
 import { useAppSelector } from '@/hooks/useAppStore'
 import PermissionWrapper from '@/components/permission/PermissionWrapper'
 import { encodeRedirectInfo } from '@/utils/auth'
 import { IConsumerList, IConsumerListRequest } from '@/api/type'
-import { getConsumerListAPI } from '@/api/consumer'
+import { consumerChangeStatusAPI, getConsumerListAPI } from '@/api/consumer'
 import { useFieldProps } from '@/hooks/useFieldProps'
 
 interface IProps {
@@ -17,15 +17,6 @@ interface IProps {
 }
 
 const ConsumerList: FC<IProps> = (_props) => {
-  const {
-    staff: {
-      staffList
-    },
-    user: {
-      userRole,
-      permissions
-    }
-  } = useAppSelector((state) => state)
   const { message, modal } = App.useApp();
   const { navigateTo, getRouteRole } = useLayout();
   const {
@@ -81,7 +72,7 @@ const ConsumerList: FC<IProps> = (_props) => {
       width: 80,
       align: 'center',
       valueType: 'select',
-      valueEnum: CONSUMER_STATUS,
+      valueEnum: STATUS,
     },
     {
       dataIndex: 'sex',
@@ -155,115 +146,137 @@ const ConsumerList: FC<IProps> = (_props) => {
       key: 'option',
       fixed: 'right',
       width: 150,
-      render: (text, record, _, action) => [
-        <PermissionWrapper
-          requiredRole={getRouteRole(ROUTE_KEY.CONSUMER_DETAIL, 3)}
-          requiredPermissions={[ROUTE_PERMISSION.CONSUMER_DETAIL]}
-        >
-          <Button
-            key="view"
-            color="primary"
-            variant="text"
-            size='small'
-            onClick={() => {
-              // console.log('record: ', record);
-              navigateTo(ROUTE_KEY.CONSUMER_DETAIL,
-                {
-                  [ROUTE_PARAM_NAME.CONSUMER_ID]: record.id,
-                  [ROUTE_PARAM_NAME.PAGE_TYPE]: '2'
+      render: (text, record, _, action) => {
+        const optList = [
+          <PermissionWrapper
+            requiredRole={getRouteRole(ROUTE_KEY.CONSUMER_DETAIL, 3)}
+            requiredPermissions={[ROUTE_PERMISSION.CONSUMER_DETAIL]}
+          >
+            <Button
+              key="view"
+              color="primary"
+              variant="text"
+              size='small'
+              onClick={() => {
+                // console.log('record: ', record);
+                navigateTo(ROUTE_KEY.CONSUMER_DETAIL,
+                  {
+                    [ROUTE_PARAM_NAME.CONSUMER_ID]: record.id,
+                    [ROUTE_PARAM_NAME.PAGE_TYPE]: '2'
+                  });
+              }}
+            >
+              查看
+            </Button>
+          </PermissionWrapper>,
+          <PermissionWrapper
+            requiredRole={getRouteRole(ROUTE_KEY.EDIT_CONSUMER, 3)}
+            requiredPermissions={[ROUTE_PERMISSION.EDIT_CONSUMER]}
+          >
+            <Button
+              key="edit"
+              color="primary"
+              variant="text"
+              size='small'
+              onClick={() => {
+                // console.log('record: ', record);
+                const encodedRedirectInfo = encodeRedirectInfo({
+                  pathname: ROUTE_KEY.CONSUMER_LIST,
+                  search: '',
+                  hash: '',
+                  state: null,
+                  key: ''
+                })
+                navigateTo(ROUTE_KEY.EDIT_CONSUMER,
+                  {
+                    [ROUTE_PARAM_NAME.CONSUMER_ID]: record.id,
+                    [ROUTE_PARAM_NAME.PAGE_TYPE]: '1',
+                    [ROUTE_PARAM_NAME.REDIRECT_INFO]: encodedRedirectInfo,
+                  });
+              }}
+            >
+              编辑
+            </Button>
+          </PermissionWrapper>,
+          <PermissionWrapper
+            requiredRole={getRouteRole(ROUTE_KEY.DELETE_CONSUMER, 3)}
+            requiredPermissions={[ROUTE_PERMISSION.DELETE_CONSUMER]}
+          >
+            <Button
+              key="status"
+              color={!STATUS[record.status].boolean ? 'primary' : 'danger'}
+              variant="text"
+              size='small'
+              onClick={() => {
+                modal.confirm({
+                  title: !STATUS[record.status].boolean ? '启用用户' : '禁用用户',
+                  content: !STATUS[record.status].boolean ? '确定启用该用户吗？' : '确定禁用该用户吗？',
+                  okText: '确定',
+                  cancelText: '取消',
+                  onOk() {
+                    return new Promise((resolve, reject) => {
+                      consumerChangeStatusAPI({
+                        id: record.id,
+                        status: STATUS[record.status].boolean ? STATUS_NAME.DISABLE : STATUS_NAME.ENABLE
+                      }).then(res => {
+                        if (res.success) {
+                          message.success(!STATUS[record.status].boolean ? '启用成功' : '禁用成功');
+                          // 删除后刷新列表
+                          action?.reload();
+                          resolve(res);
+                        } else {
+                          reject(res.errMsg);
+                        }
+                      })
+                    })
+                  },
                 });
-            }}
+              }}
+            >
+              {!STATUS[record.status].boolean ? '启用' : '禁用'}
+            </Button>
+          </PermissionWrapper>,
+          <PermissionWrapper
+            requiredRole={getRouteRole(ROUTE_KEY.DELETE_CONSUMER, 3)}
+            requiredPermissions={[ROUTE_PERMISSION.DELETE_CONSUMER]}
           >
-            查看
-          </Button>
-        </PermissionWrapper>,
-        <PermissionWrapper
-          requiredRole={getRouteRole(ROUTE_KEY.EDIT_CONSUMER, 3)}
-          requiredPermissions={[ROUTE_PERMISSION.EDIT_CONSUMER]}
-        >
-          <Button
-            key="edit"
-            color="primary"
-            variant="text"
-            size='small'
-            onClick={() => {
-              // console.log('record: ', record);
-              const encodedRedirectInfo = encodeRedirectInfo({
-                pathname: ROUTE_KEY.CONSUMER_LIST,
-                search: '',
-                hash: '',
-                state: null,
-                key: ''
-              })
-              navigateTo(ROUTE_KEY.EDIT_CONSUMER,
-                {
-                  [ROUTE_PARAM_NAME.CONSUMER_ID]: record.id,
-                  [ROUTE_PARAM_NAME.PAGE_TYPE]: '1',
-                  [ROUTE_PARAM_NAME.REDIRECT_INFO]: encodedRedirectInfo,
+            <Button
+              key="delete"
+              color="danger"
+              variant="text"
+              size='small'
+              onClick={() => {
+                modal.confirm({
+                  title: '删除用户',
+                  content: '确定删除该用户吗？',
+                  okText: '确定',
+                  cancelText: '取消',
+                  onOk() {
+                    return new Promise((resolve, reject) => {
+                      // const res = await deleteStaffAPI({
+                      //   id: record.id,
+                      // })
+                      // if (res.success) {
+                      //   message.success('删除成功');
+                      // }
+                      // 删除后刷新列表
+                      action?.reload();
+                      resolve(true);
+                    })
+                  },
                 });
-            }}
-          >
-            编辑
-          </Button>
-        </PermissionWrapper>,
-        <PermissionWrapper
-          requiredRole={getRouteRole(ROUTE_KEY.DELETE_CONSUMER, 3)}
-          requiredPermissions={[ROUTE_PERMISSION.DELETE_CONSUMER]}
-        >
-          <Button
-            key="status"
-            color={!CONSUMER_STATUS[record.status].boolean ? 'primary' : 'danger'}
-            variant="text"
-            size='small'
-            onClick={() => {
-              modal.confirm({
-                title: !CONSUMER_STATUS[record.status].boolean ? '启用用户' : '禁用用户',
-                content: !CONSUMER_STATUS[record.status].boolean ? '确定启用该用户吗？' : '确定禁用该用户吗？',
-                okText: '确定',
-                cancelText: '取消',
-                onOk: () => {
-                  message.success(!CONSUMER_STATUS[record.status].boolean ? '启用成功' : '禁用成功');
-                  // 删除后刷新列表
-                  action?.reload();
-                },
-              });
-            }}
-          >
-            {!CONSUMER_STATUS[record.status].boolean ? '启用' : '禁用'}
-          </Button>
-        </PermissionWrapper>,
-        <PermissionWrapper
-          requiredRole={getRouteRole(ROUTE_KEY.DELETE_CONSUMER, 3)}
-          requiredPermissions={[ROUTE_PERMISSION.DELETE_CONSUMER]}
-        >
-          <Button
-            key="delete"
-            color="danger"
-            variant="text"
-            size='small'
-            onClick={() => {
-              modal.confirm({
-                title: '删除用户',
-                content: '确定删除该用户吗？',
-                okText: '确定',
-                cancelText: '取消',
-                onOk: async () => {
-                  // const res = await deleteStaffAPI({
-                  //   id: record.id,
-                  // })
-                  // if (res.success) {
-                  //   message.success('删除成功');
-                  // }
-                  // 删除后刷新列表
-                  action?.reload();
-                },
-              });
-            }}
-          >
-            删除
-          </Button>
-        </PermissionWrapper>
-      ],
+              }}
+            >
+              删除
+            </Button>
+          </PermissionWrapper>
+        ]
+        return (
+          <Space size="small">
+            {optList}
+          </Space>
+        )
+      },
     },
   ]
 
@@ -315,10 +328,13 @@ const ConsumerList: FC<IProps> = (_props) => {
                       content: '确定删除所选用户吗？',
                       okText: '确定',
                       cancelText: '取消',
-                      onOk: () => {
-                        message.success('删除成功');
-                        // 删除后刷新列表
-                        actionRef.current?.reload();
+                      onOk() {
+                        return new Promise((resolve, reject) => {
+                          message.success('删除成功');
+                          // 删除后刷新列表
+                          actionRef.current?.reload();
+                          resolve(true);
+                        })
                       },
                     });
                   }}

@@ -4,7 +4,7 @@ import { Button, Space, Drawer } from 'antd'
 import { ProTable, ProColumns } from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
 import { useFieldProps } from '@/hooks/useFieldProps'
-import { IQARecordList, IMessageList } from '@/api/type'
+import { IQARecordList, IMessage } from '@/api/type'
 import Messages from '@/components/messages'
 
 interface IProps {
@@ -23,7 +23,7 @@ const QARecord: FC<IProps> = (_props) => {
     // 当前选择的会话
     const [currentSession, setCurrentSession] = useState<IQARecordList>()
     // 当前查看的会话详情
-    const [messageList, setMessageList] = useState<IMessageList[]>([
+    const [messageList, setMessageList] = useState<IMessage[]>([
         {
             id: 1,
             role: 'user',

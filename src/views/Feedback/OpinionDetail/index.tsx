@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import type { FC, ReactNode } from 'react'
-import { Steps, Skeleton, Empty } from 'antd'
-import { FEED_STATUS, FEED_STATUS_NAME, ROUTE_PARAM_NAME } from '@/constants'
+import { Steps, Tag } from 'antd'
+import { FEED_CATEGORY, FEED_STATUS, FEED_STATUS_NAME, ROUTE_PARAM_NAME } from '@/constants'
 import { getLocationParamsByName } from '@/utils/location'
 import { useLocation } from 'react-router-dom'
 import {
@@ -27,29 +27,6 @@ const OpinionDetail: FC<IProps> = (_props) => {
     } = useFieldProps()
     const location = useLocation();
     const opinionId = getLocationParamsByName(location, ROUTE_PARAM_NAME.OPINION_ID);
-
-    // 骨架屏loading
-    const [loading, setLoading] = useState(true)
-    // 反馈详情
-    const [opinionDetail, setOpinionDetail] = useState<IOpinionList | null>(null)
-    // 获取反馈详情
-    const getOpinionDetail = async (opinionId: number) => {
-        const res = await getOpinionDetailAPI({
-            id: Number(opinionId)
-        })
-        if (res.success) {
-            setOpinionDetail(res.data)
-            // setTimeout(() => {
-            //     setLoading(false)
-            // }, 1000)
-            setLoading(false)
-        }
-    }
-    useEffect(() => {
-        if (opinionId) {
-            getOpinionDetail(Number(opinionId))
-        }
-    }, [])
 
     // 描述列表column
     const descColumn: ProDescriptionsItemProps<IOpinionList>[] = [
@@ -120,46 +97,123 @@ const OpinionDetail: FC<IProps> = (_props) => {
         },
     ]
 
+    // 反馈详情描述列表column
+    const feedDetailDescColumn: ProDescriptionsItemProps<IOpinionList>[] = [
+        {
+            title: '用户ID',
+            key: 'userId',
+            dataIndex: 'userId',
+        },
+        {
+            title: '用户昵称',
+            key: 'userNickname',
+            dataIndex: 'userNickname',
+        },
+        {
+            title: '用户手机号',
+            key: 'userMobile',
+            dataIndex: 'userMobile',
+            copyable: true,
+        },
+        {
+            title: '反馈类型',
+            key: 'categoryEnum',
+            dataIndex: 'categoryEnum',
+            valueType: 'select',
+            valueEnum: FEED_CATEGORY,
+        },
+        {
+            title: '处理状态',
+            key: 'statusEnum',
+            dataIndex: 'statusEnum',
+            valueType: 'select',
+            valueEnum: FEED_STATUS,
+        },
+        {
+            title: '反馈优先级',
+            key: 'priority',
+            dataIndex: 'priority',
+        },
+        {
+            title: '标签',
+            key: 'tags',
+            dataIndex: 'tags',
+            span: 3,
+            render: (_, record) => {
+                const tags = record.tags?.split(',');
+                return tags?.map((tag) => {
+                    return <Tag style={{ margin: 5 }} key={tag} color='#87d068'>{tag}</Tag>
+                })
+            }
+        },
+        {
+            title: '反馈进度',
+            key: 'feedDetail',
+            dataIndex: 'feedDetail',
+            span: 3,
+            render: (_, record) => {
+                return (
+                    <Steps
+                        progressDot
+                        current={FEED_STATUS[record.statusEnum].step}
+                        direction="vertical"
+                        items={[
+                            {
+                                title: '用户反馈',
+                                description: (
+                                    <ProDescriptions
+                                        title={null}
+                                        column={2}
+                                        dataSource={record}
+                                        emptyText={'-'}
+                                        columns={descColumn}
+                                    />
+                                ),
+                            },
+                            {
+                                title: '客服处理',
+                                description: (
+                                    <ProDescriptions
+                                        title={null}
+                                        column={2}
+                                        dataSource={FEED_STATUS[record.statusEnum]?.step === FEED_STATUS[FEED_STATUS_NAME.PROCESSED].step ? record : {} as IOpinionList}
+                                        emptyText={'-'}
+                                        columns={replyDescColumn}
+                                    />
+                                ),
+                            },
+                        ]}
+                    />
+                )
+            }
+        },
+    ]
+
     return (
         <>
-            {loading ? (
-                <Skeleton active loading={true}>
-                </Skeleton>
-            ) : opinionDetail ? (
-                <Steps
-                    progressDot
-                    current={FEED_STATUS[opinionDetail.statusEnum].step}
-                    direction="vertical"
-                    items={[
-                        {
-                            title: '用户反馈',
-                            description: (
-                                <ProDescriptions
-                                    title={null}
-                                    column={2}
-                                    dataSource={opinionDetail}
-                                    emptyText={'-'}
-                                    columns={descColumn}
-                                />
-                            ),
-                        },
-                        {
-                            title: '客服处理',
-                            description: (
-                                <ProDescriptions
-                                    title={null}
-                                    column={2}
-                                    dataSource={FEED_STATUS[opinionDetail.statusEnum]?.step === FEED_STATUS[FEED_STATUS_NAME.PROCESSED].step ? opinionDetail : {} as IOpinionList}
-                                    emptyText={'-'}
-                                    columns={replyDescColumn}
-                                />
-                            ),
-                        },
-                    ]}
-                />
-            ) : (
-                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-            )}
+            <ProDescriptions
+                title={null}
+                column={3}
+                emptyText={'-'}
+                columns={feedDetailDescColumn}
+                request={async () => {
+                    if (opinionId) {
+                        const res = await getOpinionDetailAPI({
+                            id: Number(opinionId)
+                        })
+                        if (res.success) {
+                            return Promise.resolve({
+                                success: true,
+                                data: res.data,
+                            });
+                        }
+                    }
+                    return Promise.reject({
+                        success: false,
+                        data: null,
+                    });
+                }}
+            />
         </>
     )
 }

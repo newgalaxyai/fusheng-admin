@@ -12,3 +12,5 @@ export const staffDeleteURL = '/system/user/delete'
 export const staffGiveRoleURL = '/system/permission/assign-user-role'
 // 获取员工的角色
 export const staffGetRolesURL = '/system/permission/list-user-roles'
+// 修改员工状态
+export const staffChangeStatusURL = '/system/user/update-status'

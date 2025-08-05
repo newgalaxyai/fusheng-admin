@@ -1,17 +1,20 @@
 import { baseRequest, adminRequest } from '@/service'
 import { IRequest, IResponse } from '../type'
 import {
+  IConsumerChangeStatusRequest,
   IConsumerDetailRequest,
   IConsumerList,
   IConsumerListRequest,
   IConsumerListResponse,
   ILoginListRequest,
-  ILoginListResponse
+  ILoginListResponse,
 } from '../type/consumer'
 import {
   consumerListURL,
   consumerDetailURL,
-  consumerLoginLogURL
+  consumerLoginLogURL,
+  consumerEditURL,
+  consumerChangeStatusURL
 } from '../url/consumer'
 
 /**
@@ -37,6 +40,26 @@ export const getConsumerDetailAPI = async (params: IRequest<IConsumerDetailReque
   const response = await adminRequest.get<IResponse<IConsumerList>>({
     url: consumerDetailURL,
     params
+  })
+
+  return response
+}
+
+// 编辑用户
+export const consumerEditAPI = async (params: IRequest<IConsumerList>): Promise<IResponse<boolean>> => {
+  const response = await adminRequest.put<IResponse<boolean>>({
+    url: consumerEditURL,
+    data: params
+  })
+
+  return response
+}
+
+// 修改用户状态
+export const consumerChangeStatusAPI = async (params: IRequest<IConsumerChangeStatusRequest>): Promise<IResponse<boolean>> => {
+  const response = await adminRequest.put<IResponse<boolean>>({
+    url: consumerChangeStatusURL,
+    data: params
   })
 
   return response

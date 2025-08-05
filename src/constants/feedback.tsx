@@ -61,7 +61,7 @@ export const FEED_CATEGORY: Record<string, IRecord> = {
             bordered={false}
             color='warning'
         >
-            功能
+            功能建议
         </Tag>,
     },
     [FEED_CATEGORY_NAME.COMPLAINT]: {

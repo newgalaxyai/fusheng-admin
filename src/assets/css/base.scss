@@ -74,12 +74,12 @@ body,
     background-color: #001529;
   }
 
-  .logo-img::before{
+  .logo-img::before {
     background-image: url('../img/login/login_logo@2x.png');
     opacity: 1;
   }
 
-  .logo-img::after{
+  .logo-img::after {
     background-image: url('../img/logo/Galaxy_logo.png');
     opacity: 0;
   }
@@ -145,4 +145,8 @@ body,
 // 标签设置0边距
 .ant-tag {
   margin-right: 0;
+}
+
+.operation>div {
+  justify-content: center;
 }

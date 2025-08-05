@@ -64,3 +64,9 @@ export type IStaffRoleRequest = {
 export type IStaffAddOrEditRequest = Omit<IStaffList, 'hireDate'> & {
     hireDate: number | undefined // 入职时间
 }
+
+// 修改员工状态
+export type IStaffChangeStatusRequest = {
+    id: number // 员工ID
+    status: number // 员工状态 0:启用 1:禁用
+}

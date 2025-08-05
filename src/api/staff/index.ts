@@ -7,6 +7,7 @@ import type {
   IStaffAssignRoleRequest,
   IStaffRoleRequest,
   IStaffAddOrEditRequest,
+  IStaffChangeStatusRequest,
 } from '@/api/type'
 import { IRequest, IResponse } from '../type'
 import {
@@ -17,6 +18,7 @@ import {
   staffDeleteURL,
   staffGiveRoleURL,
   staffGetRolesURL,
+  staffChangeStatusURL,
 } from '../url/staff'
 
 /**
@@ -66,8 +68,8 @@ export const addStaffAPI = async (params: IRequest<IStaffAddOrEditRequest>): Pro
  * @param params 员工信息
  * @returns 结果
  */
-export const editStaffAPI = async (params: IRequest<IStaffAddOrEditRequest>): Promise<IResponse<any>> => {
-  const response = await adminRequest.put<IResponse<any>>({
+export const editStaffAPI = async (params: IRequest<IStaffAddOrEditRequest>): Promise<IResponse<boolean>> => {
+  const response = await adminRequest.put<IResponse<boolean>>({
     url: staffEditURL,
     data: params
   })
@@ -104,6 +106,16 @@ export const getStaffRolesAPI = async (params: IRequest<IStaffRoleRequest>): Pro
   const response = await adminRequest.get<IResponse<number[]>>({
     url: staffGetRolesURL,
     params
+  })
+
+  return response
+}
+
+// 修改员工状态
+export const staffChangeStatusAPI = async (params: IRequest<IStaffChangeStatusRequest>): Promise<IResponse<boolean>> => {
+  const response = await adminRequest.put<IResponse<boolean>>({
+    url: staffChangeStatusURL,
+    data: params
   })
 
   return response

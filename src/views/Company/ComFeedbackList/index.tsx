@@ -228,32 +228,39 @@ const ComFeedbackList: FC<IProps> = (_props) => {
             key: 'option',
             fixed: 'right',
             width: 150,
-            render: (text, record, _, action) => [
-                <Button
-                    key="view"
-                    color="primary"
-                    variant="text"
-                    size='small'
-                    onClick={() => {
-                        setCompanyID(record.id);
-                        setIsContactsModalOpen(true);
-                    }}
-                >
-                    联系人
-                </Button>,
-                <Button
-                    key="view"
-                    color="primary"
-                    variant="text"
-                    size='small'
-                    onClick={() => {
-                        // message.info('暂未开放')
-                        setIsFeedbackModalOpen(true);
-                    }}
-                >
-                    反馈结果
-                </Button>
-            ]
+            render: (text, record, _, action) => {
+                const optList = [
+                    <Button
+                        key="view"
+                        color="primary"
+                        variant="text"
+                        size='small'
+                        onClick={() => {
+                            setCompanyID(record.id);
+                            setIsContactsModalOpen(true);
+                        }}
+                    >
+                        联系人
+                    </Button>,
+                    <Button
+                        key="view"
+                        color="primary"
+                        variant="text"
+                        size='small'
+                        onClick={() => {
+                            // message.info('暂未开放')
+                            setIsFeedbackModalOpen(true);
+                        }}
+                    >
+                        反馈结果
+                    </Button>
+                ]
+                return (
+                    <Space size="small">
+                        {optList}
+                    </Space>
+                )
+            }
         },
     ]
 

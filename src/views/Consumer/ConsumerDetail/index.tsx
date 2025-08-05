@@ -10,7 +10,8 @@ import {
   ProFormSelect,
   ProFormInstance,
   ProDescriptions,
-  ProDescriptionsItemProps
+  ProDescriptionsItemProps,
+  ProFormRadio
 } from '@ant-design/pro-components'
 import {
   Row,
@@ -42,7 +43,7 @@ import { useLayout } from '@/hooks/useLayout';
 import { decodeRedirectInfo, encodeRedirectInfo } from '@/utils/auth'
 import { IConsumerList, IConsumerOffList } from '@/api/type'
 import dayjs from 'dayjs'
-import { getConsumerDetailAPI } from '@/api/consumer'
+import { consumerEditAPI, getConsumerDetailAPI } from '@/api/consumer'
 import { useFieldProps } from '@/hooks/useFieldProps'
 
 interface IProps {
@@ -277,11 +278,15 @@ const ConsumerDetail: FC<IProps> = (_props) => {
               onFinish={async (values) => {
                 let res = null;
                 if (consumerId) {
+                  res = await consumerEditAPI({
+                    ...values,
+                    id: Number(consumerId),
+                  })
                 } else {
-                }
-                res = {
-                  success: true,
-                  errMsg: ''
+                  res = {
+                    success: true,
+                    errMsg: ''
+                  }
                 }
                 if (res.success) {
                   message.success('提交成功');
@@ -353,28 +358,38 @@ const ConsumerDetail: FC<IProps> = (_props) => {
                   {
                     required: true,
                     validator: (_rule, value) => {
-                      if (!value) {
+                      if (!value || !value.trim()) {
                         return Promise.reject('手机号不能为空！')
                       }
                       return Promise.resolve()
                     },
                     validateTrigger: ['onSubmit', 'onFinish'],
                   },
-                  // {
-                  //   validator: (_rule, value) => {
-                  //     if (value && value.length === 15020202020) {
-                  //       return Promise.reject('该手机号已存在！')
-                  //     }
-                  //     return Promise.resolve()
-                  //   },
-                  //   validateTrigger: ['onSubmit', 'onFinish', 'onBlur'],
-                  // }
                 ]}
               />
-              <ProFormSelect
+              <ProFormRadio.Group
+                label="状态"
+                name="status"
+                options={Object.keys(CONSUMER_STATUS).map((key) => ({
+                  label: CONSUMER_STATUS[Number(key)].text,
+                  value: Number(key),
+                }))}
+                rules={[
+                  {
+                    required: true,
+                    validator: (_rule, value) => {
+                      if (value !== 0 && !value) {
+                        return Promise.reject('请选择状态！')
+                      }
+                      return Promise.resolve()
+                    },
+                    validateTrigger: ['onSubmit', 'onFinish'],
+                  }
+                ]}
+              />
+              <ProFormRadio.Group
                 label="性别"
                 name="sex"
-                // colProps={{ xl: 8, md: 12 }}
                 options={Object.keys(SEX).map((key) => ({
                   label: SEX[Number(key)].text,
                   value: Number(key),

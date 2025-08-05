@@ -21,7 +21,7 @@ import {
 } from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
 import { useLayout } from '@/hooks/useLayout';
-import { ROUTE_KEY, ROUTE_PARAM_NAME, ROUTE_PERMISSION, STAFF_ROLE, STAFF_ROLE_NAME } from '@/constants'
+import { ROUTE_KEY, ROUTE_PARAM_NAME, ROUTE_PERMISSION, STAFF_ROLE, STAFF_ROLE_NAME, STATUS, STATUS_NAME } from '@/constants'
 import { IStaffList, IStaffListRequest, IStaffListResponse } from '@/api/type'
 import { useAppSelector } from '@/hooks/useAppStore'
 import PermissionWrapper from '@/components/permission/PermissionWrapper'
@@ -30,13 +30,16 @@ import {
   deleteStaffAPI,
   editStaffAPI,
   assignStaffRoleAPI,
-  getStaffRolesAPI
+  getStaffRolesAPI,
+  staffChangeStatusAPI
 } from '@/api/staff'
 import { encodeRedirectInfo } from '@/utils/auth'
 import { useFieldProps } from '@/hooks/useFieldProps'
 import {
   getIDStaffRole,
 } from '@/utils/staff'
+import dayjs from 'dayjs'
+import { staffChangeStatusURL } from '@/api/url/staff'
 
 interface IProps {
   children?: ReactNode
@@ -55,11 +58,6 @@ const StaffList: FC<IProps> = (_props) => {
 
   const actionRef = useRef<ActionType>();
   const formRef = useRef<FormInstance>();
-
-  // 获取员工状态的boolean值
-  const staffStatus = (status: number) => {
-    return status === 0;
-  };
 
   // 员工列表列数据
   const columns: ProColumns<IStaffList>[] = [
@@ -113,16 +111,7 @@ const StaffList: FC<IProps> = (_props) => {
       title: '员工状态',
       width: 80,
       valueType: 'select',
-      valueEnum: {
-        0: {
-          text: '启用',
-          status: 'Success',
-        },
-        1: {
-          text: '禁用',
-          status: 'Error',
-        },
-      },
+      valueEnum: STATUS,
       align: 'center',
     },
     {
@@ -173,6 +162,7 @@ const StaffList: FC<IProps> = (_props) => {
       valueType: 'option',
       key: 'option',
       fixed: 'right',
+      className: 'operation',
       width: 150,
       render: (text, record, _, action) => {
         // 编辑员工下拉菜单
@@ -216,7 +206,7 @@ const StaffList: FC<IProps> = (_props) => {
             ),
           },
         ];
-        return [
+        const optList = [
           <PermissionWrapper
             requiredRole={getRouteRole(ROUTE_KEY.STAFF_DETAIL, 3)}
             requiredPermissions={[ROUTE_PERMISSION.STAFF_DETAIL]}
@@ -259,31 +249,36 @@ const StaffList: FC<IProps> = (_props) => {
           >
             <Button
               key="status"
-              color={!staffStatus(record.status) ? 'primary' : 'danger'}
+              color={!STATUS[record.status].boolean ? 'primary' : 'danger'}
               variant="text"
               size='small'
               onClick={() => {
                 modal.confirm({
-                  title: !staffStatus(record.status) ? '启用员工' : '禁用员工',
-                  content: !staffStatus(record.status) ? '确定启用该员工吗？' : '确定禁用该员工吗？',
+                  title: !STATUS[record.status].boolean ? '启用员工' : '禁用员工',
+                  content: !STATUS[record.status].boolean ? '确定启用该员工吗？' : '确定禁用该员工吗？',
                   okText: '确定',
                   cancelText: '取消',
-                  onOk: () => {
-                    editStaffAPI({
-                      ...record,
-                      status: staffStatus(record.status) ? 1 : 0
-                    }).then((res) => {
-                      if (res.success) {
-                        message.success(!staffStatus(record.status) ? '启用成功' : '禁用成功');
-                        // 删除后刷新列表
-                        action?.reload();
-                      }
+                  onOk() {
+                    return new Promise((resolve, reject) => {
+                      staffChangeStatusAPI({
+                        id: record.id,
+                        status: STATUS[record.status].boolean ? STATUS_NAME.DISABLE : STATUS_NAME.ENABLE
+                      }).then((res) => {
+                        if (res.success) {
+                          message.success(!STATUS[record.status].boolean ? '启用成功' : '禁用成功');
+                          // 删除后刷新列表
+                          action?.reload();
+                          resolve(res);
+                        } else {
+                          reject(res.errMsg);
+                        }
+                      })
                     })
                   },
                 });
               }}
             >
-              {!staffStatus(record.status) ? '启用' : '禁用'}
+              {!STATUS[record.status].boolean ? '启用' : '禁用'}
             </Button>
           </PermissionWrapper>,
           <PermissionWrapper
@@ -301,15 +296,21 @@ const StaffList: FC<IProps> = (_props) => {
                   content: '确定删除该员工吗？',
                   okText: '确定',
                   cancelText: '取消',
-                  onOk: async () => {
-                    const res = await deleteStaffAPI({
-                      id: record.id,
+                  onOk() {
+                    return new Promise((resolve, reject) => {
+                      deleteStaffAPI({
+                        id: record.id,
+                      }).then(res => {
+                        if (res.success) {
+                          message.success('删除成功');
+                          // 删除后刷新列表
+                          action?.reload();
+                          resolve(res);
+                        } else {
+                          reject(res.errMsg);
+                        }
+                      })
                     })
-                    if (res.success) {
-                      message.success('删除成功');
-                    }
-                    // 删除后刷新列表
-                    action?.reload();
                   },
                 });
               }}
@@ -318,6 +319,12 @@ const StaffList: FC<IProps> = (_props) => {
             </Button>
           </PermissionWrapper>
         ]
+
+        return (
+          <Space size="small">
+            {optList}
+          </Space>
+        )
       },
     },
   ]
@@ -411,10 +418,11 @@ const StaffList: FC<IProps> = (_props) => {
                       content: '确定删除所选员工吗？',
                       okText: '确定',
                       cancelText: '取消',
-                      onOk: () => {
-                        message.success('删除成功');
-                        // 删除后刷新列表
-                        actionRef.current?.reload();
+                      onOk() {
+                        return new Promise((resolve, reject) => {
+                          message.success('删除成功');
+                          resolve(true);
+                        })
                       },
                     });
                   }}

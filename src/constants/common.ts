@@ -134,3 +134,21 @@ export const MESSAGE_ROLE: Record<string, IRecord> = {
         color: '#108ee9',
     },
 }
+
+// 状态
+export const STATUS_NAME = {
+    ENABLE: 0,
+    DISABLE: 1,
+}
+export const STATUS: Record<number, IRecord> = {
+    [STATUS_NAME.ENABLE]: {
+        text: '启用',
+        status: 'Success',
+        boolean: true,
+    },
+    [STATUS_NAME.DISABLE]: {
+        text: '禁用',
+        status: 'Error',
+        boolean: false,
+    },
+}

@@ -223,35 +223,42 @@ const CompanyList: FC<IProps> = (_props) => {
             key: 'option',
             fixed: 'right',
             width: 150,
-            render: (text, record, _, action) => [
-                <Button
-                    key="view"
-                    color="primary"
-                    variant="text"
-                    size='small'
-                    onClick={() => {
-                        // console.log('record: ', record);
-                        navigateTo(ROUTE_KEY.COMPANY_DETAIL,
-                            {
-                                [ROUTE_PARAM_NAME.COMPANY_ID]: record.id,
-                            });
-                    }}
-                >
-                    查看详情
-                </Button>,
-                <Button
-                    key="view"
-                    color="primary"
-                    variant="text"
-                    size='small'
-                    onClick={() => {
-                        setCompanyID(record.id);
-                        setIsContactsModalOpen(true);
-                    }}
-                >
-                    联系人
-                </Button>
-            ]
+            render: (text, record, _, action) => {
+                const optList = [
+                    <Button
+                        key="view"
+                        color="primary"
+                        variant="text"
+                        size='small'
+                        onClick={() => {
+                            // console.log('record: ', record);
+                            navigateTo(ROUTE_KEY.COMPANY_DETAIL,
+                                {
+                                    [ROUTE_PARAM_NAME.COMPANY_ID]: record.id,
+                                });
+                        }}
+                    >
+                        查看详情
+                    </Button>,
+                    <Button
+                        key="view"
+                        color="primary"
+                        variant="text"
+                        size='small'
+                        onClick={() => {
+                            setCompanyID(record.id);
+                            setIsContactsModalOpen(true);
+                        }}
+                    >
+                        联系人
+                    </Button>
+                ]
+                return (
+                    <Space size="small">
+                        {optList}
+                    </Space>
+                )
+            }
         },
     ]
 

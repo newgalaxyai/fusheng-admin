@@ -20,10 +20,10 @@ const PermissionWrapper: React.FC<PermissionWrapperProps> = ({
 
     // 检查角色权限
     const rolePermitted = requiredRole ? hasRole(requiredRole) : false;
-    
+
     // 检查操作权限
     // const permissionPermitted = requiredPermissions ? hasPermission(requiredPermissions) : false;
-    
+
     // 最终权限检查结果
     // const hasAccess = rolePermitted || permissionPermitted;
     const hasAccess = rolePermitted //暂时先只检查角色权限
@@ -37,9 +37,9 @@ const PermissionWrapper: React.FC<PermissionWrapperProps> = ({
                 className: `${(children as React.ReactElement).props.className || ''} opacity-50 cursor-not-allowed`
             });
         }
-        
+
         // 否则返回fallback内容或null
-        return <>{fallback}</>;
+        return <>{fallback}</>
     }
 
     return <>{children}</>;
