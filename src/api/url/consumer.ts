@@ -1,7 +1,7 @@
 // 用户列表
-export const consumerListURL = '/system/social-user/page'
+export const consumerListURL = '/member/user/page'
 // 用户详情
-export const consumerDetailURL = '/system/social-user/get'
+export const consumerDetailURL = '/member/user/get'
 // 用户新增
 export const consumerAddURL = '/system/user/create'
 // 用户编辑

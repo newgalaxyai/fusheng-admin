@@ -1,4 +1,4 @@
-import { LOCAL_STORAGE_NAME } from "./constants"
+import { LOCAL_STORAGE_NAME } from "@/constants"
 import { encrypt, decrypt, IAccountLogin } from './aes_gcm'
 
 // 获取accessToken

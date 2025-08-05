@@ -4,7 +4,7 @@ import { Button, Space, App } from 'antd'
 import { ProTable, ProColumns } from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
 import { useLayout } from '@/hooks/useLayout';
-import { ROUTE_KEY, ROUTE_PARAM_NAME, ROUTE_PERMISSION } from '@/constants'
+import { CONSUMER_SOURCE, CONSUMER_STATUS, ROUTE_KEY, ROUTE_PARAM_NAME, ROUTE_PERMISSION, SEX } from '@/constants'
 import { useAppSelector } from '@/hooks/useAppStore'
 import PermissionWrapper from '@/components/permission/PermissionWrapper'
 import { encodeRedirectInfo } from '@/utils/auth'
@@ -50,41 +50,17 @@ const ConsumerList: FC<IProps> = (_props) => {
       align: 'center',
     },
     {
-      dataIndex: 'openid',
-      title: '用户编号',
-      width: 180,
-      ellipsis: true,
-      // fixed: 'left',
-      align: 'center',
-      // render: (_, record) => (
-      //   <PermissionWrapper
-      //     requiredRole={getRouteRole(ROUTE_KEY.CONSUMER_DETAIL, 3)}
-      //     requiredPermissions={[ROUTE_PERMISSION.CONSUMER_DETAIL]}
-      //     fallback={record.openid}
-      //   >
-      //     <Button
-      //       type="link"
-      //       variant="link"
-      //       color="primary"
-      //       onClick={() => {
-      //         // console.log('record: ', record);
-      //         navigateTo(ROUTE_KEY.CONSUMER_DETAIL,
-      //           {
-      //             [ROUTE_PARAM_NAME.CONSUMER_ID]: record.id,
-      //             [ROUTE_PARAM_NAME.PAGE_TYPE]: '2'
-      //           });
-      //       }}
-      //     >
-      //       {record.openid}
-      //     </Button>
-      //   </PermissionWrapper>
-      // ),
-    },
-    {
       dataIndex: 'id',
       title: '用户ID',
       align: 'center',
       width: 80,
+    },
+    {
+      dataIndex: 'openid',
+      title: '用户编号',
+      width: 180,
+      ellipsis: true,
+      align: 'center',
     },
     {
       dataIndex: 'nickname',
@@ -100,38 +76,19 @@ const ConsumerList: FC<IProps> = (_props) => {
       align: 'center',
     },
     {
-      dataIndex: 'consumerStatus',
+      dataIndex: 'status',
       title: '状态',
       width: 80,
       align: 'center',
       valueType: 'select',
-      valueEnum: {
-        true: {
-          text: '启用',
-          status: 'Success',
-        },
-        false: {
-          text: '禁用',
-          status: 'Error',
-        },
-      },
+      valueEnum: CONSUMER_STATUS,
     },
     {
       dataIndex: 'sex',
       title: '性别',
       width: 80,
       valueType: 'select',
-      valueEnum: {
-        0: {
-          text: '保密',
-        },
-        1: {
-          text: '男',
-        },
-        2: {
-          text: '女',
-        },
-      },
+      valueEnum: SEX,
       align: 'center',
       search: false
     },
@@ -155,11 +112,7 @@ const ConsumerList: FC<IProps> = (_props) => {
       width: 120,
       align: 'center',
       valueType: 'select',
-      valueEnum: {
-        1: {
-          text: '小程序',
-        },
-      },
+      valueEnum: CONSUMER_SOURCE,
       search: false,
     },
     {
@@ -259,24 +212,24 @@ const ConsumerList: FC<IProps> = (_props) => {
         >
           <Button
             key="status"
-            color={!record.consumerStatus ? 'primary' : 'danger'}
+            color={!CONSUMER_STATUS[record.status].boolean ? 'primary' : 'danger'}
             variant="text"
             size='small'
             onClick={() => {
               modal.confirm({
-                title: !record.consumerStatus ? '启用用户' : '禁用用户',
-                content: !record.consumerStatus ? '确定启用该用户吗？' : '确定禁用该用户吗？',
+                title: !CONSUMER_STATUS[record.status].boolean ? '启用用户' : '禁用用户',
+                content: !CONSUMER_STATUS[record.status].boolean ? '确定启用该用户吗？' : '确定禁用该用户吗？',
                 okText: '确定',
                 cancelText: '取消',
                 onOk: () => {
-                  message.success(!record.consumerStatus ? '启用成功' : '禁用成功');
+                  message.success(!CONSUMER_STATUS[record.status].boolean ? '启用成功' : '禁用成功');
                   // 删除后刷新列表
                   action?.reload();
                 },
               });
             }}
           >
-            {!record.consumerStatus ? '启用' : '禁用'}
+            {!CONSUMER_STATUS[record.status].boolean ? '启用' : '禁用'}
           </Button>
         </PermissionWrapper>,
         <PermissionWrapper

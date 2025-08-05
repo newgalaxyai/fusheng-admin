@@ -15,7 +15,7 @@ export type IConsumerList = {
     id: number // 用户ID
     openid: string // 用户编号
     nickname: string // 用户昵称
-    consumerStatus: boolean // 用户状态 true:启用 false:禁用
+    status: number // 用户状态 0:启用 1:禁用
     mobile: string // 用户手机号
     compareCompany: string // 关联企业
     consumerPositionName: string // 用户职位名称
@@ -23,7 +23,7 @@ export type IConsumerList = {
     // registerTime: number // 注册时间戳
     waterMark: number // 水印编号
     loginIp: string // 最后登录IP
-    loginCity: string // 最后登录城市
+    loginArea: string // 最后登录城市
     createTime: number // 创建时间戳
     updateTime: number // 更新时间戳
     avatar?: string // 用户头像
@@ -85,19 +85,22 @@ export type ILoginListRequest = {
     pageSize: number // 每页条数
     userType: number // 用户类型 1：员工 2：用户
     userId?: string // 用户编号
-    mobile?: string // 用户手机号
-    username?: string // 用户昵称
+    username?: string // 用户手机号
+    nickname?: string // 用户昵称
+    area?: string // 登录地区
     createTime?: string[] // 登录时间
+    'createTime[0]'?: any // 创建时间
+    'createTime[1]'?: any // 创建时间
 }
 
 export type ILoginList = {
     id: number // 登录日志id
     userId: string // 用户编号
-    username: string // 用户昵称
-    mobile: string // 用户手机号
+    nickname: string // 用户昵称
+    username: string // 用户手机号
     userIp: string // 登录ip
     createTime: number // 登录时间戳
-    loginArea: string // 登录地区
+    area: string // 登录地区
     loginType: 1 | 2 // 登录方式 1：小程序登录2：普通登录
 }
 

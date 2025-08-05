@@ -2,7 +2,7 @@ import { VITE_BASE_URL, TIME_OUT, SENIOR_TOKEN, SENIOR_TENANT_ID } from './confi
 import ZZRequest from './request'
 import { message, Modal } from 'antd'
 import { IResponseData } from '@/api/type'
-import { encodeRedirectInfo, refreshToken } from '@/utils/auth'
+import { encodeRedirectInfo, refreshToken, customParamsSerializer } from '@/utils/auth'
 import { getAccessToken, removeAccessToken, removeRefreshToken } from '@/utils/storge'
 import { appURL, adminURL } from '@/api/url'
 import { ROUTE_PATH, ROUTE_PARAM_NAME } from '@/constants'
@@ -98,7 +98,16 @@ const handleTokenRefresh = async (originalRequest: any, requestInstance: ZZReque
   })
 }
 
-const createRequest = (baseURL: string, headerAuth?: string) => {
+// 定义更明确的类型
+interface ICreateRequestArgs {
+  paramsSerializer?: boolean; // 是否需要参数序列化
+  // 其他配置选项
+}
+
+const createRequest = (baseURL: string, headerAuth?: string, ...args: ICreateRequestArgs[]) => {
+  // 合并所有配置选项
+  const mergedArgs = Object.assign({}, ...args)
+
   const requestInstance = new ZZRequest({
     baseURL,
     timeout: TIME_OUT,
@@ -112,6 +121,10 @@ const createRequest = (baseURL: string, headerAuth?: string) => {
         const token = getAccessToken()
         if (token || headerAuth) {
           config.headers['Authorization'] = `Bearer ${token || headerAuth}`
+        }
+        // 需要参数序列化
+        if (mergedArgs.paramsSerializer) {
+          return customParamsSerializer(config)
         }
         return config
       },
@@ -162,12 +175,17 @@ const createRequest = (baseURL: string, headerAuth?: string) => {
         }
       },
       responseFailureFn(error) {
+        console.log('响应失败', error);
         let errMsg
         switch (error.status) {
           case 500:
             // 处理系统异常情况
             message.error('系统异常');
             errMsg = '系统异常'
+            break
+          case 400:
+            message.error('接口响应失败')
+            errMsg = '接口响应失败'
             break
           default:
             // 处理其他错误情况
@@ -176,7 +194,6 @@ const createRequest = (baseURL: string, headerAuth?: string) => {
             break
         }
         // 继续抛出错误，以便在业务代码中可以继续捕获
-        console.log('响应失败', error);
         return Promise.reject({
           success: false,
           data: null,
@@ -190,7 +207,11 @@ const createRequest = (baseURL: string, headerAuth?: string) => {
 }
 
 const baseRequest = createRequest(VITE_BASE_URL + appURL)
-const adminRequest = createRequest(VITE_BASE_URL + adminURL)
-const seniorRequest = createRequest(VITE_BASE_URL + adminURL, SENIOR_TOKEN)
+const adminRequest = createRequest(VITE_BASE_URL + adminURL, undefined, {
+  paramsSerializer: true
+})
+const seniorRequest = createRequest(VITE_BASE_URL + adminURL, SENIOR_TOKEN, {
+  paramsSerializer: true
+})
 
 export { baseRequest, adminRequest, seniorRequest }

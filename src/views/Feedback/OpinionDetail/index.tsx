@@ -128,7 +128,7 @@ const OpinionDetail: FC<IProps> = (_props) => {
             ) : opinionDetail ? (
                 <Steps
                     progressDot
-                    current={FEED_STATUS[opinionDetail.status].step}
+                    current={FEED_STATUS[opinionDetail.statusEnum].step}
                     direction="vertical"
                     items={[
                         {
@@ -149,7 +149,7 @@ const OpinionDetail: FC<IProps> = (_props) => {
                                 <ProDescriptions
                                     title={null}
                                     column={2}
-                                    dataSource={FEED_STATUS[opinionDetail.status].step === FEED_STATUS[FEED_STATUS_NAME.PROCESSED].step ? opinionDetail : {} as IOpinionList}
+                                    dataSource={FEED_STATUS[opinionDetail.statusEnum]?.step === FEED_STATUS[FEED_STATUS_NAME.PROCESSED].step ? opinionDetail : {} as IOpinionList}
                                     emptyText={'-'}
                                     columns={replyDescColumn}
                                 />

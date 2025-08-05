@@ -43,9 +43,9 @@ export const FEED_CATEGORY: Record<string, IRecord> = {
     [FEED_CATEGORY_NAME.GENERAL]: {
         text: <Tag
             bordered={false}
-            color='processing'
+            color='success'
         >
-            通用
+            一般建议
         </Tag>,
     },
     [FEED_CATEGORY_NAME.BUG]: {
@@ -70,7 +70,7 @@ export const FEED_CATEGORY: Record<string, IRecord> = {
             color='error'
         >
             投诉
-        </Tag>,
+        </Tag>, 
     },
     [FEED_CATEGORY_NAME.OTHER]: {
         text: <Tag

@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { IUserState } from '../types/user'
-import { set } from 'lodash-es'
 
 // 用户状态
 const initialState: IUserState = {

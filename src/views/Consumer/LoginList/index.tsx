@@ -1,10 +1,11 @@
 import React, { useRef, memo } from 'react'
 import type { FC, ReactNode } from 'react'
-import { Space } from 'antd'
+import { Space, Cascader } from 'antd'
 import { ProTable, ProColumns } from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
 import { LOGIN_TYPE } from '@/constants'
 import {
+    IAreaTree,
     ILoginList,
     ILoginListRequest,
 } from '@/api/type'
@@ -17,10 +18,13 @@ interface IProps {
 
 const LoginList: FC<IProps> = (_props) => {
     const {
-        cascaderOptions,
-        cascaderLoadData,
+        areaFieldNames,
+        areaTreeOptions,
+        selectPlaceholder,
         dateRangePlaceholder,
-        dateTimeFormat
+        dateTimeFormat,
+        startTimeFormat,
+        endTimeFormat,
     } = useFieldProps()
 
     // 是否正在加载
@@ -41,20 +45,21 @@ const LoginList: FC<IProps> = (_props) => {
         },
         {
             dataIndex: 'userId',
-            title: '用户编号',
+            title: '用户ID',
             width: 80,
             //   fixed: 'left',
             ellipsis: true,
             align: 'center',
+            search: false,
         },
         {
-            dataIndex: 'username',
+            dataIndex: 'nickname',
             title: '用户昵称',
             width: 120,
             align: 'center',
         },
         {
-            dataIndex: 'mobile',
+            dataIndex: 'username',
             title: '手机号',
             width: 120,
             copyable: true,
@@ -87,15 +92,23 @@ const LoginList: FC<IProps> = (_props) => {
             hidden: true,
         },
         {
-            dataIndex: 'loginArea',
+            dataIndex: 'area',
             title: '地区',
-            width: 180,
+            width: 100,
             align: 'center',
             valueType: 'cascader',
-            fieldProps: {
-                options: cascaderOptions,
-                loadData: cascaderLoadData,
-            },
+            fieldProps: (form) => {
+                return {
+                    placeholder: selectPlaceholder,
+                    options: areaTreeOptions,
+                    fieldNames: {
+                        ...areaFieldNames,
+                        value: 'name',
+                    },
+                    // showCheckedStrategy: Cascader.SHOW_CHILD,
+                    changeOnSelect: true,
+                }
+            }
         },
         {
             dataIndex: 'loginType',
@@ -159,10 +172,17 @@ const LoginList: FC<IProps> = (_props) => {
                         userType: 1,
                         pageNo: params.current!,
                         pageSize: params.pageSize!,
+                        area: params.area?.join(' '),
+                    }
+                    if (params.createTime) {
+                        queryParams.createTime = [params.createTime?.[0] + ' ' + startTimeFormat, params.createTime?.[1] + ' ' + endTimeFormat]
                     }
                     const res = await getConsumerLoginLogAPI(queryParams)
                     return {
-                        data: res.data.list,
+                        data: res.data.list.map((item) => ({
+                            ...item,
+                            loginType: 1,
+                        })),
                         total: res.data.total,
                         success: res.success,
                     }
@@ -212,7 +232,7 @@ const LoginList: FC<IProps> = (_props) => {
                     pageSizeOptions: [10, 20, 30, 40, 50],
                 }}
                 dateFormatter="string"
-                headerTitle="收藏列表"
+                headerTitle="登录日志"
             // toolBarRender={() => [
             //   <PermissionWrapper
             //     requiredRole={getRouteRole(ROUTE_KEY.ADD_CONSUMER, 3)}

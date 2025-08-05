@@ -3,21 +3,23 @@ export type IOpinionListRequest = {
     pageSize: number // 每页条数
     opinionNo?: string // 意见编号
     mobile?: string // 用户手机号
-    createStartTime?: number // 创建时间
-    createEndTime?: number // 创建时间
+    createTime?: string[] // 创建时间
 }
 
 export type IOpinionList = {
     id: number // 意见ID
     userId: number // 用户ID
-    contactMsg: string // 用户联系信息
+    userNickname: string // 用户昵称
+    userMobile: string // 用户手机号
     content: string // 反馈内容
     status: string // 状态
+    statusEnum: string // 状态枚举
     statusDesc: string // 状态描述
     replyContent?: string // 回复内容
     replyTime?: number // 回复时间
     replyUserId?: number // 回复人id
     category: string // 分类
+    categoryEnum: string // 分类枚举
     categoryDesc: string // 分类描述
     priority: number // 优先级
     tags?: string // 标签

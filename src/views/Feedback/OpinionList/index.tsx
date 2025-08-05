@@ -26,7 +26,9 @@ interface IProps {
 const OpinionList: FC<IProps> = (_props) => {
     const {
         dateRangePlaceholder,
-        dateTimeFormat
+        dateTimeFormat,
+        startTimeFormat,
+        endTimeFormat,
     } = useFieldProps()
 
     const { navigateTo } = useLayout();
@@ -51,13 +53,19 @@ const OpinionList: FC<IProps> = (_props) => {
             align: 'center',
         },
         {
-            dataIndex: 'contactMsg',
+            dataIndex: 'userNickname',
+            title: '用户昵称',
+            width: 120,
+            align: 'center',
+        },
+        {
+            dataIndex: 'userMobile',
             title: '用户手机号',
             width: 120,
             align: 'center',
         },
         {
-            dataIndex: 'category',
+            dataIndex: 'categoryEnum',
             title: '反馈类型',
             width: 80,
             align: 'center',
@@ -72,7 +80,7 @@ const OpinionList: FC<IProps> = (_props) => {
             ellipsis: true,
         },
         {
-            dataIndex: 'status',
+            dataIndex: 'statusEnum',
             title: '处理状态',
             width: 80,
             align: 'center',
@@ -85,7 +93,7 @@ const OpinionList: FC<IProps> = (_props) => {
             width: 80,
             align: 'center',
             search: false,
-            sorter: true,
+            // sorter: true,
         },
         {
             dataIndex: 'tags',
@@ -194,28 +202,32 @@ const OpinionList: FC<IProps> = (_props) => {
                         pageNo: params.current!,
                         pageSize: params.pageSize!,
                     }
+                    if (params.createTime) {
+                        queryParams.createTime = [params.createTime?.[0] + ' ' + startTimeFormat, params.createTime?.[1] + ' ' + endTimeFormat]
+                    }
                     const res = await getOpinionListAPI(queryParams)
                     return {
-                        data: [
-                            {
-                                id: 1,
-                                userId: 1,
-                                contactMsg: '13800000000',
-                                content: '测试反馈内容',
-                                status: 'PENDING',
-                                statusDesc: '待处理',
-                                replyContent: '测试回复内容',
-                                replyTime: 1785958000000,
-                                replyUserId: 1,
-                                category: 'GENERAL',
-                                categoryDesc: '一般',
-                                priority: 1,
-                                tags: '测试标签,测试标签2,测试标签3',
-                                images: ['https://example.com/image1.jpg', 'https://example.com/image2.jpg'],
-                                createTime: 1785958000000,
-                                updateTime: 1785958000000
-                            }
-                        ],
+                        // data: [
+                        //     {
+                        //         id: 1,
+                        //         userId: 1,
+                        //         contactMsg: '13800000000',
+                        //         content: '测试反馈内容',
+                        //         status: 'PENDING',
+                        //         statusDesc: '待处理',
+                        //         replyContent: '测试回复内容',
+                        //         replyTime: 1785958000000,
+                        //         replyUserId: 1,
+                        //         category: 'GENERAL',
+                        //         categoryDesc: '一般',
+                        //         priority: 1,
+                        //         tags: '测试标签,测试标签2,测试标签3',
+                        //         images: ['https://example.com/image1.jpg', 'https://example.com/image2.jpg'],
+                        //         createTime: 1785958000000,
+                        //         updateTime: 1785958000000
+                        //     }
+                        // ],
+                        data: res.data.list,
                         total: res.data.total,
                         success: res.success,
                     }

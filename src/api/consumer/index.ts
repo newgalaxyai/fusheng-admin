@@ -46,7 +46,7 @@ export const getConsumerDetailAPI = async (params: IRequest<IConsumerDetailReque
 export const getConsumerLoginLogAPI = async (params: IRequest<ILoginListRequest>): Promise<IResponse<ILoginListResponse>> => {
   const response = await adminRequest.get<IResponse<ILoginListResponse>>({
     url: consumerLoginLogURL,
-    params
+    params,
   })
 
   return response

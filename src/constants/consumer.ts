@@ -33,3 +33,21 @@ export const CONSUMER_OPERATION: Record<number, IRecord> = {
         text: '修改',
     },
 }
+
+// 状态
+export const CONSUMER_STATUS_NAME = {
+    ENABLE: 0,
+    DISABLE: 1,
+}
+export const CONSUMER_STATUS: Record<number, IRecord> = {
+    [CONSUMER_STATUS_NAME.ENABLE]: {
+        text: '启用',
+        status: 'Success',
+        boolean: true,
+    },
+    [CONSUMER_STATUS_NAME.DISABLE]: {
+        text: '禁用',
+        status: 'Error',
+        boolean: false,
+    },
+}

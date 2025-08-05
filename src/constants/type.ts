@@ -7,6 +7,7 @@ import {
 export type IRecord = ProSchemaValueEnumType & {
     id?: number
     step?: number
+    boolean?: boolean
 }
 
 // 性别

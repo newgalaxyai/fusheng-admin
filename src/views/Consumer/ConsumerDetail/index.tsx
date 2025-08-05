@@ -13,11 +13,11 @@ import {
   ProDescriptionsItemProps
 } from '@ant-design/pro-components'
 import {
-  Row, 
-  Col, 
-  Space, 
-  Avatar, 
-  App, 
+  Row,
+  Col,
+  Space,
+  Avatar,
+  App,
   Table,
   Empty
 } from 'antd'
@@ -30,7 +30,8 @@ import {
   SEX,
   ROUTE_PARAM_NAME,
   CONSUMER_SOURCE,
-  CONSUMER_OPERATION
+  CONSUMER_OPERATION,
+  CONSUMER_STATUS
 } from '@/constants'
 import {
   MobileOutlined,
@@ -94,16 +95,7 @@ const ConsumerDetail: FC<IProps> = (_props) => {
       key: 'status',
       dataIndex: 'status',
       valueType: 'select',
-      valueEnum: {
-        0: {
-          text: '启用',
-          status: 'Success',
-        },
-        1: {
-          text: '禁用',
-          status: 'Error',
-        },
-      },
+      valueEnum: CONSUMER_STATUS,
     },
     {
       title: '用户手机号',
@@ -118,8 +110,8 @@ const ConsumerDetail: FC<IProps> = (_props) => {
     },
     {
       title: '城市',
-      key: 'loginCity',
-      dataIndex: 'loginCity',
+      key: 'loginArea',
+      dataIndex: 'loginArea',
     },
     {
       title: '关联企业',
@@ -147,6 +139,7 @@ const ConsumerDetail: FC<IProps> = (_props) => {
       title: '注册时间',
       key: 'createTime',
       dataIndex: 'createTime',
+      valueType: 'dateTime',
       fieldProps: {
         format: dateTimeFormat,
       },
@@ -224,24 +217,24 @@ const ConsumerDetail: FC<IProps> = (_props) => {
   ];
 
   const [offList, setOffList] = useState<IConsumerOffList[]>([]);
-  const [offTableLoading, setOffTableLoading] = useState(false);
+  // const [offTableLoading, setOffTableLoading] = useState(false);
 
-  useEffect(() => {
-    if (consumerId && pageType === '2') {
-      // setOffTableLoading(true);
-      // getConsumerOffListAPI({
-      //   id: consumerId,
-      //   pageNo: 1,
-      //   pageSize: 10
-      // }).then((res) => {
-      //   if (res.success) {
-      //     setOffList(res.data);
-      //   }
-      // }).finally(() => {
-      //   setOffTableLoading(false);
-      // });
-    }
-  }, [consumerId]);
+  // useEffect(() => {
+  //   if (consumerId && pageType === '2') {
+  //     // setOffTableLoading(true);
+  //     // getConsumerOffListAPI({
+  //     //   id: consumerId,
+  //     //   pageNo: 1,
+  //     //   pageSize: 10
+  //     // }).then((res) => {
+  //     //   if (res.success) {
+  //     //     setOffList(res.data);
+  //     //   }
+  //     // }).finally(() => {
+  //     //   setOffTableLoading(false);
+  //     // });
+  //   }
+  // }, [consumerId]);
 
   return (
     <>
@@ -311,30 +304,11 @@ const ConsumerDetail: FC<IProps> = (_props) => {
               params={{}}
               request={async () => {
                 if (consumerId) {
-                  const res = {
-                    success: true
-                  }
+                  const res = await getConsumerDetailAPI({
+                    id: Number(consumerId)
+                  })
                   if (res.success) {
-                    return {
-                      id: 1,
-                      openid: 'USER00000001',
-                      nickname: '测试用户',
-                      consumerStatus: true,
-                      mobile: '12345678901',
-                      compareCompany: '上海测试公司',
-                      consumerPositionName: '董事长',
-                      registerSource: 1,
-                      // registerTime: 1672531200000,
-                      waterMark: 1,
-                      loginIp: '192.168.1.1',
-                      loginCity: '上海',
-                      createTime: 1672531200000,
-                      updateTime: 1672531200000,
-                      sex: 1,
-                      remark: '备注',
-                    }
-                  } else {
-                    return {} as IConsumerList
+                    return res.data;
                   }
                 }
                 return {} as IConsumerList;
@@ -429,10 +403,7 @@ const ConsumerDetail: FC<IProps> = (_props) => {
                 if (res.success) {
                   return Promise.resolve({
                     success: true,
-                    data: {
-                      ...res.data,
-                      avatar: 'https://minio-dev.imissniu.com/xfn/assets%2Findex%2Fbg-index.png'
-                    },
+                    data: res.data,
                   });
                 }
                 return Promise.reject({
