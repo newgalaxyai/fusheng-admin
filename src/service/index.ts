@@ -76,12 +76,13 @@ const handleTokenRefresh = async (originalRequest: any, requestInstance: ZZReque
           onOk: () => {
             // 获取当前位置信息并编码
             const currentLocation = {
-              pathname: window.location.pathname,
+              pathname: window.location.pathname + window.location.hash.replace('#/', ''),
               search: window.location.search,
               hash: window.location.hash,
               state: null,
               key: 'default'
             }
+            // console.log('currentLocation', currentLocation);
             const encodedRedirectInfo = encodeRedirectInfo(currentLocation)
 
             // 跳转到登录页面

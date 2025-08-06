@@ -31,7 +31,12 @@ export const encodeRedirectInfo = (location: Location) => {
 }
 // 获取重定向信息
 export const decodeRedirectInfo = (encodedRedirectInfo: string) => {
-    return JSON.parse(decodeURIComponent(encodedRedirectInfo)) as Location
+    try {
+        return JSON.parse(decodeURIComponent(encodedRedirectInfo)) as Location
+    } catch (error) {
+        console.log('解析重定向信息失败:', error)
+        return null
+    }
 }
 
 // 自定义参数序列化

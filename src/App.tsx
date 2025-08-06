@@ -44,6 +44,8 @@ function App() {
   // 根据路由地址获取路由信息
   useEffect(() => {
     const pathname = location.pathname;
+    // console.log('pathname', pathname);
+    
     if (!ROUTE_PATH_COMMON.includes(pathname) && authRoutes.length > 1) {
       const keyList = pathname.split('/');
       const params = location.search;

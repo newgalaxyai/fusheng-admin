@@ -109,10 +109,14 @@ const Page = () => {
         const encodedRedirectInfo = getLocationParamsByName(location, ROUTE_PARAM_NAME.REDIRECT_INFO)
         if (encodedRedirectInfo) {
           const paramsRedirect = decodeRedirectInfo(encodedRedirectInfo)
-          navigate(paramsRedirect.pathname + (paramsRedirect.search || '') + (paramsRedirect.hash || ''), { replace: true, state: paramsRedirect.state })
-        } else {
-          navigate(ROUTE_PATH.HOME, { replace: true })
+          // console.log('paramsRedirect', paramsRedirect);
+          if (paramsRedirect) {
+            navigate(paramsRedirect.pathname + (paramsRedirect.search || ''), { replace: true, state: paramsRedirect.state })
+            return;
+          }
         }
+        navigate(ROUTE_PATH.HOME, { replace: true })
+
       }}
       // 表单请求入参
       // params={{
