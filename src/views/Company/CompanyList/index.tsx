@@ -5,9 +5,10 @@ import { ProTable, ProColumns } from '@ant-design/pro-components'
 import type { FormInstance, ActionType } from '@ant-design/pro-components'
 import { useLayout } from '@/hooks/useLayout';
 import { BUSINESS_SCOPE, COMPANY_STATUS, INDUSTRY, PERSON_SCALE, ROUTE_KEY, ROUTE_PARAM_NAME } from '@/constants'
-import { ICompanyList } from '@/api/type'
+import { ICompanyList, ICompanyListRequest, IConcatMsg } from '@/api/type'
 import { useFieldProps } from '@/hooks/useFieldProps'
 import ContactsComponent from '@/components/contacts'
+import { getCompanyListPageAPI } from '@/api/company'
 
 interface IProps {
     children?: ReactNode
@@ -17,9 +18,8 @@ const CompanyList: FC<IProps> = (_props) => {
     const { navigateTo } = useLayout();
     const {
         dateRangePlaceholder,
-        cascaderOptions,
-        cascaderLoadData,
-        dateFormat,
+        areaTreeOptions,
+        areaFieldNames,
     } = useFieldProps()
 
     // 是否正在加载
@@ -39,30 +39,75 @@ const CompanyList: FC<IProps> = (_props) => {
             align: 'center',
         },
         {
-            dataIndex: 'companyNo',
-            title: '编号',
-            width: 200,
+            dataIndex: 'id',
+            title: '企业ID',
+            width: 120,
             align: 'center',
         },
         {
-            dataIndex: 'companyName',
+            dataIndex: 'name',
             title: '企业名称',
             width: 200,
             align: 'center',
             ellipsis: true,
         },
         {
-            dataIndex: 'taxNo',
-            title: '税号',
-            width: 200,
-            align: 'center',
-        },
-        {
-            dataIndex: 'companyIntroduction',
-            title: '企业简介',
+            dataIndex: 'websites',
+            title: '官网',
             width: 200,
             align: 'center',
             ellipsis: true,
+            copyable: true,
+            search: false,
+        },
+        {
+            dataIndex: 'regStatus',
+            title: '登记状态',
+            width: 120,
+            align: 'center',
+            ellipsis: true,
+        },
+        {
+            dataIndex: 'creditCode',
+            title: '统一社会信用代码',
+            width: 250,
+            align: 'center',
+        },
+        {
+            dataIndex: 'legalPerson',
+            title: '法定代表人',
+            width: 120,
+            align: 'center',
+            ellipsis: true,
+        },
+        {
+            dataIndex: 'establishTime',
+            title: '成立日期',
+            width: 150,
+            align: 'center',
+            search: false,
+        },
+        {
+            dataIndex: 'establishTime',
+            title: '成立日期',
+            valueType: 'dateRange',
+            fieldProps: {
+                placeholder: dateRangePlaceholder,
+            },
+            hidden: true,
+        },
+        {
+            dataIndex: 'regCapital',
+            title: '注册资本',
+            width: 150,
+            align: 'center',
+            search: false,
+        },
+        {
+            dataIndex: 'paidInCapital',
+            title: '实缴资本',
+            width: 150,
+            align: 'center',
             search: false,
         },
         {
@@ -87,134 +132,100 @@ const CompanyList: FC<IProps> = (_props) => {
             search: false,
         },
         {
+            dataIndex: 'area',
             title: '地区',
             hidden: true,
             valueType: 'cascader',
             fieldProps: {
-                options: cascaderOptions,
-                loadData: cascaderLoadData,
+                options: areaTreeOptions,
+                fieldNames: {
+                    ...areaFieldNames,
+                    value: 'name',
+                },
             },
         },
         {
-            dataIndex: 'address',
-            title: '详细地址',
+            dataIndex: 'regLocation',
+            title: '企业地址',
             width: 200,
             align: 'center',
             ellipsis: true,
             search: false,
         },
         {
-            dataIndex: 'legalPersonName',
-            title: '法人',
+            dataIndex: 'taxpayerId',
+            title: '纳税人识别号',
+            width: 200,
+            align: 'center',
+        },
+        {
+            dataIndex: 'regNumber',
+            title: '注册号',
+            width: 200,
+            align: 'center',
+            search: false,
+        },
+        {
+            dataIndex: 'orgNumber',
+            title: '组织机构代码',
             width: 150,
             align: 'center',
             search: false,
         },
         {
-            dataIndex: 'personScale',
-            title: '人员规模',
-            width: 150,
+            dataIndex: 'orgType',
+            title: '企业(机构)类型',
+            width: 200,
             align: 'center',
-            valueType: 'select',
-            valueEnum: PERSON_SCALE,
-            search: false,
         },
         {
-            dataIndex: 'registerTime',
-            title: '注册时间',
-            valueType: 'date',
-            width: 150,
-            align: 'center',
-            fieldProps: {
-                format: dateFormat,
-            },
-            search: false,
-        },
-        {
-            dataIndex: 'registerTime',
-            title: '注册时间',
-            valueType: 'dateRange',
-            fieldProps: {
-                placeholder: dateRangePlaceholder,
-            },
-            hidden: true,
-        },
-        {
-            dataIndex: 'registeredCapital',
-            title: '注册资本',
-            width: 150,
-            align: 'center',
-            valueType: 'money',
-            search: false,
-        },
-        {
-            dataIndex: 'industry',
-            title: '行业',
-            width: 150,
-            align: 'center',
-            valueType: 'select',
-            valueEnum: INDUSTRY,
-            search: false,
-        },
-        {
-            dataIndex: 'productLabel',
-            title: '产品应用标签',
+            dataIndex: 'categoryNameLv1',
+            title: '国行一级分类',
             width: 150,
             align: 'center',
             search: false,
         },
         {
-            dataIndex: 'website',
-            title: '公司网站',
+            dataIndex: 'categoryNameLv2',
+            title: '国行二级分类',
             width: 150,
             align: 'center',
-            ellipsis: true,
-            render: (_, record) =>
-                <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href={record.website.startsWith('http') ? record.website : `//${record.website}`}
-                    style={{ color: '#1890ff' }}
-                >{record.website}</a>,
             search: false,
         },
         {
-            dataIndex: 'status',
-            title: '公司登记状态',
-            width: 150,
-            align: 'center',
-            valueType: 'select',
-            valueEnum: COMPANY_STATUS,
-            search: false,
-        },
-        {
-            dataIndex: 'insuredNum',
-            title: '参保人数',
+            dataIndex: 'categoryNameLv3',
+            title: '国行三级分类',
             width: 150,
             align: 'center',
             search: false,
         },
+        // {
+        //     dataIndex: 'mainProductTags',
+        //     title: '主营产品标签',
+        //     width: 150,
+        //     align: 'center',
+        //     search: false,
+        // },
+        // {
+        //     dataIndex: 'industryTags',
+        //     title: '行业赛道标签',
+        //     width: 150,
+        //     align: 'center',
+        //     search: false,
+        // },
         {
             dataIndex: 'matchScore',
             title: '匹配度',
             width: 200,
             align: 'center',
             valueType: 'slider',
+            search: false,
             fieldProps: {
                 min: 0,
                 max: 100,
                 range: true,
             },
-            render: (_, record) => <Progress percent={record.matchScore} />
-        },
-        {
-            dataIndex: 'businessScope',
-            title: '经营范围',
-            width: 150,
-            align: 'center',
-            valueType: 'select',
-            valueEnum: BUSINESS_SCOPE,
-            search: false,
+            render: (_, record) => <Progress percent={95} />
         },
         {
             title: '操作',
@@ -246,7 +257,7 @@ const CompanyList: FC<IProps> = (_props) => {
                         variant="text"
                         size='small'
                         onClick={() => {
-                            setCompanyID(record.id);
+                            setConcatMsg(record.concatMsg);
                             setIsContactsModalOpen(true);
                         }}
                     >
@@ -264,7 +275,7 @@ const CompanyList: FC<IProps> = (_props) => {
 
     // 查看联系人弹窗
     const [isContactsModalOpen, setIsContactsModalOpen] = useState<boolean>(false);
-    const [companyID, setCompanyID] = useState<number>(0);
+    const [concatMsg, setConcatMsg] = useState<IConcatMsg[]>([]);
 
     return (
         <>
@@ -311,74 +322,38 @@ const CompanyList: FC<IProps> = (_props) => {
                 cardBordered
                 request={async (params, sort, filter) => {
                     // console.log('params: ', params);
-                    return {
-                        data: [
-                            {
-                                id: 1,
-                                companyNo: 'COM000000000001',
-                                companyName: '测试企业5',
-                                taxNo: '91310000MA00000000',
-                                taxType: 1,
-                                companyType: 1,
-                                companyIntroduction: '简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介',
-                                provinceId: 33,
-                                provinceName: '浙江省',
-                                cityId: 3301,
-                                cityName: '杭州市',
-                                districtId: 330101,
-                                districtName: '西湖区',
-                                address: '西湖风景区',
-                                legalPersonName: '张三',
-                                personScale: 1,
-                                registerTime: 1772531200000,
-                                registeredCapital: 47560000,
-                                actualCapital: 39800000,
-                                industry: 1,
-                                productLabel: 1,
-                                website: 'www.baidu.com',
-                                status: 1,
-                                employeeNum: 90,
-                                insuredNum: 80,
-                                matchScore: 87,
-                                businessScope: 1,
-                                operateTermStart: 1772531200000,
-                                operateTermEnd: 1772531200000,
-                                tags: ['存续', '电子企业'],
-                                creditCode: '91310000MA00000000',
-                                businessLicenseNo: '4401080000000021',
-                                orgCode: '1000006899',
-                                importExportCode: '44011000006899',
-                                seaRegisterCode: '44011000006899',
-                                approvalDate: 1772531200000,
-                                registerOffice: '杭州市市场监督管理局',
-                                oldNames: ['测试企业1', '测试企业2'],
-                                englishName: 'Test Company',
-                            }
-                        ],
-                        success: true,
-                        total: 0
-                    }
                     // console.log('params: ', params);
                     // console.log('sort: ', sort);
                     // console.log('filter: ', filter);
-                    // let queryParams: IFavorListRequest = {
-                    //     ...params,
-                    //     pageNo: params.current!,
-                    //     pageSize: params.pageSize!,
-                    // }
-                    // if (params.createTime) {
-                    //     queryParams = {
-                    //         ...queryParams,
-                    //         createStartTime: params.createTime[0], // 注册开始时间
-                    //         createEndTime: params.createTime[1], // 注册结束时间
-                    //     }
-                    // }
-                    // const res = await getConsumerListAPI(queryParams)
-                    // return {
-                    //     data: res.data.list,
-                    //     total: res.data.total,
-                    //     success: res.success,
-                    // }
+                    let queryParams: ICompanyListRequest = {
+                        ...params,
+                        pageNo: params.current!,
+                        pageSize: params.pageSize!,
+                    }
+                    if (params.area) {
+                        switch (params.area.length) {
+                            case 1:
+                                queryParams.provinceName = params.area[0];
+                                break;
+                            case 2:
+                                queryParams.provinceName = params.area[0];
+                                queryParams.cityName = params.area[1];
+                                break;
+                            case 3:
+                                queryParams.provinceName = params.area[0];
+                                queryParams.cityName = params.area[1];
+                                queryParams.districtName = params.area[2];
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    const res = await getCompanyListPageAPI(queryParams)
+                    return {
+                        data: res.data.list,
+                        total: res.data.total,
+                        success: res.success,
+                    }
                 }
                 }
                 editable={{
@@ -458,8 +433,8 @@ const CompanyList: FC<IProps> = (_props) => {
             // ]}
             />
             <ContactsComponent
-                companyID={companyID}
                 isModalOpen={isContactsModalOpen}
+                concatMsg={concatMsg}
                 handleCancel={() => setIsContactsModalOpen(false)}
             />
         </>

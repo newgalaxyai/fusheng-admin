@@ -3,7 +3,7 @@ import type { FC, ReactNode } from 'react'
 import { Button, Tag } from 'antd'
 import { ROUTE_PARAM_NAME } from '@/constants'
 import { getLocationParamsByName } from '@/utils/location'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import {
   ProForm,
   ProFormText,
@@ -51,6 +51,7 @@ const StaffDetail: FC<IProps> = (_props) => {
   const { token } = theme.useToken();
   const { message } = App.useApp();
   const location = useLocation();
+  const navigate = useNavigate();
   const { navigateTo, getRouteRole, pureRemoveTab } = useLayout();
   const pageType = getLocationParamsByName(location, ROUTE_PARAM_NAME.PAGE_TYPE);
   const staffId = getLocationParamsByName(location, ROUTE_PARAM_NAME.STAFF_ID);
@@ -136,7 +137,7 @@ const StaffDetail: FC<IProps> = (_props) => {
     {
       title: '操作',
       valueType: 'option',
-      render: () => [
+      render: (_dom, _record, _, action) => [
         <PermissionWrapper
           requiredRole={getRouteRole(ROUTE_KEY.EDIT_STAFF, 3)}
           requiredPermissions={[ROUTE_PERMISSION.EDIT_STAFF]}
@@ -163,6 +164,26 @@ const StaffDetail: FC<IProps> = (_props) => {
             编辑
           </Button>
         </PermissionWrapper>,
+        <Button
+          key="refresh"
+          type='primary'
+          size='small'
+          onClick={() => {
+            action?.reload();
+          }}
+        >
+          刷新
+        </Button>,
+        <Button
+          key="refresh"
+          type='default'
+          size='small'
+          onClick={() => {
+            navigate(-1)
+          }}
+        >
+          返回
+        </Button>
       ],
     },
   ]

@@ -1,9 +1,9 @@
 import React from 'react'
 import type { FC, ReactNode } from 'react'
-import { Steps, Tag } from 'antd'
+import { Steps, Tag, Button } from 'antd'
 import { FEED_CATEGORY, FEED_STATUS, FEED_STATUS_NAME, ROUTE_PARAM_NAME } from '@/constants'
 import { getLocationParamsByName } from '@/utils/location'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import {
     ProDescriptions,
     ProDescriptionsItemProps
@@ -26,6 +26,7 @@ const OpinionDetail: FC<IProps> = (_props) => {
         dateTimeFormat
     } = useFieldProps()
     const location = useLocation();
+    const navigate = useNavigate();
     const opinionId = getLocationParamsByName(location, ROUTE_PARAM_NAME.OPINION_ID);
 
     // 描述列表column
@@ -152,6 +153,9 @@ const OpinionDetail: FC<IProps> = (_props) => {
             dataIndex: 'feedDetail',
             span: 3,
             render: (_, record) => {
+                if (!record.statusEnum) {
+                    return '-'
+                }
                 return (
                     <Steps
                         progressDot
@@ -187,12 +191,41 @@ const OpinionDetail: FC<IProps> = (_props) => {
                 )
             }
         },
+        {
+            title: '操作',
+            valueType: 'option',
+            render: (_dom, _record, _, action) => {
+                const optList = [
+                    <Button
+                        key="refresh"
+                        type='primary'
+                        size='small'
+                        onClick={() => {
+                            action?.reload();
+                        }}
+                    >
+                        刷新
+                    </Button>,
+                    <Button
+                        key="refresh"
+                        type='default'
+                        size='small'
+                        onClick={() => {
+                            navigate(-1)
+                        }}
+                    >
+                        返回
+                    </Button>
+                ]
+                return optList
+            }
+        },
     ]
 
     return (
         <>
             <ProDescriptions
-                title={null}
+                title='意见反馈详情'
                 column={3}
                 emptyText={'-'}
                 columns={feedDetailDescColumn}

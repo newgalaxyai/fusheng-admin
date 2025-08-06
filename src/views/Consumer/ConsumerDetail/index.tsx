@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import type { FC, ReactNode } from 'react'
 import { Button } from 'antd'
 import { getLocationParamsByName } from '@/utils/location'
-import { useLocation } from 'react-router-dom'
+import { useLocation,useNavigate } from 'react-router-dom'
 import {
   ProForm,
   ProFormText,
@@ -54,6 +54,7 @@ const ConsumerDetail: FC<IProps> = (_props) => {
   const { token } = theme.useToken();
   const { message } = App.useApp();
   const location = useLocation();
+  const navigate = useNavigate();
   const { navigateTo, getRouteRole, pureRemoveTab } = useLayout();
   const {
     dateTimeFormat,
@@ -154,14 +155,15 @@ const ConsumerDetail: FC<IProps> = (_props) => {
     {
       title: '操作',
       valueType: 'option',
-      render: () => [
+      render: (_dom, _record, _, action) => [
         <PermissionWrapper
           requiredRole={getRouteRole(ROUTE_KEY.EDIT_CONSUMER, 3)}
           requiredPermissions={[ROUTE_PERMISSION.EDIT_CONSUMER]}
         >
           <Button
             key="edit"
-            color="primary" variant="text"
+            color="primary" 
+            variant="text"
             onClick={() => {
               const encodedRedirectInfo = encodeRedirectInfo({
                 pathname: ROUTE_KEY.CONSUMER_DETAIL,
@@ -180,7 +182,27 @@ const ConsumerDetail: FC<IProps> = (_props) => {
           >
             编辑
           </Button>
-        </PermissionWrapper>
+        </PermissionWrapper>,
+        <Button
+          key="refresh"
+          type='primary'
+          size='small'
+          onClick={() => {
+            action?.reload();
+          }}
+        >
+          刷新
+        </Button>,
+        <Button
+          key="refresh"
+          type='default'
+          size='small'
+          onClick={() => {
+            navigate(-1)
+          }}
+        >
+          返回
+        </Button>
       ]
     }
   ]

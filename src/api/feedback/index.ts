@@ -11,7 +11,7 @@ import {
     IOpinionList,
 } from '../type/feedback'
 
-// 反馈列表
+// 获取公司反馈分页列表
 export const getOpinionListAPI = async (params: IRequest<IOpinionListRequest>): Promise<IResponse<IOpinionListResponse>> => {
   const response = await adminRequest.get<IResponse<IOpinionListResponse>>({
     url: feedbackListURL,

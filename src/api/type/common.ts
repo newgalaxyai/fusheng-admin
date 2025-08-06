@@ -5,5 +5,8 @@ export type IAreaTree = {
     children: IAreaTree[]
 }
 
-// 地区树返回
+// 获取详情
+export type IDetailRequest = {
+    id: number // 主键ID
+}
 
