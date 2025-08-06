@@ -1,3 +1,22 @@
+import axios, { AxiosResponse } from "axios"
+import { seniorRequest, adminRequest } from "@/service"
+import {
+    SENIOR_TOKEN,
+    SENIOR_TENANT_ID,
+    VITE_BASE_URL
+} from "@/service/config"
+import type {
+    IResponseData,
+    IResponse,
+    ILoginResponse,
+    ILoginRequest,
+    ILoginInfo,
+    ILoginPermissionInfo,
+    ISendMobileCodeRequest,
+    IVerifyMobileCodeRequest,
+    IResetPasswordRequest,
+    IPhoneLoginRequest
+} from "../type"
 import {
     refreshTokenURL,
     loginURL,
@@ -7,22 +26,7 @@ import {
     verifyMobileCodeURL,
     resetPasswordURL,
     phoneLoginURL
-} from "@/api/url/login"
-import { VITE_BASE_URL } from "@/service/config"
-import axios, { AxiosResponse } from "axios"
-import { IResponse, IResponseData } from "../type"
-import {
-    ILoginResponse,
-    ILoginRequest,
-    ILoginInfo,
-    ILoginPermissionInfo,
-    ISendMobileCodeRequest,
-    IVerifyMobileCodeRequest,
-    IResetPasswordRequest,
-    IPhoneLoginRequest
-} from "../type/login"
-import { seniorRequest, adminRequest } from "@/service"
-import { SENIOR_TOKEN, SENIOR_TENANT_ID } from "@/service/config"
+} from "../url"
 
 
 /**

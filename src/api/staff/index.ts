@@ -1,5 +1,7 @@
-import { baseRequest, adminRequest } from '@/service'
+import { adminRequest } from '@/service'
 import type {
+  IRequest,
+  IResponse,
   IStaffListRequest,
   IStaffListResponse,
   IStaffList,
@@ -8,8 +10,7 @@ import type {
   IStaffRoleRequest,
   IStaffAddOrEditRequest,
   IStaffChangeStatusRequest,
-} from '@/api/type'
-import { IRequest, IResponse } from '../type'
+} from '../type'
 import {
   staffListURL,
   staffDetailURL,
@@ -19,7 +20,7 @@ import {
   staffGiveRoleURL,
   staffGetRolesURL,
   staffChangeStatusURL,
-} from '../url/staff'
+} from '../url'
 
 /**
  * 获取员工列表

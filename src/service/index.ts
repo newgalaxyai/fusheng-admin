@@ -4,7 +4,6 @@ import { message, Modal } from 'antd'
 import { IResponseData } from '@/api/type'
 import { encodeRedirectInfo, refreshToken, customParamsSerializer } from '@/utils/auth'
 import { getAccessToken, removeAccessToken, removeRefreshToken } from '@/utils/storge'
-import { appURL, adminURL } from '@/api/url'
 import { ROUTE_PATH, ROUTE_PARAM_NAME } from '@/constants'
 
 // 是否正在刷新token
@@ -206,11 +205,11 @@ const createRequest = (baseURL: string, headerAuth?: string, ...args: ICreateReq
   return requestInstance
 }
 
-const baseRequest = createRequest(VITE_BASE_URL + appURL)
-const adminRequest = createRequest(VITE_BASE_URL + adminURL, undefined, {
+const baseRequest = createRequest(VITE_BASE_URL)
+const adminRequest = createRequest(VITE_BASE_URL, undefined, {
   paramsSerializer: true
 })
-const seniorRequest = createRequest(VITE_BASE_URL + adminURL, SENIOR_TOKEN, {
+const seniorRequest = createRequest(VITE_BASE_URL, SENIOR_TOKEN, {
   paramsSerializer: true
 })
 

@@ -13,11 +13,15 @@ export default defineConfig(({ mode }): UserConfig => {
       port: Number(env.VITE_APP_PORT),
       open: false,
       proxy: {
-        '/fusheng': {
-          target: 'http://192.168.110.20:10017',
+        [env.VITE_BASE_URL]: {
+          target: 'http://192.168.110.35:10017',
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/fusheng/, '')
         },
+        // [env.VITE_BASE_URL]: {
+        //   target: 'https://fs.xiaohengquan.com',
+        //   changeOrigin: true,
+        //   secure: true, // 添加这个选项处理HTTPS
+        // },
       }
     },
     resolve: {

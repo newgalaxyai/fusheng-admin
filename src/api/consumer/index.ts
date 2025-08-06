@@ -1,6 +1,7 @@
-import { baseRequest, adminRequest } from '@/service'
-import { IRequest, IResponse } from '../type'
-import {
+import { adminRequest } from '@/service'
+import type {
+  IRequest,
+  IResponse,
   IConsumerChangeStatusRequest,
   IConsumerDetailRequest,
   IConsumerList,
@@ -8,14 +9,14 @@ import {
   IConsumerListResponse,
   ILoginListRequest,
   ILoginListResponse,
-} from '../type/consumer'
+} from '../type'
 import {
   consumerListURL,
   consumerDetailURL,
   consumerLoginLogURL,
   consumerEditURL,
-  consumerChangeStatusURL
-} from '../url/consumer'
+  consumerChangeStatusURL,
+} from '../url'
 
 /**
  * 获取用户列表

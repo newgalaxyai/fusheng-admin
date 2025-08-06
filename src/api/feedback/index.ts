@@ -1,15 +1,16 @@
 import { adminRequest } from '@/service'
-import { IRequest, IResponse } from '../type'
 import {
     feedbackListURL,
     feedbackDetailURL
-} from '../url/feedback'
-import {
+} from '../url'
+import type {
+    IRequest,
+    IResponse,
     IOpinionListRequest,
     IOpinionListResponse,
     IOpinionDetailRequest,
     IOpinionList,
-} from '../type/feedback'
+} from '../type'
 
 // 获取公司反馈分页列表
 export const getOpinionListAPI = async (params: IRequest<IOpinionListRequest>): Promise<IResponse<IOpinionListResponse>> => {

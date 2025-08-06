@@ -1,6 +1,10 @@
 import { baseRequest } from '@/service'
-import type { IExampleRequest, IExampleResponse } from '@/api/type'
-import { IRequest, IResponse } from '../type'
+import type { 
+  IRequest, 
+  IResponse,
+  IExampleRequest,
+  IExampleResponse,
+} from '../type'
 
 export const getExampleAPI = async (params: IRequest<IExampleRequest>): Promise<IResponse<IExampleResponse>> => {
   const response = await baseRequest.get<IResponse<IExampleResponse>>({

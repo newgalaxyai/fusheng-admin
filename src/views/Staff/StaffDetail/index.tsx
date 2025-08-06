@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import type { FC, ReactNode } from 'react'
 import { Button, Tag } from 'antd'
-import { ROUTE_PARAM_NAME } from '@/constants'
+import { ROUTE_PARAM_NAME, STATUS } from '@/constants'
 import { getLocationParamsByName } from '@/utils/location'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
@@ -83,16 +83,7 @@ const StaffDetail: FC<IProps> = (_props) => {
       key: 'status',
       dataIndex: 'status',
       valueType: 'select',
-      valueEnum: {
-        0: {
-          text: '启用',
-          status: 'Success',
-        },
-        1: {
-          text: '禁用',
-          status: 'Error',
-        },
-      },
+      valueEnum: STATUS,
     },
     {
       dataIndex: 'staffRole',
@@ -243,7 +234,7 @@ const StaffDetail: FC<IProps> = (_props) => {
                     ...values,
                     hireDate: values.hireTime,
                     employeeNo: values.username.toUpperCase(),
-                    password: 'fusheng@' + values.username, // 初始密码
+                    password: 'fusheng', // 初始密码
                   })
                 }
                 if (res.success) {

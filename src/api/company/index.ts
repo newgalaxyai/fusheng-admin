@@ -2,8 +2,8 @@ import { adminRequest } from '@/service'
 import {
     getCompanyListPageUrl,
     getCompanyDetailUrl,
-} from '@/api/url/company'
-import {
+} from '../url'
+import type {
     IResponse,
     IRequest,
     ICompanyListRequest,

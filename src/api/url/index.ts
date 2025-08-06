@@ -1,5 +1,6 @@
-// app-api
-export const appURL = '/app-api'
-
-// admin-api
-export const adminURL = '/admin-api'
+export * from './common'
+export * from './company'
+export * from './consumer'
+export * from './feedback'
+export * from './login'
+export * from './staff'
