@@ -4,7 +4,7 @@ import { message, Modal } from 'antd'
 import { IResponseData } from '@/api/type'
 import { encodeRedirectInfo, refreshToken, customParamsSerializer } from '@/utils/auth'
 import { getAccessToken, removeAccessToken, removeRefreshToken } from '@/utils/storge'
-import { ROUTE_PATH, ROUTE_PARAM_NAME } from '@/constants'
+import { ROUTE_PATH, ROUTE_PARAM_NAME, ROUTE_PATH_COMMON } from '@/constants'
 
 // 是否正在刷新token
 let isRefreshToken = false
@@ -68,6 +68,11 @@ const handleTokenRefresh = async (originalRequest: any, requestInstance: ZZReque
         // 清除token
         removeAccessToken()
         removeRefreshToken()
+        // 若当前路由为登录页，不跳转登录页
+        const pathname = window.location.pathname.split('?')[0]
+        if (ROUTE_PATH_COMMON.includes(pathname)) {
+          return
+        }
         // 使用Modal静态方法显示提示框
         Modal.info({
           title: '登录已过期',
